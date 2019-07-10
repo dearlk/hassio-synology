@@ -501,7 +501,7 @@ play_door_chimes:
     - service: media_extractor.play_media
       data_template:
         entity_id: 'media_player.{{states.input_select.broadcast_speaker.state}}'
-        media_content_id: "https://delapichome.duckdns.org:9123/local/door_chime.mp3"
+        media_content_id: !secret base_url_door_chimes 
         media_content_type: "music"
 
 #################################################################################################

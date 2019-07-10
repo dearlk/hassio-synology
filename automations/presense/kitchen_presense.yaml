@@ -1,87 +1,87 @@
-# No one in kitchen
-- alias: No one in kitchen in the morning
-  trigger:
-    entity_id: binary_sensor.kitchen_motion
-    platform: state
-    to: 'off'
-    for: 
-      hours: "00"
-      minutes: "05"
-      seconds: "00"
-  condition:   
-    - condition: time
-      after: '07:00:00'
-      before: '10:00:00'
-  action:
-    - service: python_script.notify
-      data:
-        message: "Looks like no one is in kitchen, switching off lights"
-        text: 1
-    - service: light.turn_off
-      entity_id: light.kitchen_light
-##################
-- alias: No one in kitchen in the day
-  trigger:
-    entity_id: binary_sensor.kitchen_motion
-    platform: state
-    to: 'off'
-    for: 
-      hours: "00"
-      minutes: "01"
-      seconds: "00"
-  condition:   
-    - condition: time
-      after: '10:00:00'
-      before: '18:30:00'
-  action:
-    - service: python_script.notify
-      data:
-        message: "Looks like no one is in kitchen, switching off lights"
-        text: 1
-    - service: light.turn_off
-      entity_id: light.kitchen_light
-##################
-- alias: No one in kitchen in the evening
-  trigger:
-    entity_id: binary_sensor.kitchen_motion
-    platform: state
-    to: 'off'
-    for: 
-      hours: "00"
-      minutes: "20"
-      seconds: "00"
-  condition:   
-    - condition: time
-      after: '18:30:00'
-      before: '22:00:00'
-  action:
-    - service: python_script.notify
-      data:
-        message: "Looks like no one is in kitchen, switching off lights"
-        text: 1
-    - service: light.turn_off
-      entity_id: light.kitchen_light
-###############
-- alias: No one in kitchen in the night
-  trigger:
-    entity_id: binary_sensor.kitchen_motion
-    platform: state
-    to: 'off'
-    for: 
-      hours: "00"
-      minutes: "02"
-      seconds: "00"
-  condition:   
-    - condition: time
-      after: '22:00:00'
-      before: '07:00:00'
-  action:
-    # - service: python_script.notify
-    #   data:
-    #     message: "Looks like no one is in kitchen, switching off lights"
-    #     text: 1
-    - service: light.turn_off
-      entity_id: light.kitchen_light
+# # No one in kitchen
+# - alias: No one in kitchen in the morning
+#   trigger:
+#     entity_id: binary_sensor.kitchen_motion
+#     platform: state
+#     to: 'off'
+#     for: 
+#       hours: "00"
+#       minutes: "05"
+#       seconds: "00"
+#   condition:   
+#     - condition: time
+#       after: '07:00:00'
+#       before: '10:00:00'
+#   action:
+#     - service: python_script.notify
+#       data:
+#         message: "Looks like no one is in kitchen, switching off lights"
+#         text: 1
+#     - service: light.turn_off
+#       entity_id: light.kitchen_light
+# ##################
+# - alias: No one in kitchen in the day
+#   trigger:
+#     entity_id: binary_sensor.kitchen_motion
+#     platform: state
+#     to: 'off'
+#     for: 
+#       hours: "00"
+#       minutes: "01"
+#       seconds: "00"
+#   condition:   
+#     - condition: time
+#       after: '10:00:00'
+#       before: '18:30:00'
+#   action:
+#     - service: python_script.notify
+#       data:
+#         message: "Looks like no one is in kitchen, switching off lights"
+#         text: 1
+#     - service: light.turn_off
+#       entity_id: light.kitchen_light
+# ##################
+# - alias: No one in kitchen in the evening
+#   trigger:
+#     entity_id: binary_sensor.kitchen_motion
+#     platform: state
+#     to: 'off'
+#     for: 
+#       hours: "00"
+#       minutes: "20"
+#       seconds: "00"
+#   condition:   
+#     - condition: time
+#       after: '18:30:00'
+#       before: '22:00:00'
+#   action:
+#     - service: python_script.notify
+#       data:
+#         message: "Looks like no one is in kitchen, switching off lights"
+#         text: 1
+#     - service: light.turn_off
+#       entity_id: light.kitchen_light
+# ###############
+# - alias: No one in kitchen in the night
+#   trigger:
+#     entity_id: binary_sensor.kitchen_motion
+#     platform: state
+#     to: 'off'
+#     for: 
+#       hours: "00"
+#       minutes: "02"
+#       seconds: "00"
+#   condition:   
+#     - condition: time
+#       after: '22:00:00'
+#       before: '07:00:00'
+#   action:
+#     # - service: python_script.notify
+#     #   data:
+#     #     message: "Looks like no one is in kitchen, switching off lights"
+#     #     text: 1
+#     - service: light.turn_off
+#       entity_id: light.kitchen_light
 
 ############################################################################
 - alias: someone in kitchen
@@ -94,6 +94,11 @@
     - condition: state
       entity_id: light.kitchen_light
       state: 'off'
+    - condition: sun
+      after: sunrise
+      after_offset: '+03:00:00'
+      before: sunset
+      before_offset: '-01:00:00'
   action:
     # - service: python_script.notify
     #   data:
@@ -102,3 +107,28 @@
     - service: light.turn_on
       entity_id: light.kitchen_light
 
+##############################################################################
+
+###############
+- alias: No one in kitchen 
+  trigger:
+    platform: template
+    value_template: > 
+      {% set no_motion_since=states.binary_sensor.kitchen_motion.attributes['No motion since'] | int %}
+      {% set current_state=states.binary_sensor.kitchen_motion.state %}
+      {{ (is_state("binary_sensor.morning","on") and current_state=="off" and no_motion_since > 60 * 5) or
+         (is_state("binary_sensor.evening","on") and current_state=="off" and no_motion_since > 60 * 15) or
+         (is_state("binary_sensor.night","on") and current_state=="off" and no_motion_since > 60 * 2)
+      }}
+  action:
+    - service: python_script.notify
+      data_template:
+        message: "Looks like no one is in kitchen since {{no_motion_since/60|int}} minutes, switching off lights"
+        text: 1
+    - service: light.turn_off
+      entity_id: light.kitchen_light
+
+# {{ (is_state("binary_sensor.morning","on") and is_state("binary_sensor.kitchen_motion","off") and states.binary_sensor.kitchen_motion.attributes['No motion since'] | int > 60 * 5) or
+#          (is_state("binary_sensor.evening","on") and is_state("binary_sensor.kitchen_motion","off") and states.binary_sensor.kitchen_motion.attributes['No motion since'] | int > 60 * 15) or 
+#           (is_state("binary_sensor.night","on") and is_state("binary_sensor.kitchen_motion","off") and states.binary_sensor.kitchen_motion.attributes['No motion since'] | int > 60 * 2)
+#       }}
