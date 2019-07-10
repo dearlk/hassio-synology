@@ -1,0 +1,4 @@
+
+  - platform: xiaomi_miio
+    host: !secret xiaomi_robo_ip
+    token: !secret xiaomi_robo_token

@@ -1,0 +1,77 @@
+# reached office
+- alias: Lalit Reached Office
+  initial_state: true
+  action:
+    data:
+      message: <speak>Lalit has reached office now</speak>
+    service: python_script.notify
+  trigger:
+    entity_id: device_tracker.lalit
+    event: enter
+    platform: zone
+    zone: zone.DB
+# left office
+- alias: Lalit Left Office
+  initial_state: true
+  action:
+    data:
+      message: <speak>Lalit has left office now</speak>
+    service: python_script.notify
+  trigger:
+    entity_id: device_tracker.lalit
+    event: leave
+    platform: zone
+    zone: zone.DB
+# reached home
+- alias: Lalit Reached home
+  initial_state: true
+  action:
+    - service: python_script.notify
+      data:
+        message: <speak>Lalit has reached home now</speak>
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.lalit_at_home    
+  trigger:
+    entity_id: device_tracker.lalit
+    event: enter
+    platform: zone
+    zone: zone.home
+# left home
+- alias: Lalit Left home
+  initial_state: true
+  action:
+    - service: python_script.notify
+      data:
+        message: <speak>Lalit has left home now</speak>
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.lalit_at_home
+  trigger:
+    entity_id: device_tracker.lalit
+    event: leave
+    platform: zone
+    zone: zone.home
+
+
+
+- alias: Lalit is travelling
+  initial_state: true
+  trigger:
+    platform: event
+    event_type: places_state_update
+  condition:
+    - condition: template
+      value_template: '{{ trigger.event.data.entity == "lalit" }}'
+    - condition: template
+      value_template: '{{ trigger.event.data.devicetracker_zone != "home" and trigger.event.data.devicetracker_zone != "not_home"}}'
+  action:
+  - service: python_script.notify
+    data_template:
+      message: >
+        <speak>
+        {{trigger.event.data.entity}} is traveling {{trigger.event.data.direction}}. He's reached {{trigger.event.data.devicetracker_zone}}
+        </speak>
+        
+        
+        
+      
+      

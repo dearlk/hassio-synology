@@ -1,0 +1,29 @@
+
+  - platform: google_translate
+  
+  - platform: watson_tts
+    watson_apikey: !secret watson_apikey
+    watson_url: https://gateway-syd.watsonplatform.net/text-to-speech/api
+  
+  # - platform: marytts
+  #   host: 192.168.1.165
+  #   port: 59125
+  #   codec: 'wav'
+  #   voice: 'cmu-slt-hsmm'
+  #   language: 'en-US'
+
+  - platform: amazon_polly
+    aws_access_key_id: !secret aws_access_key_id
+    aws_secret_access_key: !secret aws_secret_access_key
+    text_type: ssml
+    voice: Aditi
+    #name: amazon_aditi_say
+
+  # - platform: amazon_polly
+  #   aws_access_key_id: !secret aws_access_key_id
+  #   aws_secret_access_key: !secret aws_secret_access_key
+  #   text_type: ssml
+  #   #voice: Aditi
+
+  # - platform: google_cloud
+  #   key_file: googlecloud.json

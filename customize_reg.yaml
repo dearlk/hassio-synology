@@ -1,0 +1,83 @@
+# lock.zwave_lock_locked:
+  # friendly_name: Front Door
+# scene.mood_lighting:
+  # icon: mdi:heart
+  # emulated_hue_hidden: false
+# scene.regular_lighting:
+  # icon: mdi:lightbulb
+  # emulated_hue_hidden: false
+# switch.zwave_switch_1_switch:
+  # friendly_name: Kitchen Fluorescent
+  # icon: mdi:lightbulb
+  # emulated_hue_hidden: false
+# switch.zwave_switch_2_switch:
+  # friendly_name: Porch Lanterns
+  # icon: mdi:lightbulb
+  # emulated_hue_hidden: false
+# switch.zwave_switch_3_switch:
+  # friendly_name: Foyer Light
+  # icon: mdi:lightbulb
+  # emulated_hue_hidden: false
+# light.zwave_dimmer_1_level:
+  # friendly_name: Den Light
+  # emulated_hue_hidden: false
+# light.zwave_dimmer_2_level:
+  # friendly_name: Bedroom Light
+  # emulated_hue_hidden: false
+# light.zwave_dimmer_3_level:
+  # friendly_name: Dining Room Chandelier
+  # icon: mdi:ceiling-light
+  # emulated_hue_hidden: false
+# switch.zwave_switch_4_switch:
+  # friendly_name: Dinette Light
+  # icon: mdi:lightbulb
+  # emulated_hue_hidden: false
+# switch.zwave_switch_5_switch:
+  # friendly_name: Bathroom Light
+  # icon: mdi:lightbulb
+  # emulated_hue_hidden: false
+# switch.zwave_switch_6_switch:
+  # friendly_name: Hall Lights
+  # icon: mdi:lightbulb
+  # emulated_hue_hidden: false
+# switch.zwave_switch_7_switch:
+  # friendly_name: Living Room Downlights
+  # icon: mdi:ceiling-light
+  # emulated_hue_hidden: false
+# switch.zwave_water_valve_switch:
+  # friendly_name: Main Water Shutoff
+  # icon: mdi:water-pump
+# cover.zwave_garage_door_opener_open:
+  # friendly_name: Garage Door
+# binary_sensor.zwave_water_sensor_1_sensor:
+  # friendly_name: Water Sensor
+  # icon: mdi:water
+# light.bedroom_lamp:
+  # emulated_hue_hidden: false
+  # icon: mdi:lamp
+# light.living_room_lamps:
+  # emulated_hue_hidden: false
+  # icon: mdi:lamp
+# light.stair_lighting:
+  # icon: mdi:led-on
+# light.living_room_fan_light:
+  # emulated_hue_hidden: false
+# fan.zwave_fan_1_level:
+  # friendly_name: Bedroom Fan
+  # emulated_hue_hidden: false
+# sensor.quote:
+  # hidden: true
+# sensor.vzw_number_1:
+  # friendly_name: !secret her_name
+# sensor.vzw_number_2:
+  # friendly_name: !secret vzw_2
+# sensor.vzw_number_3:
+  # friendly_name: !secret vzw_3
+# sensor.vzw_number_4:
+  # friendly_name: !secret his_name
+# sensor.vzw_number_5:
+  # friendly_name: !secret vzw_5
+# sensor.his_horoscope:
+  # hidden: true
+# sensor.her_horoscope:
+  # hidden: true

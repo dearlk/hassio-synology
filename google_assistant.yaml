@@ -1,0 +1,14 @@
+
+  project_id: homeassistant-645b2
+  #client_id: !secret google_assistant_client_id
+  #access_token: !secret google_assistant_access_token
+  #agent_user_id: !secret google_assistant_access_user_id
+  #api_key: !secret google_assistant_api_key
+  expose_by_default: false
+  exposed_domains:
+    - light
+  entity_config:
+    light.door_light:
+      expose: true
+      room: living room
+

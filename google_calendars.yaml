@@ -1,0 +1,32 @@
+
+- cal_id: lalitksharma@gmail.com
+  entities:
+  - device_id: lalitksharmagmailcom
+    name: lalitksharma@gmail.com
+    track: true
+
+- cal_id: '#contacts@group.v.calendar.google.com'
+  entities:
+  - device_id: contacts
+    name: Contacts
+    track: true
+
+- cal_id: en.singapore#holiday@group.v.calendar.google.com
+  entities:
+  - device_id: holidays_in_singapore
+    name: Holidays in Singapore
+    track: true
+
+- cal_id: family03184267022586556548@group.calendar.google.com
+  entities:
+  - device_id: family
+    ignore_availability: true
+    name: Family
+    track: true
+
+- cal_id: addressbook#contacts@group.v.calendar.google.com
+  entities:
+  - device_id: contacts
+    ignore_availability: true
+    name: Contacts
+    track: true

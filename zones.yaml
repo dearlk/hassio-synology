@@ -1,0 +1,151 @@
+
+  - name: UBS
+    latitude: 1.3356338
+    longitude: 103.9660896
+    radius: 50
+    icon: mdi:work
+
+  - name: DB
+    latitude: 1.275304
+    longitude: 103.798003
+    radius: 500
+    icon: mdi:work
+
+  - name: home
+    latitude: 1.398049
+    longitude: 103.916551
+    radius: 50
+    icon: mdi:people
+
+  - name: harbour front 
+    latitude: 1.265939
+    longitude: 103.820909
+    radius: 50
+    icon: mdi:train
+
+  - name: labrador park 
+    latitude: 1.272570
+    longitude: 103.802424
+    radius: 50
+    icon: mdi:train
+
+  - name: punggol 
+    latitude: 1.405033
+    longitude: 103.902307
+    radius: 50
+    icon: mdi:train
+
+  # - name: home
+  #   latitude: 1.394593
+  #   longitude: 103.912995
+  #   radius: 5
+  #   icon: mdi:people
+
+  - name: sengkang 
+    latitude: 1.391484
+    longitude: 103.895200
+    radius: 50
+    icon: mdi:train
+
+  - name: baungkok 
+    latitude: 1.383118
+    longitude: 103.892840
+    radius: 50
+    icon: mdi:train
+
+
+  - name: Hougang 
+    latitude: 1.371234
+    longitude: 103.892497
+    radius: 50
+    icon: mdi:train
+
+
+  - name: kovan 
+    latitude: 1.360369
+    longitude: 103.885322
+    radius: 50
+    icon: mdi:train
+
+  - name: serengoon 
+    latitude: 1.331334
+    longitude: 103.868464
+    radius: 50
+    icon: mdi:train
+
+  - name: woodleigh 
+    latitude: 1.338971
+    longitude: 103.870438
+    radius: 50
+    icon: mdi:train
+
+  - name: potong pasir 
+    latitude: 1.321114
+    longitude: 103.861917
+    radius: 50
+    icon: mdi:train
+
+  - name: farrer park 
+    latitude: 1.312285
+    longitude: 103.854989
+    radius: 50
+    icon: mdi:train
+
+  - name: little india 
+    latitude: 1.307007
+    longitude: 103.849490
+    radius: 50
+    icon: mdi:train
+
+  - name: dhoby ghaut 
+    latitude: 1.299783
+    longitude: 103.845216
+    radius: 50
+    icon: mdi:train
+
+  - name: clarke quay 
+    latitude: 1.288671
+    longitude: 103.846997
+    radius: 50
+    icon: mdi:train
+
+
+  - name: chainatown 
+    latitude: 1.284308
+    longitude: 103.843436
+    radius: 50
+    icon: mdi:train
+
+
+  - name: outram park 
+    latitude: 1.280597
+    longitude: 103.840303
+    radius: 50
+    icon: mdi:train
+
+  - name: kadaloor 
+    latitude: 1.399556
+    longitude: 103.916539
+    radius: 10
+    icon: mdi:train
+
+
+  - name: oasis 
+    latitude: 1.402255
+    longitude: 103.912700
+    radius: 50
+    icon: mdi:train
+
+  - name: Damai
+    latitude: 1.405312
+    longitude: 103.908573
+    radius: 50
+    icon: mdi:train
+
+  - name: waterway point
+    latitude: 1.405939
+    longitude: 103.902248
+    radius: 50
+    icon: mdi:train
+
+

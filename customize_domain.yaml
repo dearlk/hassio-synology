@@ -1,0 +1,9 @@
+  switch:
+    assumed_state: false
+    icon: mdi:switch
+
+  automation:
+    hide_entity: True
+    # icon: mdi:home-automation
+    # assumed_state: false
+    # initial_state: on

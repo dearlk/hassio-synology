@@ -1,0 +1,568 @@
+- action:
+  - service: script.turn_on
+    entity_id: script.livingroom_tv_on
+  - service: input_boolean.turn_on
+    entity_id: input_boolean.livingroom_tv_state
+  alias: Turn on Samsung TV
+  trigger:
+    platform: state
+    entity_id: input_boolean.samsung_tv
+    to: 'on'
+- action:
+  - service: script.turn_on
+    entity_id: script.livingroom_tv_off
+  - service: input_boolean.turn_off
+    entity_id: input_boolean.livingroom_tv_state
+  alias: Turn off Samsung TV
+  condition: []
+  id: '1513335061151'
+  trigger:
+  - entity_id: input_boolean.samsung_tv
+    from: 'on'
+    platform: state
+    to: 'off'
+
+- alias: Living Room Fan Control - Template
+  trigger:
+  - platform: state
+    entity_id: input_select.livingroom_fan
+  action:
+  - service: script.turn_on
+    data_template:
+      entity_id: "{% if is_state(\"input_select.livingroom_fan\",\"Off\") %}\n  script.livingroom_fan_off\n\
+        {%-elif is_state(\"input_select.livingroom_fan\",\"Low\") %}\n  script.livingroom_fan_on\n\
+        {%-elif is_state(\"input_select.livingroom_fan\",\"Medium\") %}\n  script.livingroom_fan_medium\n\
+        {%-elif is_state(\"input_select.livingroom_fan\",\"High\") %}\n  script.livingroom_fan_high\n\
+        {% endif %}\n"
+
+- action:
+  - data_template:
+      message: '{{ states.input_text.broadcast_message.state }}'
+    service: notify.google_broadcast
+  alias: google broadcast testing
+  condition: []
+  id: '1515725991661'
+  trigger:
+  - entity_id: input_text.broadcast_message
+    platform: state
+- action:
+  - data_template:
+      message: '{{ states.input_text.google_command.state }}'
+    service: notify.google_command
+  alias: google command testing
+  condition: []
+  id: google_command
+  trigger:
+  - entity_id: input_text.google_command
+    platform: state
+
+
+
+
+
+
+#####################################################################
+#turn on office aircon when motion detected if not already on    
+- alias: "turn on office aircon"
+  trigger:
+    platform: state
+    to: 'on'
+    #from: 'off'
+    # for: 
+    #   minutes: 1
+    entity_id: binary_sensor.office_motion
+  condition: 
+    - condition: state
+      entity_id: climate.office_aircon
+      state: 'off'
+    - condition: state
+      entity_id: device_tracker.lalit
+      state: 'home' 
+    - condition: state
+      entity_id: binary_sensor.office_door
+      state: 'off'   
+  action:
+    - service: climate.set_operation_mode
+      data_template:
+        entity_id: climate.office_aircon
+        operation_mode: 'cool'
+    # - wait_template: >
+        # "{% if states.binary_sensor.office_motion.attributes['No motion since'] | int >= 900 and states.binary_sensor.office_motion.state == 'off' %}True{% else %}False{% endif %}" 
+    # - condition: state
+      # entity_id: switch.office_aircon
+      # state: 'on'
+    # - service: switch.turn_off
+      # entity_id: switch.office_aircon
+
+#turn off office aircon when no motion detected for 30 mins but before 10pm 
+- alias: "turn off office aircon"
+  trigger:
+    platform: state
+    to: 'off'
+    from: 'on'
+    # for: 
+    #   minutes: 1
+    entity_id: binary_sensor.office_motion
+  condition: 
+    # condition: and
+    # conditions:
+    #   - condition: time
+    #     before: '22:00:00'
+    condition: template
+    value_template: "{% if states.binary_sensor.office_motion.attributes['No motion since'] | int >= 900 and states.binary_sensor.office_motion.state == 'off' %}True{% else %}False{% endif %}"
+  action:
+    - service: climate.turn_off
+      entity_id: climate.office_aircon
+
+
+######################################################################################  
+    
+- alias: daily snapshot
+  trigger: 
+    platform: time
+    at: '23:00:00'
+  # condition:
+  #   condition: time
+  #   weekday:
+  #     - mon  
+  action:
+    - service: hassio.snapshot_full
+      data_template:
+        name: "hassio_fullsnapshot_{{ now().strftime('%Y%m%d') }}"
+    - service: python_script.notify
+      data:
+        message: "creating hassio_fullsnapshot_{{ now().strftime('%Y%m%d') }}"
+        text: 1
+        tell: lalit
+#####################################################################################    
+# - alias: shopping list reminder
+  # trigger:
+    # - entity_id: device_tracker.lalit_phone
+      # event: enter
+      # platform: zone
+      # zone: zone.waterway_point
+    # - entity_id: device_tracker.lalit_phone
+      # event: enter
+      # platform: zone
+      # zone: zone.punggol_mrt
+ # action:
+   # data:
+      # message: dont forget to check the shopping list and buy items from here
+   # service: notify.zanzito_lalit
+
+########################################################################################
+- alias: change theme
+  trigger:
+    platform: state
+    entity_id: input_select.theme
+  action:
+    service: frontend.set_theme
+    data_template:
+      name: "{{ states('input_select.theme') }}"
+
+########################################################################################
+- alias: turn on livingroom ac when lalit leaves office
+  trigger:
+    platform: zone
+    event: leave
+    zone: zone.DB
+    entity_id: device_tracker.lalit
+  condition:
+    - condition: time
+      after: "18:00:00"
+    - condition: state
+      entity_id: binary_sensor.workday
+      state: 'on'
+    - condition: state
+      entity_id: switch.livingroom_aircon
+      state: 'off'
+  action:
+    - service: python_script.notify
+      data_template:
+        message: "<speak>Lalit has left office, turning on livingroom aircon now, please close all windows!!!</speak>"
+    - service: script.turn_on
+      entity_id: script.livingroom_aircon_on
+    - delay: 
+        minutes: 5
+    - service: python_script.notify
+      data:
+        message: "<speak>Lalit is coming home, I've turned on livingroom aircon, please close all windows if not closed yet!!!</speak>"
+    - delay:
+        minutes: 10
+    - service: python_script.notify
+      data:
+        message: "<speak>Did you reminder to close all windows since livingroom aircon is on now?</speak>"
+
+
+
+
+
+
+
+# ####################################################################################
+# #turn on family bathroom light  
+# - alias: "turn on family bathroom light"
+#   trigger:
+#     platform: state
+#     to: 'on'
+#     from: 'off'
+#     entity_id: binary_sensor.door_window_sensor_158d00022503f6
+#   action:
+#     - service: switch.turn_on
+#       entity_id: switch.family_bathroom_light
+# #turn off family bathroom light  
+# - alias: "turn off family bathroom light"
+#   trigger:
+#     platform: state
+#     entity_id: binary_sensor.motion_sensor_158d0001b17372
+#     to: 'off'
+#     for:
+#       minutes: 5
+#   action:
+#     - service: switch.turn_off
+#       entity_id: switch.family_bathroom_light
+
+####################################################################################
+#turn on bathroom light on door open 
+- alias: "turn on bathroom light on door open"
+  trigger:
+    platform: state
+    to: 'on'
+    from: 'off'
+    entity_id: binary_sensor.bathroom_door
+  action:
+    - service: switch.turn_on
+      entity_id: switch.bathroom_light
+    
+#turn on bathroom light if it's not already on and motion is detected 
+- alias: "turn on bathroom light on motion"
+  trigger:
+    platform: state
+    to: 'on'
+    #from: 'off'
+    entity_id: binary_sensor.bathroom_motion
+  condition:
+    - condition: state
+      state: 'off'
+      entity_id: switch.bathroom_light
+    - condition: state
+      state: 'off'
+      entity_id: binary_sensor.bathroom_door
+  action:
+    - service: switch.turn_on
+      entity_id: switch.bathroom_light
+       
+#turn off bathroom light if no motion detected for 15 minutes 
+- alias: "turn off bathroom light"
+  trigger:
+    platform: state
+    entity_id: binary_sensor.bathroom_motion
+    to: 'off'
+    for:
+      minutes: 10
+  action:
+    - service: switch.turn_off
+      entity_id: switch.bathroom_light
+
+####################################################################################
+#turn on family bathroom light on door open 
+- alias: "turn on family bathroom light on door open"
+  trigger:
+    platform: state
+    to: 'on'
+    from: 'off'
+    entity_id: binary_sensor.family_bathroom_door
+  action:
+    - service: switch.turn_on
+      entity_id: switch.family_bathroom_light
+
+#turn on bathroom light if it's not already on and motion is detected 
+- alias: "turn on family bathroom light on motion"
+  trigger:
+    platform: state
+    to: 'on'
+    #from: 'off'
+    entity_id: binary_sensor.family_bathroom_motion
+  condition:
+    - condition: state
+      state: 'off'
+      entity_id: switch.family_bathroom_light
+    - condition: state
+      state: 'off'
+      entity_id: binary_sensor.family_bathroom_door
+  action:
+    - service: switch.turn_on
+      entity_id: switch.family_bathroom_light
+      
+#turn off bathroom light if no motion detected for 15 minutes 
+- alias: "turn off family bathroom light"
+  trigger:
+    platform: state
+    entity_id: binary_sensor.family_bathroom_motion
+    to: 'off'
+    for:
+      minutes: 10
+  action:
+    - service: switch.turn_off
+      entity_id: switch.family_bathroom_light
+
+#####################################################################################
+#do not disturb
+- alias: "do not disturb"
+  trigger:
+    platform: state
+    entity_id: binary_sensor.livingroom_tv
+    to: 'on'
+  condition:
+    condition: state  
+    entity_id: input_boolean.do_not_disturb
+    state: 'on'
+  action:
+    - service: script.turn_on
+      entity_id: script.livingroom_tv_off
+    - service: media_player.volume_set
+      data:
+        volume_level: 1.0
+        entity_id: media_player.livingroom
+    - service: python_script.notify
+      data:
+        message: '<speak>Sorry, it is bed time now, you better go to bed now and sleep!</speak>'
+        room: 'livingroom'
+
+#####################################################################################
+#turn on livingroom fan when tv turned on
+- alias: "turn on fan with tv"
+  trigger:
+    platform: state
+    entity_id: binary_sensor.tv_mode
+    to: 'on'
+    from: 'off'
+  condition:
+    condition: state
+    entity_id: switch.livingroom_fan_power
+    state: 'off'
+  action:
+    - service: script.turn_on
+      entity_id: script.livingroom_fan_on
+#####################################################################################
+#turn on livingroom fan
+- alias: "turn on fan test"
+  trigger:
+    platform: state
+    entity_id: input_boolean.livingroom_fan
+    to: 'on'
+    from: 'off'
+  action:
+    - service: script.turn_on
+      entity_id: script.livingroom_fan_on
+- alias: "turn off fan test"
+  trigger:
+    platform: state
+    entity_id: input_boolean.livingroom_fan
+    to: 'off'
+    from: 'on'
+  action:
+    - service: script.turn_on
+      entity_id: script.livingroom_fan_off
+#####################################################################################
+#turn down media volume
+- alias: "turn down media volume"
+  trigger:
+    platform: time
+    at: '22:00:00'
+  action:
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.home
+        volume_level: 0.3
+
+- alias: "turn up media volume"
+  trigger:
+    platform: time
+    at: '06:55:00'
+  action:
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.bedroom
+        volume_level: 0.5
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.livingroom
+        volume_level: 1.0
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.office
+        volume_level: 1.0
+#####################################################################################
+#####################################################################################
+# #turn off tv at 10pm
+# - alias: "turn off tv at 10pm"
+#   trigger:
+#     platform: time
+#     at: '22:00:00'
+#   condition:
+#     condition: state  
+#     entity_id: binary_sensor.tv_mode
+#     state: 'on'
+#   action:
+#     - service: script.turn_on
+#       entity_id: script.livingroom_tv_off
+#     - service: media_player.volume_set
+#       data:
+#         volume_level: 1.0
+#         entity_id: media_player.livingroom
+#     - service: notify.google_broadcast
+#       data:
+#         message: 'It is bed time guys, I have turned off tv now'
+#         entity_id: media_player.livingroom
+#     - service: input_boolean.turn_on
+#       data:
+#         entity_id: input_boolean.do_not_disturb
+##########################################################################################
+#turn on sleep mode at 10pm
+- alias: "turn on sleep mode"
+  trigger:
+    platform: template
+    value_template: "{{ states('sensor.time') == (states.input_datetime.bed_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+  action:
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.sleep_mode
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.announcement_mode        
+#turn off sleep mode at 7am
+- alias: "turn off sleep mode"
+  trigger:
+    platform: template
+    value_template: "{{ states('sensor.time') == (states.input_datetime.morning_alarm_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+  action:
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.sleep_mode
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.announcement_mode        
+
+##########################################################################################
+#turn workday announcements trigger on
+- alias: "turn workday announcements trigger on"
+  trigger:
+    platform: template
+    value_template: "{{ states('sensor.time') == (states.input_datetime.morning_alarm_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+  condition:
+    condition: state
+    entity_id: binary_sensor.workday
+    state: 'on'
+  action:
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.workday_announcements_trigger
+#workday_announcements
+- alias: "workday announcements"
+  trigger:
+    platform: time_pattern
+    minutes: '/15'
+  condition:
+    - condition: state
+      entity_id: input_boolean.workday_announcements_trigger
+      state: 'on'
+  action:
+    - service: python_script.notify
+      data_template:
+        message: "<speak>It's {{ now() | as_timestamp | timestamp_custom('%I:%M')}} now</speak>"
+        announce: 1
+
+#turn workday announcements trigger off
+- alias: "turn workday announcements trigger off"
+  trigger:
+    platform: time
+    at: '10:30:00'
+  action:
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.workday_announcements_trigger
+
+
+########################################################################################
+#turn on gallery light at night
+- alias: "turn on gallery light at night"
+  trigger:
+    platform: state
+    to: 'on'
+    entity_id: binary_sensor.bedroom_door, binary_sensor.familyroom_door, binary_sensor.office_door
+  condition:
+    condition: time
+    after: '22:00:00'
+    before: '07:00:00'
+  action:
+    - service: light.turn_on
+      data:
+        entity_id: light.gallery_light
+    # - service: python_script.notify
+    #   data_template:
+    #     message: '{{trigger.to_state}}'
+    - service: input_select.select_option
+      data_template:
+        entity_id: input_select.last_door_opened
+        option: '{{trigger.to_state.entity_id.split(".")[1]}}'
+
+
+#turn off gallery light at night
+- alias: "turn off gallery light at night"
+  trigger:
+    platform: state
+    to: 'off'
+    entity_id: binary_sensor.bedroom_door, binary_sensor.family_door, binary_sensor.office_door
+  condition:
+    - condition: time
+      after: '22:00:00'
+      before: '07:00:00'
+    - condition: template
+      value_template: '{{ trigger.to_state.entity_id.split(".")[1] == states.input_select.last_door_opened.state}}'  
+  action:
+    - service: light.turn_off
+      data:
+        entity_id: light.gallery_light
+#############################################################################################################
+#cleaning the kitchen
+- alias: "cleaning the kitchen"
+  trigger:
+    platform: time
+    at: '21:30:00'
+  action:
+    # - service: tts.amazon_polly_say
+    #   data_template:
+    #     entity_id: 'media_player.{{states.input_select.broadcast_speaker.state}}'
+    - service: python_script.notify
+      data_template:
+        message: '<speak><s><prosody volume="loud">krpya dhayan de!</prosody></s><p>Shanta-bai kitchen saaf karne jaa rahi hai</p></speak>'
+        announce: 1
+    - delay: '00:00:05'
+    - service: script.turn_on
+      data:
+        entity_id: script.xiaomi_vacuum_clean_kitchen
+
+#cleaning the hall
+- alias: "cleaning the hall"
+  trigger:
+    platform: time
+    at: '21:45:00'
+  condition:
+    condition: time
+    weekday:
+      - mon
+      - wed
+      - fri
+  action:
+    # - service: tts.amazon_polly_say
+    #   data_template:
+    #     entity_id: 'media_player.{{states.input_select.broadcast_speaker.state}}'
+    - service: python_script.notify
+      data_template:
+        message: '<speak><s><prosody volume="loud">krpya dhayan de!</prosody></s><p>Shanta-bai abhi hall saaf karegi</p></speak>'
+        announce: 1
+    - delay: '00:00:05'        
+    - service: script.turn_on
+      data:
+        entity_id: script.xiaomi_vacuum_clean_hall

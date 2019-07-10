@@ -1,0 +1,12 @@
+
+  - platform: spotify
+    client_id: !secret spotify_client_id
+    client_secret: !secret spotify_client_secret
+    aliases:
+        aca284739cb7a61bd37df07f7f77238646c836c3: 'SP3'
+        33ef4507c9b8cab6b8d4f8b7ab74f648e794908f: 'GlaxyS7Edge'
+        df9b95798d123a24f0d62289b1b5346e: 'Office'
+        e506539d1b492b1b316570877034868aabbbc076: 'NUC'
+
+
+

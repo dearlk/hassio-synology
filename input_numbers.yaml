@@ -1,0 +1,14 @@
+  
+  notify_ttls_lalit:
+    name: Lalit TTLS
+    initial: 5
+    min: 5
+    max: 15
+    step: 5
+
+  notify_ttls_jyoti:
+    name: Jyoti TTS
+    initial: 5
+    min: 5
+    max: 15
+    step: 5

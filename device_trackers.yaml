@@ -1,0 +1,38 @@
+
+  #- platform: owntracks
+  # - platform: gpslogger
+
+  - platform: nmap_tracker
+    interval_seconds: 60
+    hosts: 192.168.1.0/24
+    home_interval: 5
+    exclude:
+      - 192.168.1.1
+      - 192.168.1.9
+      - 192.168.1.165
+
+  # - platform: googlehome
+  #   host: 192.168.1.132
+
+  # - platform: googlehome
+  #   host: 192.168.1.143
+
+  # - platform: googlehome
+  #   host: 192.168.1.2
+
+  - platform: composite
+    name: lalit
+    time_as: local
+    entity_id: 
+      - device_tracker.lalit_gpslogger
+      - device_tracker.lalit_nmap
+      - device_tracker.lalit_zanzito
+
+  - platform: composite
+    name: jyoti
+    time_as: local
+    entity_id: 
+      - device_tracker.jyoti_gpslogger
+      - device_tracker.jyoti_nmap
+      - device_tracker.jyoti_zanzito
+

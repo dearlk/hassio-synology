@@ -1,0 +1,70 @@
+# No one in familyroom
+- alias: No one in familyroom
+  trigger:
+    entity_id: binary_sensor.familyroom_motion
+    platform: state
+    to: 'off'
+    from: 'on'
+    for: 
+      hours: "00"
+      minutes: "30"
+      seconds: "00"
+  condition:
+    condition: and
+    conditions:
+      - condition: time
+        after: '09:00:00'
+        before: '21:00:00'
+      - condition: state
+        entity_id: input_boolean.familyroom_presence_check
+        state: 'on'
+      # - condition: state
+      #   state: 'on'
+      #   entity_id: binary_sensor.workday
+  action:
+    - service: python_script.notify
+      data:
+        message: "Looks like no one is in familyroom, switching off everyting in familyroom"
+        text: 1
+    - service: homeassistant.turn_on
+      data:
+        entity_id: script.shutdown_familyroom
+    - service: homeassistant.turn_off
+      data:
+        entity_id: input_boolean.familyroom_presence_check
+############################################################################
+- alias: someone in familyroom
+  trigger:
+    entity_id: binary_sensor.familyroom_motion
+    platform: state
+    to: 'on'
+    from: 'off'
+  action:
+    - service: homeassistant.turn_on
+      data:
+        entity_id: input_boolean.familyroom_presence_check
+############################################################################
+- alias: turn on family bathroom light on motion
+  trigger:
+    entity_id: binary_sensor.family_bathroom_motion
+    platform: state
+    to: 'on'
+    from: 'off'
+  action:
+    - service: homeassistant.turn_on
+      data:
+        entity_id: light.family_bathroom_light
+############################################################################
+- alias: turn off family bathroom light if no motion
+  trigger:
+    entity_id: binary_sensor.family_bathroom_motion
+    platform: state
+    to: 'off'
+    for:
+      hours: "00"
+      minutes: "05"
+      seconds: "00" 
+  action:
+    - service: homeassistant.turn_off
+      data:
+        entity_id: light.family_bathroom_light

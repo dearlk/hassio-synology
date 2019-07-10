@@ -1,0 +1,68 @@
+# reached office
+- alias: Jyoti Reached Office
+  action:
+    data:
+      message: <speak>Jyoti has reached office now</speak>
+    service: python_script.notify
+  trigger:
+    entity_id: device_tracker.jyoti
+    event: enter
+    platform: zone
+    zone: zone.UBS
+# left office
+- alias: Jyoti Left Office
+  action:
+    data:
+      message: <speak>Jyoti has left office now</speak>
+    service: python_script.notify
+  trigger:
+    entity_id: device_tracker.jyoti
+    event: leave
+    platform: zone
+    zone: zone.UBS
+# reached home
+- alias: Jyoti Reached home
+  action:
+    - service: python_script.notify
+      data:
+        message: <speak>Jyoti has reached home now</speak>
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.jyoti_at_home
+  trigger:
+    entity_id: device_tracker.jyoti
+    event: enter
+    platform: zone
+    zone: zone.home
+# left home
+- alias: Jyoti Left home
+  action:
+    - service: python_script.notify
+      data:
+        message: <speak>Jyoti has left home now</speak>
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.jyoti_at_home
+  trigger:
+    entity_id: device_tracker.jyoti
+    event: leave
+    platform: zone
+    zone: zone.home
+
+
+- alias: Jyoti is travelling
+  initial_state: true
+  trigger:
+    platform: event
+    event_type: places_state_update
+  condition:
+    - condition: template
+      value_template: '{{ trigger.event.data.entity == "jyoti" }}'
+    - condition: template
+      value_template: '{{ trigger.event.data.devicetracker_zone != "home" }}'
+  action:
+  - service: python_script.notify
+    data_template:
+      message: >
+        <speak>
+        {{trigger.event.data.entity}} is traveling {{trigger.event.data.direction}}. She's reached {{trigger.event.data.place_name}}
+        </speak>
+       

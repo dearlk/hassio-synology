@@ -1,0 +1,35 @@
+
+  AutomateLights:
+    speech:
+      text: Turning {{ action }} the {{ light }}
+    action:
+      - service: notify.pushover
+        data_template:
+          message: Dialogflow request -- {{ action }} {{ light }}
+      - service_template: > 
+           {%- if action == "on" -%} 
+             switch.turn_on 
+           {%- else -%} 
+             switch.turn_off 
+           {%- endif -%}
+        data_template:
+          entity_id: "switch.{{light | replace(' ', '_')}}"
+  AutomateLamps:
+    speech:
+      text: Turning {{ action }} the {{ lamp }}
+    action:
+      - service: notify.pushover
+        data_template:
+          message: Dialogflow request -- {{ action }} {{ lamp }} 
+      - service_template: > 
+           {%- if action == "on" -%} 
+             switch.turn_on 
+           {%- else -%} 
+             switch.turn_off 
+           {%- endif -%}
+        data_template:
+          entity_id: "switch.{{lamp | replace(' ', '_')}}"
+          
+
+
+  

@@ -1,0 +1,99 @@
+
+  
+  - platform: tod
+    name: Morning
+    after: sunrise
+    before: '10:00'
+
+  - platform: tod
+    name: Evening
+    after: sunset
+    before: '22:00:00'
+
+  - platform: tod
+    name: Night
+    after: '22:00:00'
+    before: sunrise
+
+  - platform: ping
+    host: !secret livingroom_tv_ip
+    name: livingroom_tv
+    count: 2
+    scan_interval: 30
+
+  - platform: template
+    sensors:
+      # jyoti_home_towards:
+      #   friendly_name: jyoti home towards
+      #   value_template: '{{ states.proximity.jyoti_home.attributes.dir_of_travel == "towards"  and states.proximity.jyoti_home.state | int < 7 }}'
+      #  # value_template: '{{ states.proximity.jyoti_home.state | int < 7 }}'
+      # jyoti_work_towards:
+      #   friendly_name: jyoti work towards
+      #   value_template: '{{ states.proximity.jyoti_work.attributes.dir_of_travel == "towards" and states.proximity.jyoti_work.state | int < 7 }}'
+      #  # value_template: '{{ states.proximity.jyoti_work.state | int < 7 }}'
+      # lalit_home_towards:
+      #   friendly_name: lalit home towards
+      #   value_template: '{{ states.proximity.lalit_home.attributes.dir_of_travel == "towards" and states.proximity.lalit_home.state | int < 17 }}'
+      #   #value_template: '{{ states.proximity.lalit_home.state | int < 17 }}'
+      # lalit_work_towards:
+      #   friendly_name: lalit work towards
+      #   value_template: '{{ states.proximity.lalit_work.attributes.dir_of_travel == "towards" and states.proximity.lalit_work.state | int < 17}}' 
+      #   #value_template: '{{ states.proximity.lalit_work.state | int < 15}}' 
+      workday:
+        friendly_name: workday
+        value_template: '{{ (states.sun.sun.state in ("below_horizon","above_horizon")) and (now().weekday() < 5) and (states.calendar.holidays_in_singapore.state == "off") }}'
+        entity_id: sun.sun
+      announcement_mode:
+        friendly_name: Announcement Mode
+        value_template: '{{ (states.input_boolean.announcement_mode.state == "on") }}'
+        entity_id: input_boolean.announcement_mode
+      sleep_mode:
+        friendly_name: Sleep Mode
+        value_template: '{{ (states.input_boolean.sleep_mode.state == "on") }}'
+        entity_id: input_boolean.sleep_mode
+      tv_mode:
+        friendly_name: Livingroom Tv
+        value_template: '{{ (states.binary_sensor.livingroom_tv.state == "on") }}'
+        entity_id: binary_sensor.livingroom_tv
+
+  # - platform: bayesian
+  #   prior: 0.5
+  #   name: lalit at home
+  #   probability_threshold: 0.66
+  #   observations:
+  #     - entity_id: device_tracker.lalit_zanzito
+  #       prob_given_true: 0.8
+  #       prob_given_false: 0.3
+  #       platform: state
+  #       to_state: home
+  #     - entity_id: device_tracker.lalit_nmap
+  #       prob_given_true: 1.0
+  #       prob_given_false: 0.7
+  #       platform: state
+  #       to_state: home
+  #     - entity_id: device_tracker.lalit_gpslogger
+  #       prob_given_true: 0.6
+  #       prob_given_false: 0.5
+  #       platform: state
+  #       to_state: home
+
+  # - platform: bayesian
+  #   prior: 0.5
+  #   name: jyoti at home
+  #   probability_threshold: 0.75
+  #   observations:
+  #     - entity_id: device_tracker.jyoti_zanzito
+  #       prob_given_true: 0.8
+  #       prob_given_false: 0.3
+  #       platform: state
+  #       to_state: home
+  #     - entity_id: device_tracker.jyoti_nmap
+  #       prob_given_true: 1.0
+  #       prob_given_false: 0.7
+  #       platform: state
+  #       to_state: home
+  #     - entity_id: device_tracker.jyoti_gpslogger
+  #       prob_given_true: 0.6
+  #       prob_given_false: 0.5
+  #       platform: state
+  #       to_state: home

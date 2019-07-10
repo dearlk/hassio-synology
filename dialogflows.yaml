@@ -1,0 +1,33 @@
+
+intent_script:
+  AutomateAll:
+    speech:
+      text: Turning {{ action }} the {{ entity }} in {{ room }}
+    action:
+      - service: notify.pushbullet
+        data_template:
+          message: Dialogflow request -- Turning {{ action }} the {{ entity }} in {{ room }}
+      - service_template: > 
+           {%- if action == "on" -%} 
+             switch.turn_on 
+           {%- else -%} 
+             switch.turn_off 
+           {%- endif -%}
+        data_template:
+          entity_id: "switch.{{room | replace(' ', '_')}}_{{entity  | replace(' ', '_')}}"
+
+  TurnLights:
+    speech:
+      text: Turning {{ Room }} lights {{ OnOff }}
+    action:
+      - service: notify.pushbullet
+        data_template:
+          message: Someone asked via apiai to turn {{ Room }} lights {{ OnOff }}
+      - service_template: >
+          {%- if OnOff == "on" -%}
+            switch.turn_on
+          {%- else -%}
+            switch.turn_off
+          {%- endif -%}
+        data_template:
+          entity_id: "switch.light_{{ Room | replace(' ', '_') }}"        

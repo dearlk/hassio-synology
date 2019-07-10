@@ -1,0 +1,24 @@
+
+  lalit_home:
+    zone: home
+    devices:
+      - device_tracker.lalit
+    tolerance: 50
+
+  lalit_work:
+    zone: DB
+    devices:
+      - device_tracker.lalit
+    tolerance: 50
+
+  jyoti_work:
+    zone: UBS
+    devices:
+      - device_tracker.jyoti
+    tolerance: 50
+
+  jyoti_home:
+    zone: home
+    devices:
+      - device_tracker.jyoti
+    tolerance: 50

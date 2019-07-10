@@ -1,0 +1,156 @@
+
+  - platform: time_date
+    display_options:
+      - 'time'
+      # - 'date'
+      # - 'date_time'
+
+  # - platform: google_geocode
+  #   name: lalit
+  #   origin: device_tracker.lalit
+  #   options: formatted_address
+  #   api_key: !secret google_geocode_api_key
+
+  # - platform: google_geocode
+  #   name: jyoti
+  #   origin: device_tracker.jyoti
+  #   options: formatted_address
+  #   api_key: !secret google_geocode_api_key
+
+
+  # - platform: google_travel_time
+  #   name: jyoti work to home travel time
+  #   api_key: !secret google_travel_time_api_key
+  #   origin: device_tracker.jyoti
+  #   destination: zone.home
+  #   options:
+  #     mode: driving
+  # - platform: google_travel_time
+  #   name: jyoti home to work travel time
+  #   api_key: !secret google_travel_time_api_key
+  #   origin: device_tracker.jyoti
+  #   destination: zone.UBS
+  #   options:
+  #     mode: driving
+
+
+  # - platform: google_travel_time
+  #   name: lalit work to home travel time
+  #   api_key: !secret google_travel_time_api_key
+  #   origin: device_tracker.lalit
+  #   destination: zone.home
+  #   options:
+  #     mode: transit
+  #     transit_mode: subway
+  # - platform: google_travel_time
+  #   name: lalit home to work travel time
+  #   api_key: !secret google_travel_time_api_key
+  #   origin: device_tracker.lalit
+  #   destination: zone.DB
+  #   options:
+  #     mode: driving
+
+
+
+  # - platform: moon
+
+
+  # - platform: yr
+  #   name: Weather
+  #   forecast: 24
+  #   monitored_conditions:
+  #     - temperature
+  #     - symbol
+  #     - precipitation
+  #     - windSpeed
+  #     - pressure
+  #     - windDirection
+  #     - humidity
+  #     - fog
+  #     - cloudiness
+  #     - lowClouds
+  #     - mediumClouds
+  #     - highClouds
+  #     - dewpointTemperature
+
+# Speedtest.net
+  # - platform: speedtest
+    # monitored_conditions:
+      # - ping
+      # - download
+      # - upload
+
+#System monitor
+  - platform: systemmonitor
+    entity_namespace: systemmonitor
+    resources:
+    #  - type: disk_use_percent
+    #    arg: /
+      - type: memory_use_percent
+      #- type: load_1m
+     #- type: load_5m
+      #- type: load_15m
+     # - type: network_in
+     #   arg: wlan
+     # - type: network_out
+     #   arg: wlan
+      - type: processor_use
+     # - type: process
+     #   arg: mosquitto
+     # - type: process
+     #   arg: presence
+      #- type: process
+      #  arg: flicd
+      #- type: last_boot
+      #- type: since_last_boot
+
+  #- platform: pi_hole
+
+
+  # - platform: darksky
+  #   api_key: !secret darksky_api_key
+  #   monitored_conditions:
+  #     - summary
+  #     - cloud_cover
+
+  # - platform: rest
+    # resource: https://ml.internalpositioning.com/location?group=smallsponge&user=lalit
+    # value_template: '{{ value_json.users.lalit[0].location }}'
+    # method: GET
+    # name: Room
+    # scan_interval: 5
+
+  # - platform: mqtt
+    # name: mqtt received 
+    # state_topic: "lalit/switch/#"
+    # retain: false
+
+
+  # - platform: uber
+  #   start_latitude: 1.398251
+  #   start_longitude: 103.916706
+  #   end_latitude: 1.3356338
+  #   end_longitude: 103.9660896
+  #   server_token: !secret uber_server_token
+  #   product_ids:
+  #     - 'df231aa9-4583-4add-9526-5018aa450a9c'
+  #     - '254b4950-0240-4105-8e66-b740cf1b812f'
+
+
+  - platform: places
+    name: lalit
+    devicetracker_id: device_tracker.lalit
+    options: zone, place
+    map_provider: google
+    map_zoom: 18
+    home_zone: zone.home
+    api_key: !secret email_lalit
+
+  - platform: places
+    name: jyoti
+    devicetracker_id: device_tracker.jyoti
+    options: zone, place
+    map_provider: google
+    map_zoom: 17
+    home_zone: zone.home
+    api_key: !secret email_lalit

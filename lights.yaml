@@ -1,0 +1,226 @@
+
+  - platform: template
+    lights:
+      #livingroom lights
+      # studio_light:
+      #   friendly_name: studio light
+      #   value_template: "{{ states.switch.livingroom_studio_light.state }}"
+      #   turn_on:
+      #     service: switch.turn_on
+      #     data:
+      #       entity_id: switch.livingroom_studio_light
+      #   turn_off:
+      #     service: switch.turn_off
+      #     data:
+      #       entity_id: switch.livingroom_studio_light
+      studio_light:
+        friendly_name: studio light
+        value_template: "{{ states.input_boolean.studio_light_state.state }}"
+        turn_on:
+          service: script.turn_on
+          data:
+            entity_id: script.studio_light_on
+        turn_off:
+          service: script.turn_on
+          data:
+            entity_id: script.studio_light_off
+      center_light:
+        friendly_name: center light
+        value_template: "{{ states.switch.livingroom_center_light.state }}"
+        turn_on:
+          service: switch.turn_on
+          data:
+            entity_id: switch.livingroom_center_light
+        turn_off:
+          service: switch.turn_off
+          data:
+            entity_id: switch.livingroom_center_light
+      door_light:
+        friendly_name: door light
+        value_template: "{{ states.switch.livingroom_door_light.state }}"
+        turn_on:
+          service: switch.turn_on
+          data:
+            entity_id: switch.livingroom_door_light
+        turn_off:
+          service: switch.turn_off
+          data:
+            entity_id: switch.livingroom_door_light
+      gallery_light:
+        friendly_name: gallery light
+        value_template: "{{ states.switch.livingroom_gallery_light.state }}"
+        turn_on:
+          service: switch.turn_on
+          data:
+            entity_id: switch.livingroom_gallery_light
+        turn_off:
+          service: switch.turn_off
+          data:
+            entity_id: switch.livingroom_gallery_light
+      #livingroom lamps
+      dining_lamp:
+        friendly_name: dining lamp
+        value_template: "{{ states.switch.livingroom_dining_lamp.state }}"
+        turn_on:
+          service: switch.turn_on
+          data:
+            entity_id: switch.livingroom_dining_lamp
+        turn_off:
+          service: switch.turn_off
+          data:
+            entity_id: switch.livingroom_dining_lamp
+      sofa_lamp:
+        friendly_name: sofa lamp
+        value_template: "{{ states.switch.livingroom_sofa_lamp.state }}"
+        turn_on:
+          service: switch.turn_on
+          data:
+            entity_id: switch.livingroom_sofa_lamp
+        turn_off:
+          service: switch.turn_off
+          data:
+            entity_id: switch.livingroom_sofa_lamp
+      console_lamp:
+        friendly_name: console lamp
+        value_template: "{{ states.switch.livingroom_tv_lamp.state }}"
+        turn_on:
+          service: switch.turn_on
+          data:
+            entity_id: switch.livingroom_tv_lamp
+        turn_off:
+          service: switch.turn_off
+          data:
+            entity_id: switch.livingroom_tv_lamp
+      #family bathroom light
+      family_bathroom_light:
+        friendly_name: family bathroom light
+        value_template: "{{ states.switch.family_bathroom_light.state }}"
+        turn_on:
+          service: switch.turn_on
+          data:
+            entity_id: switch.family_bathroom_light
+        turn_off:
+          service: switch.turn_off
+          data:
+            entity_id: switch.family_bathroom_light
+
+      #family bedroom light
+      familyroom_light:
+        friendly_name: family bedroom light
+        value_template: "{{ states.switch.family_bedroom_light.state }}"
+        turn_on:
+          service: switch.turn_on
+          data:
+            entity_id: switch.family_bedroom_light
+        turn_off:
+          service: switch.turn_off
+          data:
+            entity_id: switch.family_bedroom_light
+      
+      #temple lamp
+      temple_lamp:
+        friendly_name: temple lamp
+        value_template: "{{ states.switch.familyroom_temple_lamp.state }}"
+        turn_on:
+          service: switch.turn_on
+          data:
+            entity_id: switch.familyroom_temple_lamp
+        turn_off:
+          service: switch.turn_off
+          data:
+            entity_id: switch.familyroom_temple_lamp 
+      
+      #master bathroom light
+      bathroom_light:
+        friendly_name: bathroom light
+        value_template: "{{ states.switch.bathroom_light.state }}"
+        turn_on:
+          service: switch.turn_on
+          data:
+            entity_id: switch.bathroom_light
+        turn_off:
+          service: switch.turn_off
+          data:
+            entity_id: switch.bathroom_light            
+      
+      #bedroom lamp
+      bedroom_lamp:
+        friendly_name: bedroom lamp
+        value_template: "{{ states.switch.bedroom_lamp.state }}"
+        turn_on:
+          service: switch.turn_on
+          data:
+            entity_id: switch.bedroom_lamp
+        turn_off:
+          service: switch.turn_off
+          data:
+            entity_id: switch.bedroom_lamp 
+ 
+      #bedroom lamp
+      bedroom_light:
+        friendly_name: bedroom light
+        value_template: "{{ states.switch.bedroom_light.state }}"
+        turn_on:
+          service: switch.turn_on
+          data:
+            entity_id: switch.bedroom_light
+        turn_off:
+          service: switch.turn_off
+          data:
+            entity_id: switch.bedroom_light 
+ 
+
+      #office light
+      office_light:
+        friendly_name: office light
+        value_template: "{{ states.switch.office_light.state }}"
+        turn_on:
+          service: switch.turn_on
+          data:
+            entity_id: switch.office_light
+        turn_off:
+          service: switch.turn_off
+          data:
+            entity_id: switch.office_light
+
+      #family light
+      family_light:
+        friendly_name: family light
+        value_template: "{{ states.switch.family_light.state }}"
+        turn_on:
+          service: switch.turn_on
+          data:
+            entity_id: switch.family_light
+        turn_off:
+          service: switch.turn_off
+          data:
+            entity_id: switch.family_light
+
+      #kitchen light
+      kitchen_light:
+        friendly_name: kitchen light
+        value_template: "{{ states.switch.kitchen_lights.state }}"
+        turn_on:
+          service: switch.turn_on
+          data:
+            entity_id: switch.kitchen_lights
+        turn_off:
+          service: switch.turn_off
+          data:
+            entity_id: switch.kitchen_lights
+
+  # - platform: group
+  #   name: Livingroom Lights
+  #   entities:
+  #     - light.livingroom_door_light
+  #     - light.livingroom_center_light
+  #     - light.livingroom_studio_light
+  #     - light.livingroom_gallery_light
+
+  # - platform: group
+  #   name: Livingroom Lamps
+  #   entities:
+  #     - light.livingroom_dining_lamp
+  #     - light.livingroom_sofa_lamp
+  #     - light.livingroom_tv_lamp
+      

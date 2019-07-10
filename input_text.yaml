@@ -1,0 +1,8 @@
+
+
+  broadcast_message:
+    name: Broadcast Message 
+    initial: ''
+  google_command:
+    name: Google command
+    initial: ''

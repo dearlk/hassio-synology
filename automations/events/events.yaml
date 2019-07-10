@@ -1,0 +1,228 @@
+#sunset lights on if someone at home
+- alias: sunset lights on
+  initial_state: true
+  trigger:
+    platform: sun
+    event: sunset
+    #offset: "-00:30:00"
+  # condition: 
+  #   condition: and
+  #   conditions:
+  #     - condition: state
+  #       entity_id: group.all_devices
+  #       state: 'home'
+  #     - condition: state
+  #       entity_id: group.sunset_lights
+  #       state: 'off'
+  action:
+    - service: homeassistant.turn_on
+      entity_id: group.sunset_lights
+
+
+#sunset lights on on arrival
+- alias: on arrival sunset lights on 
+  initial_state: true
+  trigger:
+    platform: state
+    to: 'home'
+    from: 'not_home'
+    entity_id: group.all_devices
+  condition: 
+    - condition: sun
+      after: sunset
+    - condition: state
+      state: 'off'
+      entity_id: group.sunset_lights
+    - condition: time
+      before: "00:00:00"
+  action:
+    - service: switch.turn_on
+      entity_id: group.sunset_lights
+    - service: light.turn_on
+      entity_id: light.gateway_light      
+    - service: python_script.notify
+      data:
+        message: "Someone just reached home, switching on sunset lights!"
+        text: 1
+
+
+#sunset lights off
+- alias: sunset lights off
+  initial_state: true
+  trigger:
+    platform: time
+    at: '00:00:00'
+  condition: []
+  action:
+    - service: homeassistant.turn_off
+      entity_id: group.sunset_lights
+    # - service: light.turn_on
+    #   entity_id: light.gateway_light      
+
+##############################################################################################################################
+#no one at home
+- alias: no one at home
+  initial_state: true
+  trigger:
+    platform: state
+    to: 'not_home'
+    entity_id: group.all_devices
+    for:
+      hours: 0
+      minutes: 15
+      seconds: 0
+  condition: []
+  action:
+    - service: python_script.notify
+      data:
+        message: "Looks like no one at home for last 15 minutes, shutting down everything!"
+        text: 1
+    - service: script.turn_on
+      entity_id: script.shutdown_everything
+##############################################################################################################################
+#good morning
+- alias: Good Morning
+  initial_state: false
+  trigger:
+    platform: template
+    value_template: "{{ states('sensor.time') == (states.input_datetime.morning_alarm_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+  condition:
+    condition: state
+    entity_id: binary_sensor.workday
+    state: 'on'
+  action:
+    # - service: script.turn_on
+    #   data:
+    #     entity_id: script.turn_up_media_volume
+    - service: media_extractor.play_media
+      data:
+        entity_id: media_player.livingroom
+        #media_content_id: "https://www.youtube.com/watch?v=YykjpeuMNEk"
+        media_content_id: "https://www.youtube.com/watch?v=ndx04oXI2Wg"
+        #media_content_id: "https://dearlk.duckdns.org:8123/local/birds.mp3"
+        media_content_type: "music"
+    # - service: switch.turn_off
+    #   entity_id: switch.bedroom_aircon
+
+
+#good morning
+- alias: Good Morning Spotify Alarm
+  initial_state: true
+  trigger:
+    - platform: template
+      value_template: "{{ states('sensor.time') == (states.input_datetime.morning_alarm_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+    - platform: template
+      value_template: "{{ states('sensor.time') == (states.input_datetime.bed_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+  condition:
+    condition: state
+    entity_id: binary_sensor.workday
+    state: 'on'
+  action:
+    - service: script.turn_on
+      data:
+        entity_id: script.spotifydemo
+
+##############################################################################################################################
+# #temple lamp ####################################################   
+- action:
+  - data:
+      entity_id: switch.family_temple_lamp
+    service: switch.turn_on
+  alias: switch on temple lamp at sunset
+  condition: []
+  trigger:
+  - event: sunset
+    platform: sun
+- action:
+  - data:
+      entity_id: switch.family_temple_lamp
+    service: switch.turn_off
+  alias: switch off temple lamp at 0700hrs
+  condition: []
+  id: '1515145091015'
+  trigger:
+  - at: "07:00"
+    platform: time
+####################################################    
+
+- action:
+  - data:
+      message: Home Assistant is shutting down...
+      text: 1
+      tell: lalit
+    service: python_script.notify
+  alias: Shutdown Notification
+  id: '1515164764817'
+  trigger:
+  - event: shutdown
+    platform: homeassistant
+- action:
+  - data:
+      message: Home Assistant is starting now...
+      text: 1
+      tell: lalit
+    service: python_script.notify
+  - data:
+      name: 'darkcyan'
+    service: frontend.set_theme  
+  alias: Start Notification
+  id: '1515164840930'
+  trigger:
+  - event: start
+    platform: homeassistant    
+####################################################    
+
+- alias: Hourly Clock Sound
+  trigger:
+    platform: time_pattern
+    hours: '/1'
+  condition:
+    - condition: state
+      state: 'not_home'
+      entity_id: device_tracker.jyoti
+  action:
+    - service: python_script.notify
+      data_template: 
+        message: "It's {{ as_timestamp(now()) | timestamp_custom('%I', True) | int }} O'clock now"
+        announce: 1
+        text: 1
+        room: "{{ states.input_select.clock_speaker.state }}"
+    #- service: media_extractor.play_media
+    - service: media_player.play_media
+      data_template:
+        entity_id: "media_player.{{ states.input_select.clock_speaker.state }}"
+        #media_content_id: "https://dearlk.duckdns.org:8123/local/{{as_timestamp(now()) | timestamp_custom('%I', True)}}.mp3"
+        media_content_id: "https://dearlk.duckdns.org:8123/local/{{ as_timestamp(now()) | timestamp_custom('%I', True) | int }}.mp3"
+        media_content_type: "music" 
+
+
+# #automation triggered ####################################################   
+- alias : automation triggered
+  trigger: 
+    platform: event
+    event_type: automation_triggered
+  condition:
+    - condition: template
+      value_template: '{{trigger.event.data.entity_id != "automation.automation_triggered"}}'
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.automation_trigger_notification_mode
+  action:
+    - service: python_script.notify
+      data_template:
+        message: '{{trigger.event.data.name}}'
+        text: 1
+        tell: lalit
+        
+
+#################################################### 
+- alias: IFTTT trigger
+  trigger:
+    platform: event
+    event_type: ifttt_webhook_received
+    event_data:
+      action: call_service
+  action:
+    service_template: '{{ trigger.event.data.service }}'
+    data_template:
+      entity_id: '{{ trigger.event.data.entity_id }}'

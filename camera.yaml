@@ -1,0 +1,24 @@
+
+  - platform: foscam
+    ip: !secret livingroom_camera_host
+    username: !secret livingroom_camera_user
+    password: !secret livingroom_camera_pass
+    name: livingroom
+
+  - platform: foscam
+    ip: !secret bedroom_camera_host
+    username: !secret bedroom_camera_user
+    password: !secret bedroom_camera_pass
+    name: bedroom
+
+  - platform: local_file
+    file_path: /config/www//office.jpg
+    name: office
+
+  - platform: local_file
+    file_path: /config/www//familyroom.jpg
+    name: familyroom
+
+  - platform: local_file
+    file_path: /config/www//kitchen.jpg
+    name: kitchen

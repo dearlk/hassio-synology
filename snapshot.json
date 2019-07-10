@@ -1,0 +1,69 @@
+{
+  "slug": "ae89df06",
+  "name": "hassio_fullsnapshot_daily_20190526",
+  "date": "2019-05-26T04:59:00.239622+00:00",
+  "type": "full",
+  "homeassistant": {
+    "watchdog": true,
+    "ssl": false,
+    "port": 8123,
+    "boot": true,
+    "wait_boot": 600,
+    "version": "0.93.2",
+    "refresh_token": "e46bca8deca4ac7a97c1fbb8251d8ff53ad61a6a0875a7eed4fe55bd3823c8f7ca3e2d2a1868ef8d430a62457b08e8240e262f896c73001530e59d4aa60acfcc",
+    "password": null
+  },
+  "addons": [
+    {
+      "slug": "7be23ff5_dropbox_sync",
+      "name": "Dropbox Sync",
+      "version": "1.3.0",
+      "size": 0.0
+    },
+    {
+      "slug": "core_samba",
+      "name": "Samba share",
+      "version": "8.1",
+      "size": 0.0
+    },
+    {
+      "slug": "local_google_assistant_webserver",
+      "name": "Google Assistant Webserver",
+      "version": "0.0.4",
+      "size": 0.0
+    },
+    {
+      "slug": "core_mosquitto",
+      "name": "Mosquitto broker",
+      "version": "4.2",
+      "size": 0.0
+    },
+    {
+      "slug": "a0d7b954_appdaemon3",
+      "name": "AppDaemon",
+      "version": "1.6.0",
+      "size": 0.0
+    },
+    {
+      "slug": "core_ssh",
+      "name": "SSH server",
+      "version": "5.4",
+      "size": 0.01
+    },
+    {
+      "slug": "core_duckdns",
+      "name": "Duck DNS",
+      "version": "1.6",
+      "size": 0.01
+    }
+  ],
+  "folders": [
+    "ssl",
+    "share",
+    "addons/local",
+    "homeassistant"
+  ],
+  "repositories": [
+    "https://github.com/hassio-addons/repository"
+  ]
+}

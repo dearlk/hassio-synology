@@ -1,0 +1,557 @@
+
+mom:
+  hide_if_away: false
+  icon:
+  mac: A0:28:ED:90:D8:63
+  name: Mom
+  picture: /local/mom.jpg
+  track: true
+
+lalit:
+  hide_if_away: false
+  icon:
+  mac:
+  name: Lalit
+  picture: /local/lalit.jpg
+  track: true
+
+jyoti:
+  hide_if_away: false
+  icon:
+  mac:
+  name: Jyoti
+  picture: /local/jyoti.jpg
+  track: true
+  
+# jyoti_gpslogger:
+#   hide_if_away: false
+#   icon:
+#   mac: 
+#   name: Jyoti
+#   picture: /local/jyoti.jpg
+#   track: true
+#   vendor:
+# lalit_gpslogger:
+#   hide_if_away: false
+#   icon:
+#   mac: 
+#   name: Lalit
+#   picture: /local/lalit.jpg
+#   track: true
+#   vendor:
+ 
+# lalit_zanzito:
+#   hide_if_away: false
+#   icon:
+#   mac: 
+#   name: Zanzito
+#   picture:
+#   track: true
+# jyoti_zanzito:
+#   hide_if_away: false
+#   icon:
+#   mac: 
+#   name: Zanzito
+#   picture:
+#   track: true
+
+lalit_nmap:
+  hide_if_away: false
+  icon:
+  mac: 8C:F5:A3:5A:86:12
+  name: Nmap
+  picture:
+  track: true
+
+jyoti_nmap:
+  hide_if_away: false
+  icon:
+  mac: 04:D6:AA:09:BD:CF
+  name: Nmap
+  picture:
+  track: true
+  vendor: SAMSUNG ELECTRO-MECHANICS(THAILAND)
+
+
+
+
+703acb3972eb:
+  hide_if_away: false
+  icon:
+  mac: 70:3A:CB:39:72:EB
+  name: 703acb3972eb
+  picture:
+  track: false
+  vendor: unknown
+
+3059b70ac7c0:
+  hide_if_away: false
+  icon:
+  mac: 30:59:B7:0A:C7:C0
+  name: 3059b70ac7c0
+  picture:
+  track: false
+  vendor: Microsoft
+
+001075408662:
+  hide_if_away: false
+  icon:
+  mac: 00:10:75:40:86:62
+  name: 001075408662
+  picture:
+  track: false
+  vendor: unknown
+
+uat_delapic:
+  hide_if_away: true
+  icon: mdi:linux
+  mac: B8:27:EB:B2:E9:44
+  name: Uat
+  picture:
+  track: false
+  vendor: unknown
+
+34ce00eb6e60:
+  hide_if_away: false
+  icon:
+  mac: 34:CE:00:EB:6E:60
+  name: 34ce00eb6e60
+  picture:
+  track: false
+  vendor: unknown
+
+
+
+34ce008fddc9:
+  hide_if_away: false
+  icon:
+  mac: 34:CE:00:8F:DD:C9
+  name: 34ce008fddc9
+  picture:
+  track: false
+  vendor: unknown
+
+
+
+
+
+7451ba3f8429:
+  hide_if_away: false
+  icon:
+  mac: 74:51:BA:3F:84:29
+  name: 7451ba3f8429
+  picture:
+  track: false
+  vendor: unknown
+
+34ce00859d0e:
+  hide_if_away: false
+  icon:
+  mac: 34:CE:00:85:9D:0E
+  name: 34ce00859d0e
+  picture:
+  track: false
+  vendor: unknown
+
+703acb5d271a:
+  hide_if_away: false
+  icon:
+  mac: 70:3A:CB:5D:27:1A
+  name: 703acb5d271a
+  picture:
+  track: false
+  vendor: unknown
+
+600194978e62:
+  hide_if_away: false
+  icon:
+  mac: 60:01:94:97:8E:62
+  name: 600194978e62
+  picture:
+  track: false
+  vendor: unknown
+
+34ea34c98a49:
+  hide_if_away: false
+  icon:
+  mac: 34:EA:34:C9:8A:49
+  name: 34ea34c98a49
+  picture:
+  track: false
+  vendor: unknown
+
+34ea3442c3f3:
+  hide_if_away: false
+  icon:
+  mac: 34:EA:34:42:C3:F3
+  name: 34ea3442c3f3
+  picture:
+  track: false
+  vendor: unknown
+
+dev_delapic:
+  hide_if_away: true
+  icon: mdi:linux
+  mac: B8:27:EB:07:9A:63
+  name: Dev
+  picture:
+  track: false
+  vendor: unknown
+
+48d6d526a5e6:
+  hide_if_away: false
+  icon:
+  mac: 48:D6:D5:26:A5:E6
+  name: 48d6d526a5e6
+  picture:
+  track: false
+  vendor: unknown
+
+test_delapic:
+  hide_if_away: true
+  icon: mdi:linux
+  mac: B8:27:EB:0D:B1:D2
+  name: Test
+  picture:
+  track: false
+  vendor: unknown
+
+f4f5d8d92adc:
+  hide_if_away: false
+  icon:
+  mac: F4:F5:D8:D9:2A:DC
+  name: f4f5d8d92adc
+  picture:
+  track: false
+  vendor: unknown
+
+e4f042391285:
+  hide_if_away: false
+  icon:
+  mac: E4:F0:42:39:12:85
+  name: e4f042391285
+  picture:
+  track: false
+  vendor: unknown
+
+2c3ae83baf90:
+  hide_if_away: false
+  icon:
+  mac: 2C:3A:E8:3B:AF:90
+  name: 2c3ae83baf90
+  picture:
+  track: false
+  vendor: unknown
+
+
+
+gateway_delapic:
+  hide_if_away: true
+  icon: mdi:linux
+  mac: B8:27:EB:47:20:EF
+  name: Gateway
+  picture:
+  track: false
+  vendor: unknown
+
+48d6d58226c5:
+  hide_if_away: false
+  icon:
+  mac: 48:D6:D5:82:26:C5
+  name: 48d6d58226c5
+  picture:
+  track: false
+  vendor: unknown
+
+live_delapic:
+  hide_if_away: true
+  icon: mdi:linux
+  mac: B8:27:EB:39:F6:13
+  name: Live
+  picture:
+  track: false
+  vendor: unknown
+
+
+
+000420fcdf1f:
+  hide_if_away: false
+  icon:
+  mac: 00:04:20:FC:DF:1F
+  name: 000420fcdf1f
+  picture:
+  track: false
+  vendor: Slim Devices, Inc.
+
+
+
+2c3ae83bb416:
+  hide_if_away: false
+  icon:
+  mac: 2C:3A:E8:3B:B4:16
+  name: 2c3ae83bb416
+  picture:
+  track: false
+  vendor: Espressif Inc.
+
+2c3ae83bb9b6:
+  hide_if_away: false
+  icon:
+  mac: 2C:3A:E8:3B:B9:B6
+  name: 2c3ae83bb9b6
+  picture:
+  track: false
+  vendor: Espressif Inc.
+
+2c3ae83bbd40:
+  hide_if_away: false
+  icon:
+  mac: 2C:3A:E8:3B:BD:40
+  name: 2c3ae83bbd40
+  picture:
+  track: false
+  vendor: Espressif Inc.
+
+0024d7cee5a0:
+  hide_if_away: false
+  icon:
+  mac: 00:24:D7:CE:E5:A0
+  name: 0024d7cee5a0
+  picture:
+  track: false
+  vendor: Intel Corporate
+
+4c3488115585:
+  hide_if_away: false
+  icon:
+  mac: 4C:34:88:11:55:85
+  name: 4c3488115585
+  picture:
+  track: false
+
+
+
+54880e8f1b1b:
+  hide_if_away: false
+  icon:
+  mac: 54:88:0E:8F:1B:1B
+  name: 54880e8f1b1b
+  picture:
+  track: false
+
+
+54880e9c37d9:
+  hide_if_away: false
+  icon:
+  mac: 54:88:0E:9C:37:D9
+  name: 54880e9c37d9
+  picture:
+  track: false
+
+34ea3458dcc4:
+  hide_if_away: false
+  icon:
+  mac: 34:EA:34:58:DC:C4
+  name: 34ea3458dcc4
+  picture:
+  track: false
+
+
+
+84a4660876fe:
+  hide_if_away: false
+  icon:
+  mac: 84:A4:66:08:76:FE
+  name: 84a4660876fe
+  picture:
+  track: false
+
+7c49eba17dd2:
+  hide_if_away: false
+  icon:
+  mac: 7C:49:EB:A1:7D:D2
+  name: 7c49eba17dd2
+  picture:
+  track: false
+
+d0270005b854:
+  hide_if_away: false
+  icon:
+  mac: D0:27:00:05:B8:54
+  name: d0270005b854
+  picture:
+  track: false
+
+
+0ccef61a94b9:
+  hide_if_away: false
+  icon:
+  mac: 0C:CE:F6:1A:94:B9
+  name: 0ccef61a94b9
+  picture:
+  track: false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+00_62_6e_93_00_42:
+  hide_if_away: false
+  icon:
+  mac: 00:62:6E:93:00:42
+  name: 00 62 6e 93 00 42
+  picture:
+  track: false
+
+00_62_6e_89_0a_30:
+  hide_if_away: false
+  icon:
+  mac: 00:62:6E:89:0A:30
+  name: 00 62 6e 89 0a 30
+  picture:
+  track: false
+
+00_11_32_a7_29_de:
+  hide_if_away: false
+  icon:
+  mac: 00:11:32:A7:29:DE
+  name: 00 11 32 a7 29 de
+  picture:
+  track: false
+
+44_07_0b_b5_39_ab:
+  hide_if_away: false
+  icon:
+  mac: 44:07:0B:B5:39:AB
+  name: 44 07 0b b5 39 ab
+  picture:
+  track: false
+
+34_ea_34_58_db_f4:
+  hide_if_away: false
+  icon:
+  mac: 34:EA:34:58:DB:F4
+  name: 34 ea 34 58 db f4
+  picture:
+  track: false
+
+a0_a4_c5_74_69_f9:
+  hide_if_away: false
+  icon:
+  mac: A0:A4:C5:74:69:F9
+  name: a0 a4 c5 74 69 f9
+  picture:
+  track: false
+
+04_cf_8c_94_ec_d8:
+  hide_if_away: false
+  icon:
+  mac: 04:CF:8C:94:EC:D8
+  name: 04 cf 8c 94 ec d8
+  picture:
+  track: false
+
+2c_3a_e8_3b_b9_8a:
+  hide_if_away: false
+  icon:
+  mac: 2C:3A:E8:3B:B9:8A
+  name: 2c 3a e8 3b b9 8a
+  picture:
+  track: false
+
+2c_3a_e8_3b_c0_10:
+  hide_if_away: false
+  icon:
+  mac: 2C:3A:E8:3B:C0:10
+  name: 2c 3a e8 3b c0 10
+  picture:
+  track: false
+
+b8_27_eb_52_cf_36:
+  hide_if_away: false
+  icon:
+  mac: B8:27:EB:52:CF:36
+  name: b8 27 eb 52 cf 36
+  picture:
+  track: false
+
+b8_27_eb_58_e4_87:
+  hide_if_away: false
+  icon:
+  mac: B8:27:EB:58:E4:87
+  name: b8 27 eb 58 e4 87
+  picture:
+  track: false
+
+b8_27_eb_e7_bc_11:
+  hide_if_away: false
+  icon:
+  mac: B8:27:EB:E7:BC:11
+  name: b8 27 eb e7 bc 11
+  picture:
+  track: false
+
+b8_27_eb_6c_a3_46:
+  hide_if_away: false
+  icon:
+  mac: B8:27:EB:6C:A3:46
+  name: b8 27 eb 6c a3 46
+  picture:
+  track: false
+
+b8_27_eb_12_75_ba:
+  hide_if_away: false
+  icon:
+  mac: B8:27:EB:12:75:BA
+  name: b8 27 eb 12 75 ba
+  picture:
+  track: false
+
+58_b3_fc_a0_4a_f0:
+  hide_if_away: false
+  icon:
+  mac: 58:B3:FC:A0:4A:F0
+  name: 58 b3 fc a0 4a f0
+  picture:
+  track: false
+
+samsung_galaxy_s7_edge:
+  hide_if_away: false
+  icon:
+  mac:
+  name: Samsung Galaxy S7 edge
+  picture:
+  track: false
+
+54_b2_03_1b_d3_8b:
+  hide_if_away: false
+  icon:
+  mac: 54:B2:03:1B:D3:8B
+  name: 54 b2 03 1b d3 8b
+  picture:
+  track: false
+
+54_b2_03_1b_d3_8a:
+  hide_if_away: false
+  icon:
+  mac: 54:B2:03:1B:D3:8A
+  name: 54 b2 03 1b d3 8a
+  picture:
+  track: false
+
+00_51_ed_a9_95_90:
+  hide_if_away: false
+  icon:
+  mac: 00:51:ED:A9:95:90
+  name: 00 51 ed a9 95 90
+  picture:
+  track: false

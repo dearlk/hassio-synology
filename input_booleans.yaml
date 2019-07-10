@@ -1,0 +1,88 @@
+
+  # notify_home:
+  #   name: Notify everyone to drink water
+  #   initial: off
+  #   icon: mdi:water
+  # # samsung_tv:
+  # #   name: Samsung Smart TV
+  # #   initial: off
+  # #   icon: mdi:television
+
+  # medicine_reminder_flag:
+  #   name: Medicine reminder flag
+  #   initial: off
+  #   icon: mdi:pill
+
+  office_presence_check:
+    name: Familyroom Presence Check Mode
+    initial: off
+    icon: mdi:bedroom
+
+  familyroom_presence_check:
+    name: Familyroom Presence Check Mode
+    initial: off
+    icon: mdi:bedroom
+
+  bedroom_presence_check:
+    name: Bedroom Presence Check Mode
+    initial: off
+    icon: mdi:bedroom
+
+  livingroom_presence_check:
+    name: Livingroom Presence Check Mode
+    initial: off
+    icon: mdi:sofa
+
+  workday_announcements_trigger:
+    name: Workday announcement trigger
+    initial: off
+    icon: mdi:work
+
+  guest_mode:
+    name: Guest Mode 
+    icon: mdi:account
+  do_not_disturb:
+    name: Dont Disturb Mode
+    icon: mdi:sleep
+  vacation_mode:
+    name: Vacation Mode
+    icon: mdi:travel
+  gallary_light_auto_mode:
+    name: Gallary Light Auto Mode
+    icon: mdi:bulb
+  sleep_mode:
+    name: Sleep Mode
+    icon: mdi:night
+  announcement_mode:
+    name: Announcement Mode
+    icon: mdi:night
+
+
+  livingroom_aircon:
+    name: livingroom aircon
+  livingroom_fan:
+    name: livingroom fan
+  studio_light_state:
+    name: studio light state
+  livingroom_tv_state:
+    name: livingroom tv state
+
+  livingroom_fan_state:
+    name: livingroom fan state 
+
+  bedroom_fan_state:
+    name: bedroom fan state 
+
+
+  # jyoti_at_home:
+  #   name: jyoti at home
+  #   initial: on
+  #   icon: mdi:people
+  # lalit_at_home:
+  #   name: lalit at home 
+  #   initial: on
+  #   icon: mdi:people
+
+  automation_trigger_notification_mode:
+    name: Automation Trigger Notification Mode
+    initial: on

@@ -1,0 +1,35 @@
+
+  # - name: html5
+  #   platform: html5
+  #   gcm_api_key: !secret html5_gcm_api_key 
+  #   gcm_sender_id: !secret html5_gcm_sender_id
+
+  - name: google_broadcast
+    platform: rest
+    resource: !secret google_assistant_resource
+
+  - name: google_command
+    platform: rest
+    resource: !secret google_assistant_command_resource
+
+  - name: pushover
+    platform: pushover
+    api_key: !secret pushover_api_key
+    user_key: !secret pushover_user_key
+
+  - name: ha_notifier
+    platform: group
+    services:
+      - service: lalit
+      - service: jyoti
+
+
+  - name: lalit
+    platform: zanzito
+    device-name: lalit
+
+  - name: jyoti
+    platform: zanzito
+    device-name: jyoti
+
+
