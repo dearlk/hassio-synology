@@ -31,15 +31,17 @@ logger:
     custom_components.places.sensor: error
     homeassistant.components.media_player.spotify: error
     homeassistant.components.proximity: error
-    homeassistant.components.ifttt: debug
-    homeassistant.components.automation: debug
+    #homeassistant.components.ifttt: debug
+    #homeassistant.components.automation: debug
+    #homeassistant.components.mqtt: debug
     googleapiclient.discovery: error
 
 updater:
 discovery:
   ignore:
     - plex_mediaserver
-    #- samsung_tv
+    - samsung_tv
+    - yeelight
 conversation:
   intents:
     ShoppingListAddItem:
@@ -124,6 +126,11 @@ custom_updater:
     - https://raw.githubusercontent.com/iammexx/home-assistant-config/master/ui/darksky/version.json
     - https://raw.githubusercontent.com/benct/lovelace-multiple-entity-row/master/tracker.json
 
+yeelight:
+  devices:
+    192.168.1.130:
+      name: bedroom mini lamp
+      
 system_health:
 smartir:
   update_branch: rc

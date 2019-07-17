@@ -23,6 +23,11 @@
       - service: lalit
       - service: jyoti
 
+  # - name: lalit
+  #   platform: group
+  #   services:
+  #     - service: lalit_zanzito
+  #     - service: pushover
 
   - name: lalit
     platform: zanzito

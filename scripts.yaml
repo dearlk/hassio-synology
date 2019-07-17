@@ -164,58 +164,109 @@ studio_light_off:
       entity_id: switch.livingroom_studio_light
 
 
-
 #############################################################################################
-spotifydemo:
-  alias: Spotify Demo
+play_morning_music:
+  alias: play monring music
   sequence:
   - service: script.turn_on
     entity_id: script.volume_down
-  - service: media_player.play_media
-    data_template:
-      entity_id: media_player.spotify
-     #media_content_id: spotify:user:spotify:playlist:37i9dQZF1DXbKpCeB6bby3
-      media_content_id: spotify:user:spotify:playlist:37i9dQZF1DX4PP3DA4J0N8
-      media_content_type: playlist
-
+  - service: media_extractor.play_media
+    data_template: 
+      entity_id: media_player.office
+      media_content_id: '{{ [
+                             "https://www.youtube.com/watch?v=qpxINQEdUyE", 
+                             "https://www.youtube.com/watch?v=6E3MMKzBn1g", 
+                             "https://www.youtube.com/watch?v=PO7kT1h21CU", 
+                             "https://www.youtube.com/watch?v=grk1w2Xb_vo"
+                            ] | random }}'
+      media_content_type: "music"     
 volume_down:
   sequence:
     - service: media_player.volume_set
       data:
-        entity_id: media_player.spotify
+        entity_id: media_player.office
         volume_level: 0.1
     - service: script.turn_on
       data:
         entity_id: script.volume_fade_in
-
 volume_fade_in:
   sequence:
     - service: media_player.volume_set
       data_template:
-        entity_id: media_player.spotify
+        entity_id: media_player.office
         volume_level: >
-          {% set current = states.media_player.spotify.attributes.volume_level %}
+          {% set current = state_attr('media_player.office','volume_level') | float %}
           {% set next = current + 0.1 %}
           {% if next > 1 %}
             {% set next = 1 %}
           {% endif %}
           {{ next }}
     - service_template: >
-        {% if states.media_player.spotify.attributes.volume_level < 0.8 %}
+        {% if state_attr('media_player.office','volume_level') | float < 0.5 %}
           script.turn_on
         {% else %}
           script.turn_off
         {% endif %}
       data:
         entity_id: script.fade_in_stop
-
 fade_in_stop:
   sequence:
   - delay:
-      seconds: 60
+      seconds: 300
   - service: script.turn_on
     data:
       entity_id: script.volume_fade_in
+# #############################################################################################
+# spotifydemo:
+#   alias: Spotify Demo
+#   sequence:
+#   - service: script.turn_on
+#     entity_id: script.volume_down
+#   - service: media_player.play_media
+#     data_template:
+#       entity_id: media_player.spotify
+#      #media_content_id: spotify:user:spotify:playlist:37i9dQZF1DXbKpCeB6bby3
+#       media_content_id: spotify:user:spotify:playlist:37i9dQZF1DX4PP3DA4J0N8
+#       media_content_type: playlist
+
+# volume_down:
+#   sequence:
+#     - service: media_player.volume_set
+#       data:
+#         entity_id: media_player.spotify
+#         volume_level: 0.1
+#     - service: script.turn_on
+#       data:
+#         entity_id: script.volume_fade_in
+
+# volume_fade_in:
+#   sequence:
+#     - service: media_player.volume_set
+#       data_template:
+#         entity_id: media_player.spotify
+#         volume_level: >
+#           {% set current = states.media_player.spotify.attributes.volume_level %}
+#           {% set next = current + 0.1 %}
+#           {% if next > 1 %}
+#             {% set next = 1 %}
+#           {% endif %}
+#           {{ next }}
+#     - service_template: >
+#         {% if states.media_player.spotify.attributes.volume_level < 0.8 %}
+#           script.turn_on
+#         {% else %}
+#           script.turn_off
+#         {% endif %}
+#       data:
+#         entity_id: script.fade_in_stop
+
+# fade_in_stop:
+#   sequence:
+#   - delay:
+#       seconds: 60
+#   - service: script.turn_on
+#     data:
+#       entity_id: script.volume_fade_in
 
 # ##living room fan control scripts########################################################
 livingroom_fan_off:

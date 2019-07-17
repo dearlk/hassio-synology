@@ -14,7 +14,7 @@
   #   icon: mdi:pill
 
   office_presence_check:
-    name: Familyroom Presence Check Mode
+    name: Office Presence Check Mode
     initial: off
     icon: mdi:bedroom
 
@@ -85,4 +85,4 @@
 
   automation_trigger_notification_mode:
     name: Automation Trigger Notification Mode
-    initial: on
+    initial: off

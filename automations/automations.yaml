@@ -449,7 +449,7 @@
 - alias: "turn workday announcements trigger on"
   trigger:
     platform: template
-    value_template: "{{ states('sensor.time') == (states.input_datetime.morning_alarm_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+    value_template: "{{ states('sensor.time') == (states.input_datetime.morning_time_reminder.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
   condition:
     condition: state
     entity_id: binary_sensor.workday
@@ -477,7 +477,7 @@
 - alias: "turn workday announcements trigger off"
   trigger:
     platform: time
-    at: '10:30:00'
+    at: '09:30:00'
   action:
     - service: input_boolean.turn_off
       data:

@@ -82,7 +82,7 @@
      - 'office'
      - 'bedroom'
      - 'livingroom_office'
-    initial: 'livingroom_office'
+    initial: 'livingroom'
     icon: mdi:speaker
 
   last_door_opened:

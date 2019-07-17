@@ -84,7 +84,8 @@
 #       entity_id: light.kitchen_light
 
 ############################################################################
-- alias: someone in kitchen
+- alias: someone in kitchen based on sun events
+  initial_state: false
   trigger:
     entity_id: binary_sensor.kitchen_motion
     platform: state
@@ -95,18 +96,31 @@
       entity_id: light.kitchen_light
       state: 'off'
     - condition: sun
-      after: sunrise
-      after_offset: '+03:00:00'
-      before: sunset
-      before_offset: '-01:00:00'
+      after: sunset
+      after_offset: '-01:00:00'
+      before: sunrise
+      before_offset: '+03:00:00'
   action:
-    # - service: python_script.notify
-    #   data:
-    #     message: "Looks like someone is in kitchen, switching on lights"
-    #     text: 1    
     - service: light.turn_on
       entity_id: light.kitchen_light
-
+########
+- alias: someone in kitchen based on sunlight
+  initial_state: true
+  trigger:
+    entity_id: binary_sensor.kitchen_motion
+    platform: state
+    to: 'on'
+  condition:
+    - condition: state
+      entity_id: light.kitchen_light
+      state: 'off'
+    - condition: numeric_state
+      entity_id: sensor.sunlight
+      #above: 0
+      below: 500
+  action:
+    - service: light.turn_on
+      entity_id: light.kitchen_light
 ##############################################################################
 
 ###############
@@ -118,7 +132,13 @@
       {% set current_state=states.binary_sensor.kitchen_motion.state %}
       {{ (is_state("binary_sensor.morning","on") and current_state=="off" and no_motion_since > 60 * 5) or
          (is_state("binary_sensor.evening","on") and current_state=="off" and no_motion_since > 60 * 15) or
-         (is_state("binary_sensor.night","on") and current_state=="off" and no_motion_since > 60 * 2)
+         (is_state("binary_sensor.night","on") and current_state=="off" and no_motion_since > 60 * 2) or 
+         (is_state("binary_sensor.morning","off") and 
+          is_state("binary_sensor.morning","off") and
+          is_state("binary_sensor.morning","off") and 
+          current_state=="off" and 
+          no_motion_since > 60 * 5
+          )
       }}
   action:
     - service: python_script.notify

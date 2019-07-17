@@ -4,7 +4,7 @@
   trigger:
     platform: sun
     event: sunset
-    #offset: "-00:30:00"
+    offset: "-00:30:00"
   # condition: 
   #   condition: and
   #   conditions:
@@ -51,7 +51,7 @@
   initial_state: true
   trigger:
     platform: time
-    at: '00:00:00'
+    at: '22:00:00'
   condition: []
   action:
     - service: homeassistant.turn_off
@@ -82,7 +82,7 @@
 ##############################################################################################################################
 #good morning
 - alias: Good Morning
-  initial_state: false
+  initial_state: true
   trigger:
     platform: template
     value_template: "{{ states('sensor.time') == (states.input_datetime.morning_alarm_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
@@ -91,23 +91,15 @@
     entity_id: binary_sensor.workday
     state: 'on'
   action:
-    # - service: script.turn_on
-    #   data:
-    #     entity_id: script.turn_up_media_volume
-    - service: media_extractor.play_media
+    - service: script.turn_on
       data:
-        entity_id: media_player.livingroom
-        #media_content_id: "https://www.youtube.com/watch?v=YykjpeuMNEk"
-        media_content_id: "https://www.youtube.com/watch?v=ndx04oXI2Wg"
-        #media_content_id: "https://dearlk.duckdns.org:8123/local/birds.mp3"
-        media_content_type: "music"
-    # - service: switch.turn_off
-    #   entity_id: switch.bedroom_aircon
+        entity_id: script.play_morning_music
+
 
 
 #good morning
 - alias: Good Morning Spotify Alarm
-  initial_state: true
+  initial_state: false
   trigger:
     - platform: template
       value_template: "{{ states('sensor.time') == (states.input_datetime.morning_alarm_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
@@ -191,13 +183,13 @@
     - service: media_player.play_media
       data_template:
         entity_id: "media_player.{{ states.input_select.clock_speaker.state }}"
-        #media_content_id: "https://dearlk.duckdns.org:8123/local/{{as_timestamp(now()) | timestamp_custom('%I', True)}}.mp3"
-        media_content_id: "https://dearlk.duckdns.org:8123/local/{{ as_timestamp(now()) | timestamp_custom('%I', True) | int }}.mp3"
+        media_content_id: !secret base_clock_url 
         media_content_type: "music" 
 
 
 # #automation triggered ####################################################   
 - alias : automation triggered
+  initial_state: true
   trigger: 
     platform: event
     event_type: automation_triggered

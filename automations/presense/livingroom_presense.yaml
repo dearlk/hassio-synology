@@ -34,6 +34,10 @@
     platform: state
     to: 'on'
     from: 'off'
+  condition:
+    - condition: state
+      entity_id: input_boolean.livingroom_presence_check
+      state: 'off'
   action:
     - service: homeassistant.turn_on
       data:
@@ -89,9 +93,9 @@
       state: 'off'
       entity_id: input_boolean.livingroom_tv_state
   action:
-    - service: script.turn_on
-      data:
-        entity_id: script.livingroom_aircon_on
+    # - service: script.turn_on
+    #   data:
+    #     entity_id: script.livingroom_aircon_on
     - service: input_boolean.turn_on
       data:
         entity_id: input_boolean.livingroom_tv_state

@@ -303,6 +303,7 @@ views:
     cards:
       - type: picture-glance
         entities:
+          - light.bedroom_mini_lamp
           - entity: climate.bedroom_aircon
             icon: mdi:air-conditioner
           - entity: switch.bedroom_tv
@@ -314,6 +315,7 @@ views:
 
       - type: entities
         entities:
+          - entity: light.bedroom_mini_lamp
           - entity: light.bedroom_lamp
           - entity: light.bedroom_light
           - entity: light.bathroom_light

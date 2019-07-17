@@ -43,7 +43,7 @@ logger.info("IS_ANYONE_HOME={}".format(IS_ANYONE_HOME))
 
 
 #text####################################################################################
-if (text is not None and int(text)==1) or (BROADCAST_MODE == "TEXT"):
+if (text is not None and int(text)==1) or (BROADCAST_MODE == "TEXT" or BROADCAST_MODE == "ALL"):
   if tell is not None:
     to = tell
   else:
@@ -54,7 +54,7 @@ if (text is not None and int(text)==1) or (BROADCAST_MODE == "TEXT"):
   
 
 #announce#################################################################################### 
-if announce is not None and int(announce)==1 or (BROADCAST_MODE == "ANNOUNCE"):
+if announce is not None and int(announce)==1 or (BROADCAST_MODE == "ANNOUNCE" or BROADCAST_MODE == "ALL"):
   if announcement_mode=='on' and IS_ANYONE_HOME:
     logger.info("announcing now...")  
     if BROADCAST_AGENT == "google_broadcast":
@@ -78,28 +78,28 @@ if announce is not None and int(announce)==1 or (BROADCAST_MODE == "ANNOUNCE"):
 ###############################################################################################
 #no flag passed, do all
 #if (text is None and show is None and announce is None) or (BROADCAST_MODE == "ALL"):
-if BROADCAST_MODE=="ALL":
-  if message is not None:
-    logger.info("sending text now...")
-    to = "ha_notifier"
-    service_data = {'message': message}  
-    hass.services.call('notify', to, service_data, False)	    
-    if announcement_mode=='on' and IS_ANYONE_HOME:
-      logger.info("announcing now...")
-      if "<speak>" not in message:
-        message = "<speak>" + message + "</speak>"
-      if BROADCAST_AGENT == "google_broadcast":
-        service_data = {'message': message}
-        hass.services.call('notify', BROADCAST_AGENT, service_data)
-      else:
-        service_data = {'message': message, 'entity_id': BROADCAST_SPEAKER}
-        while True:
-          if hass.states.get(BROADCAST_SPEAKER).state == "playing":
-            time.sleep(1)
-            logger.info("looks like media player busy... waiting")
-            continue
-          else:
-            logger.info("ok, media player available now...")
-            break  
-        hass.services.call('tts', BROADCAST_AGENT, service_data, False)   
+# if BROADCAST_MODE=="ALL":
+#   if message is not None:
+#     logger.info("sending text now...")
+#     to = "ha_notifier"
+#     service_data = {'message': message}  
+#     hass.services.call('notify', to, service_data, False)	    
+#     if announcement_mode=='on' and IS_ANYONE_HOME:
+#       logger.info("announcing now...")
+#       if "<speak>" not in message:
+#         message = "<speak>" + message + "</speak>"
+#       if BROADCAST_AGENT == "google_broadcast":
+#         service_data = {'message': message}
+#         hass.services.call('notify', BROADCAST_AGENT, service_data)
+#       else:
+#         service_data = {'message': message, 'entity_id': BROADCAST_SPEAKER}
+#         while True:
+#           if hass.states.get(BROADCAST_SPEAKER).state == "playing":
+#             time.sleep(1)
+#             logger.info("looks like media player busy... waiting")
+#             continue
+#           else:
+#             logger.info("ok, media player available now...")
+#             break  
+#         hass.services.call('tts', BROADCAST_AGENT, service_data, False)   
 logger.info("Ending now.........................................................................................")
