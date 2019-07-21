@@ -3,7 +3,7 @@
   initial_state: true
   action:
     data:
-      message: <speak>Lalit has reached office now</speak>
+      message: Lalit has reached office now
     service: python_script.notify
   trigger:
     entity_id: device_tracker.lalit
@@ -15,7 +15,7 @@
   initial_state: true
   action:
     data:
-      message: <speak>Lalit has left office now</speak>
+      message: Lalit has left office now
     service: python_script.notify
   trigger:
     entity_id: device_tracker.lalit
@@ -28,7 +28,7 @@
   action:
     - service: python_script.notify
       data:
-        message: <speak>Lalit has reached home now</speak>
+        message: Lalit has reached home now
     - service: input_boolean.turn_on
       entity_id: input_boolean.lalit_at_home    
   trigger:
@@ -42,7 +42,7 @@
   action:
     - service: python_script.notify
       data:
-        message: <speak>Lalit has left home now</speak>
+        message: Lalit has left home now
     - service: input_boolean.turn_off
       entity_id: input_boolean.lalit_at_home
   trigger:
@@ -66,12 +66,4 @@
   action:
   - service: python_script.notify
     data_template:
-      message: >
-        <speak>
-        {{trigger.event.data.entity}} is traveling {{trigger.event.data.direction}}. He's reached {{trigger.event.data.devicetracker_zone}}
-        </speak>
-        
-        
-        
-      
-      
+      message: '{{trigger.event.data.entity}} has reached {{trigger.event.data.devicetracker_zone}}'

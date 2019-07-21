@@ -25,7 +25,7 @@ breaking_changes:
 system_log:
   fire_event: true
 logger:
-  default: info
+  default: warning
   logs:
     custom_components.device_tracker.composite: error
     custom_components.places.sensor: error

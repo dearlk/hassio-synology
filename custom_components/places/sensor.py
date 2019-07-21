@@ -330,7 +330,8 @@ class Places(Entity):
 
         home_latitude = str(hass.states.get(home_zone).attributes.get('latitude'))
         home_longitude = str(hass.states.get(home_zone).attributes.get('longitude'))
-        self._entity_picture = hass.states.get(devicetracker_id).attributes.get('entity_picture')
+        #self._entity_picture = hass.states.get(devicetracker_id).attributes.get('entity_picture')
+        self._entity_picture = "/local/"+self._name + ".jpg"
         self._street_number = None
         self._street = None
         self._city = None

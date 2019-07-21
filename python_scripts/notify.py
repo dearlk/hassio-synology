@@ -61,8 +61,8 @@ if announce is not None and int(announce)==1 or (BROADCAST_MODE == "ANNOUNCE" or
       service_data = {'message': message}
       hass.services.call('notify', BROADCAST_AGENT, service_data)
     else:
-      if "<speak>" not in message:
-        message = "<speak>" + message + "</speak>"
+      # if "<speak>" not in message:
+      #   message = "<speak>" + message + "</speak>"
       service_data = {'message': message, 'entity_id': BROADCAST_SPEAKER}
       while True:
         if hass.states.get(BROADCAST_SPEAKER).state == "playing":

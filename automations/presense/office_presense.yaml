@@ -47,6 +47,12 @@
       entity_id: sensor.sunlight
       #above: 0
       below: 500
+    - condition: state
+      entity_id: light.office_light
+      state: 'off'
+    - condition: time
+      before: '22:00:00'
+      after: '07:00:00' 
     - service: light.turn_on
       entity_id: light.office_light
 
@@ -56,5 +62,5 @@
     platform: template
     value_template: "{{ states('sensor.time') == (states.input_datetime.morning_alarm_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
   action:
-    - service: homeassistant.turn_off
+    - service: climate.turn_off
       entity_id: climate.bedroom_aircon

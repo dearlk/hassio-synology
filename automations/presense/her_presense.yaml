@@ -2,7 +2,7 @@
 - alias: Jyoti Reached Office
   action:
     data:
-      message: <speak>Jyoti has reached office now</speak>
+      message: Jyoti has reached office now
     service: python_script.notify
   trigger:
     entity_id: device_tracker.jyoti
@@ -13,7 +13,7 @@
 - alias: Jyoti Left Office
   action:
     data:
-      message: <speak>Jyoti has left office now</speak>
+      message: Jyoti has left office now
     service: python_script.notify
   trigger:
     entity_id: device_tracker.jyoti
@@ -25,7 +25,7 @@
   action:
     - service: python_script.notify
       data:
-        message: <speak>Jyoti has reached home now</speak>
+        message: Jyoti has reached home now
     - service: input_boolean.turn_on
       entity_id: input_boolean.jyoti_at_home
   trigger:
@@ -38,7 +38,7 @@
   action:
     - service: python_script.notify
       data:
-        message: <speak>Jyoti has left home now</speak>
+        message: Jyoti has left home now
     - service: input_boolean.turn_off
       entity_id: input_boolean.jyoti_at_home
   trigger:
@@ -61,8 +61,6 @@
   action:
   - service: python_script.notify
     data_template:
-      message: >
-        <speak>
-        {{trigger.event.data.entity}} is traveling {{trigger.event.data.direction}}. She's reached {{trigger.event.data.place_name}}
-        </speak>
-       
+      message: '{{trigger.event.data.entity}} has reached {{trigger.event.data.place_name}}'
+        
+ 

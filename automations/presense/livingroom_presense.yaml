@@ -17,13 +17,6 @@
       entity_id: binary_sensor.workday
       state: 'on'
   action:
-    # - service: python_script.notify
-    #   data:
-    #     message: "Looks like no one in livingroom, will switch off everyting in 5 minutes. Please waive your hand if you're still there!!!"
-    #     announce: 1
-    #     room: 'livingroom'
-    # - delay: 
-    #     minutes: 5
     - service: script.turn_on
       data:
         entity_id: script.shutdown_livingroom
@@ -129,12 +122,9 @@
       before: '21:00:00'
       after: '18:00:00'
   action:
-    # - service: tts.amazon_polly_say
-      # data_template:
-      #   entity_id: 'media_player.{{states.input_select.broadcast_speaker.state}}'
     - service: python_script.notify
       data_template:
-        message: '<speak><s><prosody volume="loud">krpya dhayan de!</prosody></s><p>Joote-chappal almaari mein rakhen, shaam ko safai ke liye shaanta-bai aaegee</p></speak>'
+        message: 'krpya dhayan de! Joote-chappal almaari mein rakhen, shaam ko safai ke liye shaanta-bai aaegee'
         announce: 1
 ###########################################################################################
 - alias: main door is opened 

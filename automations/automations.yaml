@@ -179,19 +179,19 @@
   action:
     - service: python_script.notify
       data_template:
-        message: "<speak>Lalit has left office, turning on livingroom aircon now, please close all windows!!!</speak>"
+        message: "Lalit has left office, turning on livingroom aircon now, please close all windows!!!"
     - service: script.turn_on
       entity_id: script.livingroom_aircon_on
     - delay: 
         minutes: 5
     - service: python_script.notify
       data:
-        message: "<speak>Lalit is coming home, I've turned on livingroom aircon, please close all windows if not closed yet!!!</speak>"
+        message: "Lalit is coming home, I've turned on livingroom aircon, please close all windows if not closed yet!!!"
     - delay:
         minutes: 10
     - service: python_script.notify
       data:
-        message: "<speak>Did you reminder to close all windows since livingroom aircon is on now?</speak>"
+        message: "Did you reminder to close all windows since livingroom aircon is on now?"
 
 
 
@@ -326,7 +326,7 @@
         entity_id: media_player.livingroom
     - service: python_script.notify
       data:
-        message: '<speak>Sorry, it is bed time now, you better go to bed now and sleep!</speak>'
+        message: 'Sorry, it is bed time now, you better go to bed now and sleep!'
         room: 'livingroom'
 
 #####################################################################################
@@ -470,7 +470,7 @@
   action:
     - service: python_script.notify
       data_template:
-        message: "<speak>It's {{ now() | as_timestamp | timestamp_custom('%I:%M')}} now</speak>"
+        message: "It's {{ now() | as_timestamp | timestamp_custom('%I:%M')}} now"
         announce: 1
 
 #turn workday announcements trigger off
@@ -499,9 +499,6 @@
     - service: light.turn_on
       data:
         entity_id: light.gallery_light
-    # - service: python_script.notify
-    #   data_template:
-    #     message: '{{trigger.to_state}}'
     - service: input_select.select_option
       data_template:
         entity_id: input_select.last_door_opened
@@ -531,14 +528,11 @@
     platform: time
     at: '21:30:00'
   action:
-    # - service: tts.amazon_polly_say
+    # - service: python_script.notify
     #   data_template:
-    #     entity_id: 'media_player.{{states.input_select.broadcast_speaker.state}}'
-    - service: python_script.notify
-      data_template:
-        message: '<speak><s><prosody volume="loud">krpya dhayan de!</prosody></s><p>Shanta-bai kitchen saaf karne jaa rahi hai</p></speak>'
-        announce: 1
-    - delay: '00:00:05'
+    #     message: 'krpya dhayan de! Shanta-bai kitchen saaf karne jaa rahi hai.'
+    #     announce: 1
+    # - delay: '00:00:05'
     - service: script.turn_on
       data:
         entity_id: script.xiaomi_vacuum_clean_kitchen
@@ -555,14 +549,10 @@
       - wed
       - fri
   action:
-    # - service: tts.amazon_polly_say
+    # - service: python_script.notify
     #   data_template:
-    #     entity_id: 'media_player.{{states.input_select.broadcast_speaker.state}}'
-    - service: python_script.notify
-      data_template:
-        message: '<speak><s><prosody volume="loud">krpya dhayan de!</prosody></s><p>Shanta-bai abhi hall saaf karegi</p></speak>'
-        announce: 1
-    - delay: '00:00:05'        
+    #     message: 'krpya dhayan de! Shanta-bai abhi hall saaf karegi.'
+    # - delay: '00:00:05'        
     - service: script.turn_on
       data:
         entity_id: script.xiaomi_vacuum_clean_hall
