@@ -21,15 +21,15 @@ auth:
 frontend: !include frontend.yaml
 config:
 default_config:
-breaking_changes:
+#breaking_changes:
 system_log:
   fire_event: true
 logger:
-  default: warning
+  default: info
   logs:
     custom_components.device_tracker.composite: error
     custom_components.places.sensor: error
-    homeassistant.components.media_player.spotify: error
+    homeassistant.components.media_player.spotify: debug
     homeassistant.components.proximity: error
     #homeassistant.components.ifttt: debug
     #homeassistant.components.automation: debug
@@ -137,3 +137,27 @@ smartir:
 
 # hacs:
 #   token: !secret my_github_access_token
+
+
+image_processing:
+  - platform: deepstack_object
+    ip_address: localhost
+    port: 5001
+    scan_interval: 20000
+    save_file_folder: '/config/www/deepstack_person_images'
+    target: person
+    confidence: 50
+    source:
+      - entity_id: camera.livingroom
+        name: livingroom_pd
+      - entity_id: camera.bedroom
+        name: bedroom_pd
+
+  - platform: facebox
+    ip_address: localhost
+    port: 8090
+    source:
+      - entity_id: camera.livingroom
+        name: livingroom_fb
+      - entity_id: camera.bedroom
+        name: bedroom_fb

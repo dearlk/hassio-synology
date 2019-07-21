@@ -217,56 +217,74 @@ fade_in_stop:
     data:
       entity_id: script.volume_fade_in
 # #############################################################################################
-# spotifydemo:
-#   alias: Spotify Demo
-#   sequence:
-#   - service: script.turn_on
-#     entity_id: script.volume_down
-#   - service: media_player.play_media
-#     data_template:
-#       entity_id: media_player.spotify
-#      #media_content_id: spotify:user:spotify:playlist:37i9dQZF1DXbKpCeB6bby3
-#       media_content_id: spotify:user:spotify:playlist:37i9dQZF1DX4PP3DA4J0N8
-#       media_content_type: playlist
+spotify_morning:
+  alias: Spotify Morning
+  sequence:
+  - service: script.turn_on
+    entity_id: script.spotify_volume_down
+  - service: media_player.play_media
+    data_template:
+      entity_id: media_player.spotify
+      media_content_type: playlist
+      media_content_id: '{{ [
+                            "spotify:user:spotify:playlist:37i9dQZF1DXbKpCeB6bby3",
+                            "spotify:user:spotify:playlist:37i9dQZF1DX4PP3DA4J0N8",
+                            "spotify:user:spotify:playlist:37i9dQZF1DXebxttQCq0zA"
+                            ] | random }}'
 
-# volume_down:
-#   sequence:
-#     - service: media_player.volume_set
-#       data:
-#         entity_id: media_player.spotify
-#         volume_level: 0.1
-#     - service: script.turn_on
-#       data:
-#         entity_id: script.volume_fade_in
+spotify_evening:
+  alias: Spotify Evening
+  sequence:
+  - service: script.turn_on
+    entity_id: script.spotify_volume_down
+  - service: media_player.play_media
+    data_template:
+      entity_id: media_player.spotify
+      media_content_type: playlist
+      media_content_id: '{{ [
+                            "spotify:user:spotify:playlist:7sXrmazSWcD5jGDX64EpqG",
+                            "spotify:user:spotify:playlist:5zPkrQhayMoOluFPTqP5t8",
+                            "spotify:user:spotify:playlist:37i9dQZF1DXbcPC6Vvqudd"
+                            ] | random }}'
 
-# volume_fade_in:
-#   sequence:
-#     - service: media_player.volume_set
-#       data_template:
-#         entity_id: media_player.spotify
-#         volume_level: >
-#           {% set current = states.media_player.spotify.attributes.volume_level %}
-#           {% set next = current + 0.1 %}
-#           {% if next > 1 %}
-#             {% set next = 1 %}
-#           {% endif %}
-#           {{ next }}
-#     - service_template: >
-#         {% if states.media_player.spotify.attributes.volume_level < 0.8 %}
-#           script.turn_on
-#         {% else %}
-#           script.turn_off
-#         {% endif %}
-#       data:
-#         entity_id: script.fade_in_stop
+spotify_volume_down:
+  sequence:
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.spotify
+        volume_level: 0.2
+    - service: script.turn_on
+      data:
+        entity_id: script.spotify_volume_fade_in
 
-# fade_in_stop:
-#   sequence:
-#   - delay:
-#       seconds: 60
-#   - service: script.turn_on
-#     data:
-#       entity_id: script.volume_fade_in
+spotify_volume_fade_in:
+  sequence:
+    - service: media_player.volume_set
+      data_template:
+        entity_id: media_player.spotify
+        volume_level: >
+          {% set current = states.media_player.spotify.attributes.volume_level %}
+          {% set next = current + 0.1 %}
+          {% if next > 1 %}
+            {% set next = 1 %}
+          {% endif %}
+          {{ next }}
+    - service_template: >
+        {% if states.media_player.spotify.attributes.volume_level < 0.6 %}
+          script.turn_on
+        {% else %}
+          script.turn_off
+        {% endif %}
+      data:
+        entity_id: script.spotify_fade_in_stop
+
+spotify_fade_in_stop:
+  sequence:
+  - delay:
+      seconds: 300
+  - service: script.turn_on
+    data:
+      entity_id: script.spotify_volume_fade_in
 
 # ##living room fan control scripts########################################################
 livingroom_fan_off:

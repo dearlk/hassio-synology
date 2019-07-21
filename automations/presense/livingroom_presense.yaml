@@ -35,6 +35,10 @@
     - service: homeassistant.turn_on
       data:
         entity_id: input_boolean.livingroom_presence_check
+    - service: image_processing.scan
+      entity_id: image_processing.livingroom_pd
+    - service: image_processing.scan
+      entity_id: image_processing.livingroom_fb      
 ###############################################################################
 - alias: someone in livingroom switch on fan if ac is not on
   trigger:

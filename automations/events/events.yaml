@@ -82,7 +82,7 @@
 ##############################################################################################################################
 #good morning
 - alias: Good Morning
-  initial_state: true
+  initial_state: false
   trigger:
     platform: template
     value_template: "{{ states('sensor.time') == (states.input_datetime.morning_alarm_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
@@ -98,22 +98,33 @@
 
 
 #good morning
-- alias: Good Morning Spotify Alarm
-  initial_state: false
+- alias: Good Morning Spotify 
+  initial_state: true
   trigger:
     - platform: template
       value_template: "{{ states('sensor.time') == (states.input_datetime.morning_alarm_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
-    - platform: template
-      value_template: "{{ states('sensor.time') == (states.input_datetime.bed_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
-  condition:
-    condition: state
-    entity_id: binary_sensor.workday
-    state: 'on'
+  # condition:
+  #   condition: state
+  #   entity_id: binary_sensor.workday
+  #   state: 'on'
   action:
     - service: script.turn_on
       data:
-        entity_id: script.spotifydemo
-
+        entity_id: script.spotify_morning
+#good evening
+- alias: Good Evening Spotify 
+  initial_state: true
+  trigger:
+    - platform: template
+      value_template: "{{ states('sensor.time') == (states.input_datetime.bed_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+  # condition:
+  #   condition: state
+  #   entity_id: binary_sensor.workday
+  #   state: 'on'
+  action:
+    - service: script.turn_on
+      data:
+        entity_id: script.spotify_evening
 ##############################################################################################################################
 # #temple lamp ####################################################   
 - action:
@@ -218,3 +229,47 @@
     service_template: '{{ trigger.event.data.service }}'
     data_template:
       entity_id: '{{ trigger.event.data.entity_id }}'
+
+#############################################################
+- alias: Person detected 
+  trigger:
+    - platform: event
+      event_type: image_processing.object_detected
+      event_data:
+        object: person
+        entity_id: image_processing.livingroom_pd, image_processing.bedroom_pd       
+  action:
+    - service: python_script.notify
+      data_template:
+        message: "{{trigger.event.data}}"
+        text: 1
+        tell: lalit
+      
+#############################################################
+# - alias: Object detected in bedroom
+#   trigger:
+#     - platform: event
+#       event_type: image_processing.object_detected
+#       event_data:
+#         object: person
+#         entity_id: image_processing.bedroom_pd      
+#   action:
+#     - service: python_script.notify
+#       data_template:
+#         message: "{{ trigger.event.data.object }} with confidence {{ trigger.event.data.confidence }}"
+#         text: 1
+#         tell: lalit  
+
+#######################################################################
+- alias: someone just recognised
+  trigger:
+    platform: event
+    event_type: image_processing.detect_face
+    event_data:
+      entity_id: image_processing.livingroom_fb, image_processing.bedroom_fb
+  action:
+    service: python_script.notify
+    data_template:
+      message: '{{ trigger.event.data }}'
+      text: 1
+      tell: lalit

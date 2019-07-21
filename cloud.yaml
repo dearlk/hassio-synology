@@ -70,34 +70,34 @@
           # aliases:
           #   - Aircon
           #   - AC
-          room: living room
+          # room: living room
         switch.office_aircon:
           name: Aircon
-          aliases:
-            - Aircon
-            - AC
-          room: Office
+          # aliases:
+          #   - Aircon
+          #   - AC
+          # room: Office
         switch.bedroom_aircon:
           name: Aircon
           # aliases:
           #   - Aircon
           #   - AC
-          room: Bedroom
+          # room: Bedroom
         vacuum.xiaomi_vacuum_cleaner:
           name: vacuum
           # aliases:
           #   - Robot
           #   - Shantabai
-          room: Living room
+          # room: Living room
         switch.livingroom_fan:
           name: Fan
-          room: Living room
+          # room: Living room
         script.livingroom_fan_medium:
           name: Fan medium
-          room: Living room
+          # room: Living room
         script.livingroom_fan_high:
           name: Fan high
-          room: Living room
+          # room: Living room
         switch.livingroom_tv:
           name: TV
-          room: Living room
+          # room: Living room

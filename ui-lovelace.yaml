@@ -51,8 +51,10 @@ views:
                 entities:
                   - sensor.jyoti
                   - sensor.lalit
-                  #- device_tracker.mom          
-
+                  - image_processing.livingroom_pd
+                  - image_processing.bedroom_pd
+                  - image_processing.livingroom_fb
+                  - image_processing.bedroom_fb
           - type: custom:auto-entities
             card: 
               type: entities

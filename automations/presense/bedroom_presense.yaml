@@ -44,6 +44,10 @@
     - service: homeassistant.turn_on
       data:
         entity_id: input_boolean.bedroom_presence_check
+    - service: image_processing.scan
+      entity_id: image_processing.bedroom_pd
+    - service: image_processing.scan
+      entity_id: image_processing.bedroom_fb
 ############################################################################
 - alias: turn on bathroom light on motion
   trigger:
