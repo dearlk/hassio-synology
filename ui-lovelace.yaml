@@ -53,8 +53,12 @@ views:
                   - sensor.lalit
                   - image_processing.livingroom_pd
                   - image_processing.bedroom_pd
+                  - image_processing.livingroom_fd
+                  - image_processing.bedroom_fd
                   - image_processing.livingroom_fb
                   - image_processing.bedroom_fb
+                  - image_processing.livingroom_ar
+                  - image_processing.bedroom_ar
           - type: custom:auto-entities
             card: 
               type: entities

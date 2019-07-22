@@ -153,6 +153,19 @@ image_processing:
       - entity_id: camera.bedroom
         name: bedroom_pd
 
+  - platform: deepstack_face
+    ip_address: localhost
+    port: 5001
+    scan_interval: 20000
+    #save_file_folder: '/config/www/deepstack_person_images'
+    #target: person
+    confidence: 50
+    source:
+      - entity_id: camera.livingroom
+        name: livingroom_fd
+      - entity_id: camera.bedroom
+        name: bedroom_fd
+
   - platform: facebox
     ip_address: localhost
     port: 8090
@@ -161,3 +174,14 @@ image_processing:
         name: livingroom_fb
       - entity_id: camera.bedroom
         name: bedroom_fb
+
+  - platform: amazon_rekognition
+    aws_access_key_id: !secret aws_access_key_id
+    aws_secret_access_key: !secret aws_secret_access_key
+    #region_name: eu-west-1 # optional region, default us-east-1
+    #target: Car # Optional target object, default Person
+    source:
+      - entity_id: camera.livingroom
+        name: livingroom_ar
+      - entity_id: camera.bedroom
+        name: bedroom_ar

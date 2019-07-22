@@ -26,7 +26,7 @@
     entity_id: binary_sensor.livingroom_motion
     platform: state
     to: 'on'
-    from: 'off'
+   # from: 'off'
   condition:
     - condition: state
       entity_id: input_boolean.livingroom_presence_check
@@ -38,7 +38,11 @@
     - service: image_processing.scan
       entity_id: image_processing.livingroom_pd
     - service: image_processing.scan
-      entity_id: image_processing.livingroom_fb      
+      entity_id: image_processing.livingroom_fd
+    - service: image_processing.scan
+      entity_id: image_processing.livingroom_fb  
+    - service: image_processing.scan
+      entity_id: image_processing.livingroom_ar    
 ###############################################################################
 - alias: someone in livingroom switch on fan if ac is not on
   trigger:

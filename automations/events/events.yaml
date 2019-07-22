@@ -237,7 +237,7 @@
       event_type: image_processing.object_detected
       event_data:
         object: person
-        entity_id: image_processing.livingroom_pd, image_processing.bedroom_pd       
+       # entity_id: image_processing.livingroom_pd, image_processing.bedroom_pd       
   action:
     - service: python_script.notify
       data_template:
@@ -265,8 +265,8 @@
   trigger:
     platform: event
     event_type: image_processing.detect_face
-    event_data:
-      entity_id: image_processing.livingroom_fb, image_processing.bedroom_fb
+   # event_data:
+     # entity_id: image_processing.livingroom_fb, image_processing.bedroom_fb
   action:
     service: python_script.notify
     data_template:

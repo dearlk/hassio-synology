@@ -220,6 +220,11 @@ fade_in_stop:
 spotify_morning:
   alias: Spotify Morning
   sequence:
+  - service: media_player.select_source
+    data:
+      entity_id: media_player.spotify
+      source: 'Hass.io'
+  - delay: '00:00:30'
   - service: script.turn_on
     entity_id: script.spotify_volume_down
   - service: media_player.play_media
@@ -235,6 +240,11 @@ spotify_morning:
 spotify_evening:
   alias: Spotify Evening
   sequence:
+  - service: media_player.select_source
+    data:
+      entity_id: media_player.spotify
+      source: 'Hass.io'
+  - delay: '00:00:30'
   - service: script.turn_on
     entity_id: script.spotify_volume_down
   - service: media_player.play_media
@@ -270,7 +280,7 @@ spotify_volume_fade_in:
           {% endif %}
           {{ next }}
     - service_template: >
-        {% if states.media_player.spotify.attributes.volume_level < 0.6 %}
+        {% if states.media_player.spotify.attributes.volume_level < 0.8 %}
           script.turn_on
         {% else %}
           script.turn_off
@@ -281,7 +291,7 @@ spotify_volume_fade_in:
 spotify_fade_in_stop:
   sequence:
   - delay:
-      seconds: 300
+      seconds: 120
   - service: script.turn_on
     data:
       entity_id: script.spotify_volume_fade_in

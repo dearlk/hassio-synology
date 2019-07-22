@@ -39,7 +39,7 @@
     entity_id: binary_sensor.bedroom_motion
     platform: state
     to: 'on'
-    from: 'off'
+   # from: 'off'
   action:
     - service: homeassistant.turn_on
       data:
@@ -47,7 +47,11 @@
     - service: image_processing.scan
       entity_id: image_processing.bedroom_pd
     - service: image_processing.scan
+      entity_id: image_processing.bedroom_fd
+    - service: image_processing.scan
       entity_id: image_processing.bedroom_fb
+    - service: image_processing.scan
+      entity_id: image_processing.bedroom_ar
 ############################################################################
 - alias: turn on bathroom light on motion
   trigger:
