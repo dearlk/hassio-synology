@@ -1,0 +1,8 @@
+{
+    "domain": "https://techblog.co.il/2019/01/easily-send-home-assistant-notifications-using-whatsapp/",
+    "name": "twilio_whatsapp",
+    "documentation": "https://techblog.co.il/2019/01/easily-send-home-assistant-notifications-using-whatsapp/",
+    "dependencies": ["twilio"],
+    "codeowners": ["@T0merr"],
+    "requirements": []
+  }

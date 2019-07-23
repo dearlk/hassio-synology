@@ -27,22 +27,22 @@
     platform: state
     to: 'on'
    # from: 'off'
-  condition:
-    - condition: state
-      entity_id: input_boolean.livingroom_presence_check
-      state: 'off'
+  # condition:
+  #   - condition: state
+  #     entity_id: input_boolean.livingroom_presence_check
+  #     state: 'off'
   action:
     - service: homeassistant.turn_on
       data:
         entity_id: input_boolean.livingroom_presence_check
     - service: image_processing.scan
-      entity_id: image_processing.livingroom_pd
+      entity_id: image_processing.deepstack_od_livingroom
     - service: image_processing.scan
-      entity_id: image_processing.livingroom_fd
+      entity_id: image_processing.deepstack_fd_livingroom
     - service: image_processing.scan
-      entity_id: image_processing.livingroom_fb  
+      entity_id: image_processing.facebox_livingroom
     - service: image_processing.scan
-      entity_id: image_processing.livingroom_ar    
+      entity_id: image_processing.rekognition_livingroom 
 ###############################################################################
 - alias: someone in livingroom switch on fan if ac is not on
   trigger:

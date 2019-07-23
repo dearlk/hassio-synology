@@ -51,14 +51,18 @@ views:
                 entities:
                   - sensor.jyoti
                   - sensor.lalit
-                  - image_processing.livingroom_pd
-                  - image_processing.bedroom_pd
-                  - image_processing.livingroom_fd
-                  - image_processing.bedroom_fd
-                  - image_processing.livingroom_fb
-                  - image_processing.bedroom_fb
-                  - image_processing.livingroom_ar
-                  - image_processing.bedroom_ar
+
+              - type: custom:auto-entities
+                card:
+                  type: entities
+                show_empty: false
+                filter:
+                  include:
+                    - domain: image_processing
+                      state: "> 0"
+                      options:
+                        secondary_info: last-changed
+
           - type: custom:auto-entities
             card: 
               type: entities

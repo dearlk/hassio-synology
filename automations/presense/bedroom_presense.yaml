@@ -45,13 +45,13 @@
       data:
         entity_id: input_boolean.bedroom_presence_check
     - service: image_processing.scan
-      entity_id: image_processing.bedroom_pd
+      entity_id: image_processing.deepstack_od_bedroom
     - service: image_processing.scan
-      entity_id: image_processing.bedroom_fd
+      entity_id: image_processing.deepstack_fd_bedroom
     - service: image_processing.scan
-      entity_id: image_processing.bedroom_fb
+      entity_id: image_processing.facebox_bedroom
     - service: image_processing.scan
-      entity_id: image_processing.bedroom_ar
+      entity_id: image_processing.rekognition_bedroom
 ############################################################################
 - alias: turn on bathroom light on motion
   trigger:

@@ -47,7 +47,8 @@ if (text is not None and int(text)==1) or (BROADCAST_MODE == "TEXT" or BROADCAST
   if tell is not None:
     to = tell
   else:
-    to = "ha_notifier"
+    #to = "ha_notifier"
+    to = "whatsapp"
   logger.info("sending text now...")  
   service_data = {'message': message}  
   hass.services.call('notify', to, service_data, False)	

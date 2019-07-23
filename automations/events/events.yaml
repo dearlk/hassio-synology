@@ -111,6 +111,14 @@
     - service: script.turn_on
       data:
         entity_id: script.spotify_morning
+# stop evening music
+- alias: stop good morning spotify
+  trigger:
+    - platform: time
+      at: '07:30:00'
+  action:
+    - service: media_player.media_stop
+      entity_id: media_player.spotify
 #good evening
 - alias: Good Evening Spotify 
   initial_state: true
@@ -125,6 +133,16 @@
     - service: script.turn_on
       data:
         entity_id: script.spotify_evening
+# stop evening music
+- alias: stop good evening spotify
+  trigger:
+    - platform: time
+      at: '00:00:30'
+  action:
+    - service: media_player.media_stop
+      entity_id: media_player.spotify
+
+
 ##############################################################################################################################
 # #temple lamp ####################################################   
 - action:
@@ -151,8 +169,8 @@
 - action:
   - data:
       message: Home Assistant is shutting down...
-      text: 1
-      tell: lalit
+      # text: 1
+      # tell: lalit
     service: python_script.notify
   alias: Shutdown Notification
   id: '1515164764817'
@@ -162,8 +180,8 @@
 - action:
   - data:
       message: Home Assistant is starting now...
-      text: 1
-      tell: lalit
+      # text: 1
+      # tell: lalit
     service: python_script.notify
   - data:
       name: 'darkcyan'
@@ -214,8 +232,8 @@
     - service: python_script.notify
       data_template:
         message: '{{trigger.event.data.name}}'
-        text: 1
-        tell: lalit
+        # text: 1
+        # tell: lalit
         
 
 #################################################### 
@@ -235,15 +253,15 @@
   trigger:
     - platform: event
       event_type: image_processing.object_detected
-      event_data:
-        object: person
+      #event_data:
+        #object: person
        # entity_id: image_processing.livingroom_pd, image_processing.bedroom_pd       
   action:
     - service: python_script.notify
       data_template:
         message: "{{trigger.event.data}}"
-        text: 1
-        tell: lalit
+        # text: 1
+        # tell: lalit
       
 #############################################################
 # - alias: Object detected in bedroom
@@ -271,5 +289,5 @@
     service: python_script.notify
     data_template:
       message: '{{ trigger.event.data }}'
-      text: 1
-      tell: lalit
+      # text: 1
+      # tell: lalit
