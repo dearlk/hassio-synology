@@ -280,7 +280,7 @@ spotify_volume_fade_in:
           {% endif %}
           {{ next }}
     - service_template: >
-        {% if states.media_player.spotify.attributes.volume_level < 0.8 %}
+        {% if states.media_player.spotify.attributes.volume_level < 0.6 %}
           script.turn_on
         {% else %}
           script.turn_off

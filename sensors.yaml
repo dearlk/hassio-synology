@@ -154,3 +154,5 @@
     map_zoom: 17
     home_zone: zone.home
     api_key: !secret email_lalit
+
+  

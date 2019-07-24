@@ -97,3 +97,14 @@
   #       prob_given_false: 0.5
   #       platform: state
   #       to_state: home
+
+  - platform: mqtt
+    state_topic: "zanzito/lalit/samsung_pick_up_gesture"
+    name: lalit_awake
+    payload_on: ''
+    off_delay: 1800
+  - platform: mqtt
+    state_topic: "zanzito/jyoti/samsung_pick_up_gesture"
+    name: jyoti_awake
+    payload_on: ''
+    off_delay: 1800

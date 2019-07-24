@@ -24,22 +24,25 @@ views:
   - title: Home
     icon: mdi:home
     badges:
-      - sensor.time
-      - sun.sun
+      #- sensor.time
+      #- sun.sun
       # - sensor.moon
       - device_tracker.lalit
       - device_tracker.jyoti
       - device_tracker.mom
-      - binary_sensor.announcement_mode
-      - binary_sensor.sleep_mode
-      - binary_sensor.tv_mode
-      - binary_sensor.workday
-      - binary_sensor.morning
-      - binary_sensor.evening
-      - binary_sensor.night
+      - binary_sensor.lalit_awake
+      - binary_sensor.jyoti_awake
+      #- binary_sensor.announcement_mode
+      #- binary_sensor.sleep_mode
+      #- binary_sensor.tv_mode
+      #- binary_sensor.workday
+      #- binary_sensor.morning
+      #- binary_sensor.evening
+      #- binary_sensor.night
       - sensor.sunlight
       - sensor.systemmonitor_processor_use
       - sensor.systemmonitor_memory_use_percent
+
     cards:
       - type: vertical-stack            
         cards:

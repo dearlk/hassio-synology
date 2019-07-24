@@ -33,8 +33,9 @@ logger:
     homeassistant.components.proximity: error
     #homeassistant.components.ifttt: debug
     #homeassistant.components.automation: debug
-    #homeassistant.components.mqtt: debug
+    homeassistant.components.mqtt: error
     googleapiclient.discovery: error
+    homeassistant.components.image_processing: error
 
 updater:
 discovery:
