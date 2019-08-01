@@ -2,16 +2,16 @@
     name: morning alarm time
     has_date: false
     has_time: true
-    initial: '06:30:00'
+    #initial: '06:30:00'
 
   bed_time:
     name: bed time
     has_date: false
     has_time: true
-    initial: '22:00:00'
+    #initial: '22:00:00'
   
   morning_time_reminder:
     name: morning time reminder
     has_date: false
     has_time: true
-    initial: '07:00:00'
+    #initial: '07:00:00'

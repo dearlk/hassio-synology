@@ -33,9 +33,9 @@ logger:
     homeassistant.components.proximity: error
     #homeassistant.components.ifttt: debug
     #homeassistant.components.automation: debug
-    homeassistant.components.mqtt: error
+    #homeassistant.components.mqtt: error
     googleapiclient.discovery: error
-    homeassistant.components.image_processing: error
+    #homeassistant.components.image_processing: error
 
 updater:
 discovery:
@@ -89,13 +89,6 @@ xiaomi_aqara:
   gateways:
     - key: !secret xiaomi_aqara_gateway_key
 input_text: !include input_text.yaml
-# mqtt:
-#   broker: !secret mqtt_broker
-#   username: !secret mqtt_username
-#   password: !secret mqtt_password
-#   keepalive: 60
-#   port: 1883
-#   client_id: hass
 google:
   client_id: !secret google_calendar_client_id
   client_secret: !secret google_calendar_client_secret
@@ -104,12 +97,11 @@ climate: !include climate.yaml
 camera: !include camera.yaml
 vacuum: !include vacuum.yaml
 remote: !include remote.yaml
-#gpslogger:
 lovelace: 
   mode: yaml
-# weather:
-#   - platform: darksky
-#     api_key: !secret darksky_api_key
+weather:
+  - platform: darksky
+    api_key: !secret darksky_api_key
 custom_updater:
   hide_sensor: false
   show_installable: false
@@ -131,42 +123,41 @@ yeelight:
   devices:
     192.168.1.130:
       name: bedroom mini lamp
-      
+    
 system_health:
 smartir:
   update_branch: rc
 
-# hacs:
-#   token: !secret my_github_access_token
+hacs:
+  token: !secret my_github_access_token
 
 
 image_processing:
-  - platform: deepstack_object
-    ip_address: localhost
-    port: 5001
-    scan_interval: 20000
-    save_file_folder: '/config/www/deepstack_person_images'
-    target: person
-    confidence: 50
-    source:
-      - entity_id: camera.livingroom
-        name: deepstack_od_livingroom
-      - entity_id: camera.bedroom
-        name: deepstack_od_bedroom
+  # - platform: deepstack_object
+  #   ip_address: localhost
+  #   port: 5001
+  #   scan_interval: 20000
+  #   save_file_folder: '/config/www/deepstack_person_images'
+  #   target: person
+  #   confidence: 50
+  #   source:
+  #     - entity_id: camera.livingroom
+  #       name: deepstack_od_livingroom
+  #     - entity_id: camera.bedroom
+  #       name: deepstack_od_bedroom
 
-  - platform: deepstack_face
-    ip_address: localhost
-    port: 5001
-    scan_interval: 20000
-    #save_file_folder: '/config/www/deepstack_person_images'
-    #target: person
-    confidence: 50
-    source:
-      - entity_id: camera.livingroom
-        name: deepstack_fd_livingroom
-      - entity_id: camera.bedroom
-        name: deepstack_fd_bedroom
-
+  # - platform: deepstack_face
+  #   ip_address: localhost
+  #   port: 5001
+  #   scan_interval: 20000
+  #   #save_file_folder: '/config/www/deepstack_person_images'
+  #   #target: person
+  #   confidence: 50
+  #   source:
+  #     - entity_id: camera.livingroom
+  #       name: deepstack_fd_livingroom
+  #     - entity_id: camera.bedroom
+  #       name: deepstack_fd_bedroom
   - platform: facebox
     ip_address: localhost
     port: 8090
@@ -175,19 +166,17 @@ image_processing:
         name: facebox_livingroom
       - entity_id: camera.bedroom
         name: facebox_bedroom
-
   - platform: amazon_rekognition
     aws_access_key_id: !secret aws_access_key_id
     aws_secret_access_key: !secret aws_secret_access_key
-    #region_name: eu-west-1 # optional region, default us-east-1
-    #target: Car # Optional target object, default Person
+    target: Person
     source:
       - entity_id: camera.livingroom
         name: rekognition_livingroom
       - entity_id: camera.bedroom
         name: rekognition_bedroom
 
-twilio:
-  account_sid: !secret twilio_account_sid 
-  auth_token: !secret twilio_auth_token
+# twilio:
+#   account_sid: !secret twilio_account_sid 
+#   auth_token: !secret twilio_auth_token
   

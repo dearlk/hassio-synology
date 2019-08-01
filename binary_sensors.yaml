@@ -55,7 +55,13 @@
         friendly_name: Livingroom Tv
         value_template: '{{ (states.binary_sensor.livingroom_tv.state == "on") }}'
         entity_id: binary_sensor.livingroom_tv
-
+      # jyoti_sleeping:
+      #   friendly_name: Jyoti Sleeping
+      #   value_template: '{{ states.sensor.time.state > states.input_datetime.bed_time.state }}'
+      # lalit_sleeping:
+      #   friendly_name: Lalit Sleeping
+      #   value_template: '{{ states.sensor.time.state > states.input_datetime.bed_time.state }}'
+        
   # - platform: bayesian
   #   prior: 0.5
   #   name: lalit at home
@@ -98,13 +104,8 @@
   #       platform: state
   #       to_state: home
 
-  - platform: mqtt
-    state_topic: "zanzito/lalit/samsung_pick_up_gesture"
-    name: lalit_awake
-    payload_on: ''
-    off_delay: 1800
-  - platform: mqtt
-    state_topic: "zanzito/jyoti/samsung_pick_up_gesture"
-    name: jyoti_awake
-    payload_on: ''
-    off_delay: 1800
+
+
+    
+
+    

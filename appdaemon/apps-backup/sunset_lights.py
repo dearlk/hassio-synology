@@ -12,10 +12,10 @@ class SunsetLights(hass.Hass):
 
   def initialize(self):
 
-    runtime = datetime.time(00,00,00)
+    runtime = datetime.time(22,30,00)
     self.run_at_sunset(self.sunset_lights_turn_on,offset=-0)
     self.run_daily(self.sunset_lights_turn_off,runtime)
-    #self.listen_state(self.someone_at_home_now, "group.all_devices", new="home") 
+    self.listen_state(self.someone_at_home_now, "group.all_devices", new="home") 
     
 
   def sunset_lights_turn_on (self, kwargs):

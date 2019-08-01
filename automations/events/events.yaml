@@ -1,6 +1,6 @@
 #sunset lights on if someone at home
 - alias: sunset lights on
-  initial_state: true
+  initial_state: false
   trigger:
     platform: sun
     event: sunset
@@ -21,7 +21,7 @@
 
 #sunset lights on on arrival
 - alias: on arrival sunset lights on 
-  initial_state: true
+  initial_state: false
   trigger:
     platform: state
     to: 'home'
@@ -48,7 +48,7 @@
 
 #sunset lights off
 - alias: sunset lights off
-  initial_state: true
+  initial_state: false
   trigger:
     platform: time
     at: '22:00:00'
@@ -111,14 +111,14 @@
     - service: script.turn_on
       data:
         entity_id: script.spotify_morning
-# stop evening music
-- alias: stop good morning spotify
-  trigger:
-    - platform: time
-      at: '07:30:00'
-  action:
-    - service: media_player.media_stop
-      entity_id: media_player.spotify
+# # stop evening music
+# - alias: stop good morning spotify
+#   trigger:
+#     - platform: time
+#       at: '07:30:00'
+#   action:
+#     - service: media_player.media_stop
+#       entity_id: media_player.spotify
 #good evening
 - alias: Good Evening Spotify 
   initial_state: true
@@ -133,11 +133,14 @@
     - service: script.turn_on
       data:
         entity_id: script.spotify_evening
-# stop evening music
+# stop morning or evening music
 - alias: stop good evening spotify
+  initial_state: true
   trigger:
     - platform: time
-      at: '00:00:30'
+      at: '00:00:00'
+    - platform: time
+      at: '08:00:00'
   action:
     - service: media_player.media_stop
       entity_id: media_player.spotify
@@ -238,6 +241,7 @@
 
 #################################################### 
 - alias: IFTTT trigger
+  initial_state: true      
   trigger:
     platform: event
     event_type: ifttt_webhook_received
@@ -250,11 +254,10 @@
 
 #############################################################
 - alias: Person detected 
+  initial_state: true    
   trigger:
     - platform: event
       event_type: image_processing.object_detected
-      event_data:
-        object: person
   condition:
     - condition: template
       value_template: '{{trigger.event.data.confidence|float>60}}'
@@ -262,36 +265,40 @@
     - service: python_script.notify
       data_template:
         message: > 
-          'Person detected in {{ trigger.event.data.entity_id.split["_"][2] }}\n{{trigger.event.data}}'
+          '{{
+            trigger.event.data.target_count|int}} 
+            Person(s) detected in {{trigger.event.data.entity_id.split(".")[1].split("_")[1] }}, 
+            confidence is {{trigger.event.data.confidence
+          }}'
       
-#############################################################
-# - alias: Object detected in bedroom
-#   trigger:
-#     - platform: event
-#       event_type: image_processing.object_detected
-#       event_data:
-#         object: person
-#         entity_id: image_processing.bedroom_pd      
-#   action:
-#     - service: python_script.notify
-#       data_template:
-#         message: "{{ trigger.event.data.object }} with confidence {{ trigger.event.data.confidence }}"
-#         text: 1
-#         tell: lalit  
-
 #######################################################################
 - alias: someone just recognised
+  initial_state: true      
   trigger:
     platform: event
     event_type: image_processing.detect_face
     event_data:
       matched: true
-  # condition:
-  #   - condition: template
-  #     value_template: '{{  trigger.event.data.matched | int > 0 }}'
+  condition:
+    - condition: template
+      value_template: '{{trigger.event.data.confidence|float>50}}'
   action:
     service: python_script.notify
     data_template:
-      message: '{{ trigger.event.data }}'
-      # text: 1
-      # tell: lalit
+      message: '{{ trigger.event.data.name }} in {{ trigger.event.data.entity_id.split(".")[1].split("_")[1]}}'
+#######################################################################
+- alias: device info received
+  initial_state: true      
+  trigger:
+    - platform: mqtt
+      topic: 'zanzito/jyoti/device_info'
+    - platform: mqtt
+      topic: 'zanzito/lalit/device_info'
+  action:
+    service: python_script.notify
+    data_template:
+      message: '{{trigger.topic}} - {{trigger.payload}}'
+      text: 1
+      tell: lalit
+#######################################################################
+   

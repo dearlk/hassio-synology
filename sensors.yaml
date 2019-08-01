@@ -107,34 +107,30 @@
   #- platform: pi_hole
 
 
-  # - platform: darksky
-  #   api_key: !secret darksky_api_key
-  #   monitored_conditions:
-  #     - summary
-  #     - cloud_cover
+  - platform: darksky
+    api_key: !secret darksky_api_key
+    monitored_conditions:
+      - summary
+      - cloud_cover
 
   # - platform: rest
-    # resource: https://ml.internalpositioning.com/location?group=smallsponge&user=lalit
-    # value_template: '{{ value_json.users.lalit[0].location }}'
-    # method: GET
-    # name: Room
-    # scan_interval: 5
+  #   resource: https://ml.internalpositioning.com/location?group=smallsponge&user=lalit
+  #   value_template: '{{ value_json.guesses[0].location }}'
+  #   method: GET
+  #   name: lalit_location
+  #   scan_interval: 5
 
-  # - platform: mqtt
-    # name: mqtt received 
-    # state_topic: "lalit/switch/#"
-    # retain: false
+  # - platform: rest
+  #   resource: https://cloud.internalpositioning.com/view/location/myhome/lalit
+  #   value_template: '{{ value_json.guesses[0].location }}'
+  #   method: GET
+  #   name: lalit_location
+  #   scan_interval: 5
 
 
-  # - platform: uber
-  #   start_latitude: 1.398251
-  #   start_longitude: 103.916706
-  #   end_latitude: 1.3356338
-  #   end_longitude: 103.9660896
-  #   server_token: !secret uber_server_token
-  #   product_ids:
-  #     - 'df231aa9-4583-4add-9526-5018aa450a9c'
-  #     - '254b4950-0240-4105-8e66-b740cf1b812f'
+
+
+
 
 
   - platform: places
@@ -155,4 +151,13 @@
     home_zone: zone.home
     api_key: !secret email_lalit
 
-  
+
+    
+    
+  # - platform: mqtt
+  #   state_topic: 'myhome/location/lalit'
+  #   name: lalit_location
+  #   value_template: '{{ value_json.guesses[0].location }}'    
+    
+
+    

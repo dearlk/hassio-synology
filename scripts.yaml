@@ -280,7 +280,7 @@ spotify_volume_fade_in:
           {% endif %}
           {{ next }}
     - service_template: >
-        {% if states.media_player.spotify.attributes.volume_level < 0.6 %}
+        {% if states.media_player.spotify.attributes.volume_level < 0.8 %}
           script.turn_on
         {% else %}
           script.turn_off
@@ -291,7 +291,7 @@ spotify_volume_fade_in:
 spotify_fade_in_stop:
   sequence:
   - delay:
-      seconds: 120
+      seconds: 300
   - service: script.turn_on
     data:
       entity_id: script.spotify_volume_fade_in

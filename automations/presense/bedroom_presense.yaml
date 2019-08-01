@@ -44,10 +44,10 @@
     - service: homeassistant.turn_on
       data:
         entity_id: input_boolean.bedroom_presence_check
-    - service: image_processing.scan
-      entity_id: image_processing.deepstack_od_bedroom
-    - service: image_processing.scan
-      entity_id: image_processing.deepstack_fd_bedroom
+    # - service: image_processing.scan
+    #   entity_id: image_processing.deepstack_od_bedroom
+    # - service: image_processing.scan
+    #   entity_id: image_processing.deepstack_fd_bedroom
     - service: image_processing.scan
       entity_id: image_processing.facebox_bedroom
     - service: image_processing.scan

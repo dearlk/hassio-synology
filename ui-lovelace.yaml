@@ -23,25 +23,25 @@ title: My Home
 views:
   - title: Home
     icon: mdi:home
-    badges:
-      #- sensor.time
-      #- sun.sun
-      # - sensor.moon
-      - device_tracker.lalit
-      - device_tracker.jyoti
-      - device_tracker.mom
-      - binary_sensor.lalit_awake
-      - binary_sensor.jyoti_awake
-      #- binary_sensor.announcement_mode
-      #- binary_sensor.sleep_mode
-      #- binary_sensor.tv_mode
-      #- binary_sensor.workday
-      #- binary_sensor.morning
-      #- binary_sensor.evening
-      #- binary_sensor.night
-      - sensor.sunlight
-      - sensor.systemmonitor_processor_use
-      - sensor.systemmonitor_memory_use_percent
+    # badges:
+    #   #- sensor.time
+    #   #- sun.sun
+    #   # - sensor.moon
+    #   - device_tracker.lalit
+    #   - device_tracker.jyoti
+    #   - device_tracker.mom
+    #   # - binary_sensor.lalit_sleeping
+    #   # - binary_sensor.jyoti_sleeping
+    #   #- binary_sensor.announcement_mode
+    #   #- binary_sensor.sleep_mode
+    #   #- binary_sensor.tv_mode
+    #   #- binary_sensor.workday
+    #   #- binary_sensor.morning
+    #   #- binary_sensor.evening
+    #   #- binary_sensor.night
+    #   - sensor.sunlight
+    #   - sensor.systemmonitor_processor_use
+    #   - sensor.systemmonitor_memory_use_percent
 
     cards:
       - type: vertical-stack            
@@ -53,8 +53,14 @@ views:
                 show_header_toggle: false
                 entities:
                   - sensor.jyoti
+                  #- entity: sensor.jyoti_mobile_in_use
+                  - entity: binary_sensor.jyoti_phone_screen_locked  
+                  - entity: sensor.jyoti_room_location
                   - sensor.lalit
-
+                  #- entity: sensor.lalit_mobile_in_use
+                  - entity: binary_sensor.lalit_phone_screen_locked
+                  - entity: sensor.lalit_room_location 
+                  - entity: device_tracker.mom                                    
               - type: custom:auto-entities
                 card:
                   type: entities
@@ -106,11 +112,11 @@ views:
               include: 
                 - domain: calendar
                   state: 'on'
-          - type: media-control
+          - type: custom:mini-media-player
             entity: media_player.spotify          
-          - type: media-control
+          - type: custom:mini-media-player
             entity: media_player.livingroom_office          
-          - type: media-control
+          - type: custom:mini-media-player
             entity: media_player.home
 ##############################################################################################
 #
@@ -119,11 +125,12 @@ views:
 ##############################################################################################
   - title: Livingroom
     icon: mdi:sofa
-    badges:
-      #- sensor.office_temperature
-      #- sensor.humidity
-      - binary_sensor.main_door
-      - binary_sensor.livingroom_motion    
+    # badges:
+    #   #- sensor.office_temperature
+    #   #- sensor.humidity
+    #   - binary_sensor.main_door
+    #   - binary_sensor.livingroom_motion
+    #   - binary_sensor.kitchen_motion
     cards:
       - type: picture-glance
         entities:
@@ -150,6 +157,12 @@ views:
             - entity_id: binary_sensor.main_door
               options:
                 secondary_info: last-changed
+            - entity_id: binary_sensor.kitchen_motion
+              options:
+                secondary_info: last-changed 
+            - entity_id: light.kitchen_light
+              options:
+                secondary_info: last-changed                             
             - entity_id: binary_sensor.livingroom_motion
               options:
                 secondary_info: last-changed                
@@ -201,9 +214,9 @@ views:
 
       - type: vertical-stack
         cards:
-          - type: media-control
+          - type: custom:mini-media-player
             entity: media_player.livingroom
-          - type: media-control
+          - type: custom:mini-media-player
             entity: media_player.livingroom_tv
 
       - type: entities
@@ -221,11 +234,11 @@ views:
 ##############################################################################################
   - title: Office
     icon: mdi:domain
-    badges:
-      - sensor.office_temperature
-      - sensor.office_humidity
-      - binary_sensor.office_door
-      - binary_sensor.office_motion
+    # badges:
+    #   - sensor.office_temperature
+    #   - sensor.office_humidity
+    #   - binary_sensor.office_door
+    #   - binary_sensor.office_motion
       
     cards:
 
@@ -261,12 +274,16 @@ views:
               options:
                 secondary_info: last-changed
 
-      - type: media-control
+      - type: custom:mini-media-player
         entity: media_player.office
       - type: sensor
         entity: sensor.office_temperature
         name: Temperature
         graph: line
+      - type: sensor
+        entity: sensor.office_humidity
+        name: Humidity
+        graph: line        
 ##############################################################################################
 #
 # Familyroom config
@@ -303,6 +320,12 @@ views:
             - entity_id: light.temple_lamp
               options:
                 secondary_info: last-changed
+            - entity_id: binary_sensor.family_bathroom_motion
+              options:
+                secondary_info: last-changed
+            - entity_id: light.family_bathroom_light
+              options:
+                secondary_info: last-changed                
 ##############################################################################################
 #
 # Bedroom config
@@ -310,9 +333,9 @@ views:
 ##############################################################################################
   - title: Bedroom
     icon: mdi:hotel
-    badges:
-      - sensor.bedroom_temperature
-      - sensor.bedroom_humidity    
+    # badges:
+    #   - sensor.bedroom_temperature
+    #   - sensor.bedroom_humidity    
     cards:
       - type: picture-glance
         entities:
@@ -321,22 +344,36 @@ views:
             icon: mdi:air-conditioner
           - entity: switch.bedroom_tv
             name: TV
-            #icon: mdi:television
+            icon: mdi:television
           - entity: fan.bedroom_air_purifier
         camera_image: camera.bedroom
         camera_view: live
+      - type: custom:auto-entities
+        card:
+          type: entities
+        filter:
+          include:
+            - entity_id: light.bedroom_mini_lamp
+              options:
+                secondary_info: last-changed
+            - entity_id: light.bedroom_lamp
+              options:
+                secondary_info: last-changed
+            - entity_id: light.bedroom_light
+              options:
+                secondary_info: last-changed
 
-      - type: entities
-        entities:
-          - entity: light.bedroom_mini_lamp
-          - entity: light.bedroom_lamp
-          - entity: light.bedroom_light
-          - entity: light.bathroom_light
-          - entity: climate.bedroom_aircon
+            - entity_id: light.bathroom_light
+              options:
+                secondary_info: last-changed
 
-      - type: media-control
+            - entity_id: climate.bedroom_aircon
+              options:
+                secondary_info: last-changed
+
+      - type: custom:mini-media-player
         entity: media_player.bedroom
-      - type: media-control
+      - type: custom:mini-media-player
         entity: media_player.bedroom_tv 
 
 ###############################################################################################################################################

@@ -1,5 +1,6 @@
 # reached office
 - alias: Jyoti Reached Office
+  initial_state: true      
   action:
     data:
       message: Jyoti has reached office now
@@ -11,6 +12,7 @@
     zone: zone.UBS
 # left office
 - alias: Jyoti Left Office
+  initial_state: true    
   action:
     data:
       message: Jyoti has left office now
@@ -22,6 +24,7 @@
     zone: zone.UBS
 # reached home
 - alias: Jyoti Reached home
+  initial_state: true    
   action:
     - service: python_script.notify
       data:
@@ -35,6 +38,7 @@
     zone: zone.home
 # left home
 - alias: Jyoti Left home
+  initial_state: true    
   action:
     - service: python_script.notify
       data:
@@ -49,7 +53,7 @@
 
 
 - alias: Jyoti is travelling
-  initial_state: true
+  initial_state: true    
   trigger:
     platform: event
     event_type: places_state_update

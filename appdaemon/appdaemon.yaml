@@ -4,13 +4,22 @@ log:
   errorfile: /config/appdaemon.log
 appdaemon:
   production_mode: false
-  threads: 10
+  threads: 20
   app_dir: /config/appdaemon/apps
   plugins:
     HASS:
       type: hass
       ha_url: http://hassio/homeassistant
-      token: 228c6cbc3a80dab0a47c32893d373938350d0c2bcbdf23285b12584fe7352777
+      token: 2a2ee7df9d5f63fe80eb399b9881aeae1715b849b619820daf9dd809af286a3d8158eac95dd79e73865eec84415b64764165901b433bf99d
+      namespace: default
+    MQTT:
+      type: mqtt
+      client_host: 192.168.1.165
+      client_user: mqtttest
+      client_password: admin
+      namespace: mqtt
+      verbose: false
+      token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiYTA1MjQyMDYzZTg0NjZkYjRhMmRmZWI1ODU2ZGI5MiIsImlhdCI6MTU2NDIxMTIwOSwiZXhwIjoxODc5NTcxMjA5fQ.UWUgMziJSqzKT7BzrX6DoXpukQKwz3TFIbx2sh5uAFs
 hadashboard:
   dash_url: http://127.0.0.1:5050
   dash_dir: /config/appdaemon/dashboards

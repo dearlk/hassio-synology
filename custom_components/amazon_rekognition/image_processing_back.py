@@ -25,8 +25,8 @@ CONF_SECRET_ACCESS_KEY = 'aws_secret_access_key'
 CONF_TARGET = 'target'
 DEFAULT_TARGET = 'Person'
 CLASSIFIER = 'amazon_rekognition'
-OBJECT = 'object'
 EVENT_OBJECT_DETECTED = 'image_processing.object_detected'
+OBJECT = 'object'
 
 DEFAULT_REGION = 'us-east-1'
 SUPPORTED_REGIONS = ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2',
@@ -108,16 +108,7 @@ class Rekognition(ImageProcessingEntity):
         response = self._client.detect_labels(Image={'Bytes': image})
         self._state = get_label_instances(response, self._target)
         self._labels = parse_labels(response)
-        #_LOGGER.error(self._labels)
-        if int(self._state) > 0:
-            self.hass.bus.fire(
-                EVENT_OBJECT_DETECTED, {
-                    'classifier': CLASSIFIER,
-                    ATTR_ENTITY_ID: self.entity_id,
-                    OBJECT: self._labels,
-                    'target_count': self._state,
-                    ATTR_CONFIDENCE: (self._labels[DEFAULT_TARGET])
-                })        
+        #self.log(self._labels)
 
     @property
     def camera_entity(self):

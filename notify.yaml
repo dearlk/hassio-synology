@@ -7,37 +7,24 @@
   - name: google_broadcast
     platform: rest
     resource: !secret google_assistant_resource
-
   - name: google_command
     platform: rest
     resource: !secret google_assistant_command_resource
-
   - name: pushover
     platform: pushover
     api_key: !secret pushover_api_key
     user_key: !secret pushover_user_key
-
   - name: ha_notifier
     platform: group
     services:
       - service: lalit
       - service: jyoti
-      - service: whatsapp
-
-  # - name: lalit
-  #   platform: group
-  #   services:
-  #     - service: lalit_zanzito
-  #     - service: pushover
-
   - name: lalit
     platform: zanzito
     device-name: lalit
-
   - name: jyoti
     platform: zanzito
     device-name: jyoti
-
-  - name: whatsapp
-    platform: twilio_whatsapp
-    from_number: whatsapp:+14155238886
+  # - name: whatsapp
+  #   platform: twilio_whatsapp
+  #   from_number: whatsapp:+14155238886

@@ -35,10 +35,10 @@
     - service: homeassistant.turn_on
       data:
         entity_id: input_boolean.livingroom_presence_check
-    - service: image_processing.scan
-      entity_id: image_processing.deepstack_od_livingroom
-    - service: image_processing.scan
-      entity_id: image_processing.deepstack_fd_livingroom
+    # - service: image_processing.scan
+    #   entity_id: image_processing.deepstack_od_livingroom
+    # - service: image_processing.scan
+    #   entity_id: image_processing.deepstack_fd_livingroom
     - service: image_processing.scan
       entity_id: image_processing.facebox_livingroom
     - service: image_processing.scan
