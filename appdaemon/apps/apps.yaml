@@ -1,16 +1,17 @@
-notify:
-  module: notify
-  class: Notify
+# notify:
+#   module: notify
+#   class: Notify
   
 mqtt_app_lalit:
   module: mqtt_app
   class: MQTTApp
   name: lalit
-
+  data: lalit_data.json
 mqtt_app_jyoti:
   module: mqtt_app
   class: MQTTApp
   name: jyoti
+  data: jyoti_data.json
 
 sunset_lights:
   module: sunset_lights

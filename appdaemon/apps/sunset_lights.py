@@ -20,13 +20,13 @@ class SunsetLights(hass.Hass):
 
   def sunset_lights_turn_on (self, kwargs):
     if self.anyone_home():
-      self.set_state("sensor.appd_notify",state="turning on sunset lights...", attributes={"announce":True, "frontend":True})
+      #self.set_state("sensor.appd_notify",state="turning on sunset lights...", attributes={"announce":True, "frontend":True})
       self.turn_on(self.args["sunset_lights"])
       self.set_state("sensor.sunset_lights", state="on")
 
   def sunset_lights_turn_off (self, kwargs):
     #if self.get_state("binary_sensor.sleep_mode")=="on":
-    self.set_state("sensor.appd_notify",state="turning off sunset lights...", attributes={"announce":True, "frontend":True})
+    #self.set_state("sensor.appd_notify",state="turning off sunset lights...", attributes={"announce":True, "frontend":True})
     self.turn_off(self.args["sunset_lights"])
     self.set_state("sensor.sunset_lights", state="off")
 
