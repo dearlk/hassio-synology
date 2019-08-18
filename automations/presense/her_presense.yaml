@@ -45,6 +45,10 @@
         message: Jyoti has left home now
     - service: input_boolean.turn_off
       entity_id: input_boolean.jyoti_at_home
+    - service: python_script.set_state
+      data:
+        entity_id: sensor.jyoti_room_location
+        state: "Not at home"      
   trigger:
     entity_id: device_tracker.jyoti
     event: leave

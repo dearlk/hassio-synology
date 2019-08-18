@@ -25,6 +25,6 @@
   - name: jyoti
     platform: zanzito
     device-name: jyoti
-  # - name: whatsapp
-  #   platform: twilio_whatsapp
-  #   from_number: whatsapp:+14155238886
+  - name: whatsapp
+    platform: twilio_whatsapp
+    from_number: whatsapp:+14155238886

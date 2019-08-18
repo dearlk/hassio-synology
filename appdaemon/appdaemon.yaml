@@ -10,13 +10,13 @@ appdaemon:
     HASS:
       type: hass
       ha_url: http://hassio/homeassistant
-      token: 2a2ee7df9d5f63fe80eb399b9881aeae1715b849b619820daf9dd809af286a3d8158eac95dd79e73865eec84415b64764165901b433bf99d
+      token: 6687051e5348068e1e74c3c6fb2a9b3cfde104696b1d7911ccebcf543c2f2bd56afb53e68001804e4eb729fb69071f30cd6a793ed9784fce
       namespace: default
     MQTT:
       type: mqtt
-      client_host: 192.168.1.165
-      client_user: mqtttest
-      client_password: admin
+      client_host: !secret mqtt_broker
+      client_user: !secret mqtt_username
+      client_password: !secret mqtt_password
       namespace: mqtt
       verbose: false
       token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiYTA1MjQyMDYzZTg0NjZkYjRhMmRmZWI1ODU2ZGI5MiIsImlhdCI6MTU2NDIxMTIwOSwiZXhwIjoxODc5NTcxMjA5fQ.UWUgMziJSqzKT7BzrX6DoXpukQKwz3TFIbx2sh5uAFs

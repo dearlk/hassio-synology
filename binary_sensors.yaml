@@ -21,6 +21,12 @@
     count: 2
     scan_interval: 30
 
+  - platform: ping
+    host: !secret bedroom_tv_ip
+    name: bedroom_tv
+    count: 2
+    scan_interval: 30
+
   - platform: template
     sensors:
       # jyoti_home_towards:
@@ -106,6 +112,27 @@
 
 
 
-    
+  - platform: mqtt
+    name: jyoti mobile zanzito status
+    state_topic: zanzito/jyoti/status
+    payload_on: "1"
+    payload_off: "0"
+    device_class: connectivity
 
-    
+  # - platform: mqtt
+  #   name: jyoti mobile charging
+  #   state_topic: zanzito/jyoti/device_info
+  #   value_template: '{{ value_json.battery_charging }}'
+
+
+  - platform: mqtt
+    name: lalit mobile zanzito status
+    state_topic: zanzito/lalit/status
+    payload_on: "1"
+    payload_off: "0"
+    device_class: connectivity
+
+  # - platform: mqtt
+  #   name: lalit mobile charging
+  #   state_topic: zanzito/lalit/device_info
+  #   value_template: '{{ value_json.battery_charging }}'

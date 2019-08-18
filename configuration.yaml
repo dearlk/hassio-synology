@@ -10,6 +10,8 @@ homeassistant:
   packages: !include_dir_named packages
   auth_providers:
     - type: homeassistant
+    - type: legacy_api_password
+      api_password: !secret http_password
     - type: trusted_networks
       trusted_networks:
         - 192.168.1.0/24
@@ -25,18 +27,18 @@ default_config:
 system_log:
   fire_event: true
 logger:
-  default: info
-  logs:
-    custom_components.device_tracker.composite: error
-    custom_components.places.sensor: error
-    homeassistant.components.media_player.spotify: debug
-    homeassistant.components.proximity: error
-    #homeassistant.components.ifttt: debug
-    #homeassistant.components.automation: debug
-    #homeassistant.components.mqtt: error
-    googleapiclient.discovery: error
-    #homeassistant.components.image_processing: error
-
+  # default: info
+  # logs:
+  #   custom_components.device_tracker.composite: error
+  #   custom_components.places.sensor: error
+  #   homeassistant.components.media_player.spotify: debug
+  #   homeassistant.components.proximity: error
+  #   #homeassistant.components.ifttt: debug
+  #   #homeassistant.components.automation: debug
+  #   #homeassistant.components.mqtt: error
+  #   googleapiclient.discovery: error
+  #   #homeassistant.components.image_processing: error
+#mobile_app:
 updater:
 discovery:
   ignore:
@@ -50,6 +52,7 @@ conversation:
 history:
 logbook:
 recorder:
+  #db_url: !secret db_url
 map:
 sun:
 http: !include http.yaml
@@ -128,8 +131,8 @@ system_health:
 smartir:
   update_branch: rc
 
-hacs:
-  token: !secret my_github_access_token
+# hacs:
+#   token: !secret my_github_access_token
 
 
 image_processing:
@@ -179,4 +182,6 @@ image_processing:
 # twilio:
 #   account_sid: !secret twilio_account_sid 
 #   auth_token: !secret twilio_auth_token
-  
+variable:
+  base_url_full: 
+    value: !secret base_url_full

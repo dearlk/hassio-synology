@@ -82,7 +82,7 @@
 ##############################################################################################################################
 #good morning
 - alias: Good Morning
-  initial_state: false
+  initial_state: true
   trigger:
     platform: template
     value_template: "{{ states('sensor.time') == (states.input_datetime.morning_alarm_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
@@ -91,15 +91,15 @@
     entity_id: binary_sensor.workday
     state: 'on'
   action:
-    - service: script.turn_on
-      data:
-        entity_id: script.play_morning_music
+    - service: script.play_morning_music_by_room
+      data_template:
+        rname: '{{states.sensor.lalit_room_location.state}}'
 
 
 
 #good morning
 - alias: Good Morning Spotify 
-  initial_state: true
+  initial_state: false
   trigger:
     - platform: template
       value_template: "{{ states('sensor.time') == (states.input_datetime.morning_alarm_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
@@ -121,7 +121,7 @@
 #       entity_id: media_player.spotify
 #good evening
 - alias: Good Evening Spotify 
-  initial_state: true
+  initial_state: false
   trigger:
     - platform: template
       value_template: "{{ states('sensor.time') == (states.input_datetime.bed_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
@@ -188,7 +188,11 @@
     service: python_script.notify
   - data:
       name: 'darkcyan'
-    service: frontend.set_theme  
+    service: frontend.set_theme
+  - data_template:
+      level: '{{states.input_select.log_level.state}}'
+    service: logger.set_default_level
+
   alias: Start Notification
   id: '1515164840930'
   trigger:
@@ -203,19 +207,12 @@
   condition:
     - condition: state
       state: 'not_home'
-      entity_id: device_tracker.jyoti
+      entity_id: device_tracker.jyoti_nmap
   action:
-    - service: python_script.notify
-      data_template: 
-        message: "It's {{ as_timestamp(now()) | timestamp_custom('%I', True) | int }} O'clock now"
-        announce: 1
-        text: 1
-        room: "{{ states.input_select.clock_speaker.state }}"
-    #- service: media_extractor.play_media
-    - service: media_player.play_media
+    - service: media_extractor.play_media
       data_template:
         entity_id: "media_player.{{ states.input_select.clock_speaker.state }}"
-        media_content_id: !secret base_clock_url 
+        media_content_id: "{{states.variable.base_url_full.state}}/local/{{as_timestamp(now())|timestamp_custom('%I',True)|int}}.mp3"
         media_content_type: "music" 
 
 
@@ -265,14 +262,25 @@
     - service: python_script.notify
       data_template:
         message: > 
-          '{{
-            trigger.event.data.target_count|int}} 
-            Person(s) detected in {{trigger.event.data.entity_id.split(".")[1].split("_")[1] }}, 
-            confidence is {{trigger.event.data.confidence
-          }}'
-      
+          '{{trigger.event.data.target_count|int}} Person(s) detected in {{trigger.event.data.entity_id.split(".")[1].split("_")[1] }}, confidence is {{ trigger.event.data.confidence}}'
+    - delay: '00:00:05'
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.send_camera_picture_notification
+    - service: notify.ha_notifier
+      data_template:
+        message: 'person detected'
+        data_template: >
+          photo:
+            - url: 
+                {% set room =trigger.event.data.entity_id.split(".")[1].split("_")[1] %}
+                {%- if room =="livingroom" -%} 
+                  !secret livingroom_camera_url 
+                {%- elif room =="bedroom" -%} 
+                  !secret bedroom_camera_url 
+                {%- endif -%} 
 #######################################################################
-- alias: someone just recognised
+- alias: face recognised
   initial_state: true      
   trigger:
     platform: event
@@ -283,12 +291,27 @@
     - condition: template
       value_template: '{{trigger.event.data.confidence|float>50}}'
   action:
-    service: python_script.notify
-    data_template:
-      message: '{{ trigger.event.data.name }} in {{ trigger.event.data.entity_id.split(".")[1].split("_")[1]}}'
+    - service: python_script.notify
+      data_template:
+        message: '{{ trigger.event.data.name }} in {{ trigger.event.data.entity_id.split(".")[1].split("_")[1]}}'
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.send_camera_picture_notification
+    - service: notify.ha_notifier
+      data: 
+        message: 'face recognised'
+        data_template: >
+          photo:
+            #- url: !secret livingroom_camera_url
+            - url:
+                {% if trigger.event.data.entity_id.split(".")[1].split("_")[1]=="livingroom" %}
+                    !secret livingroom_camera_url
+                {% elif trigger.event.data.entity_id.split(".")[1].split("_")[1]=="bedroom" %}
+                    !secret bedroom_camera_url
+                {% endif %}
 #######################################################################
 - alias: device info received
-  initial_state: true      
+  initial_state: false      
   trigger:
     - platform: mqtt
       topic: 'zanzito/jyoti/device_info'

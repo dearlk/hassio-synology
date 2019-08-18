@@ -24,7 +24,7 @@
     name: lalit
     time_as: local
     entity_id: 
-      - device_tracker.lalit_gpslogger
+      #- device_tracker.lalit_gpslogger
       - device_tracker.lalit_nmap
       - device_tracker.lalit_zanzito
 

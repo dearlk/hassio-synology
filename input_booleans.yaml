@@ -86,3 +86,10 @@
   automation_trigger_notification_mode:
     name: Automation Trigger Notification Mode
     initial: off
+  send_camera_picture_notification:
+    name: send camera picture notification
+    icon: mdi:camera
+    #initial: off
+  send_battery_notification:
+    name: send_battery_notification
+    icon: mdi:mobile    

@@ -77,3 +77,27 @@
     - service: homeassistant.turn_off
       data:
         entity_id: light.bathroom_light
+############################################################################
+- alias: bedroom door open
+  trigger:
+    entity_id: binary_sensor.bedroom_door
+    platform: state
+    to: 'on'
+    from: 'off'
+  condition:
+    - condition: state
+      state: 'not_home'
+      entity_id: device_tracker.jyoti
+    - condition: state
+      state: 'not_home'
+      entity_id: device_tracker.lalit
+  action:
+    - service: xiaomi_aqara.play_ringtone
+      data:
+        ringtone_id: 8
+        ringtone_vol: 100
+    - service: python_script.notify
+      data:
+        message: 'bedroom door opened'
+
+        

@@ -1,4 +1,15 @@
 
+  
+  log_level:
+    name: log level
+    options:
+     - 'not-set'
+     - 'debug'
+     - 'info'
+     - 'warn'
+     - 'error'
+    initial: 'info'  
+  
   clock_speaker:
     name: Clock speaker
     options:

@@ -3,10 +3,21 @@
     client_id: !secret spotify_client_id
     client_secret: !secret spotify_client_secret
     aliases:
-        aca284739cb7a61bd37df07f7f77238646c836c3: 'SP3'
-        33ef4507c9b8cab6b8d4f8b7ab74f648e794908f: 'GlaxyS7Edge'
-        df9b95798d123a24f0d62289b1b5346e: 'Office'
-        e506539d1b492b1b316570877034868aabbbc076: 'NUC'
+      SP3: aca284739cb7a61bd37df07f7f77238646c836c3
+      NUC: e506539d1b492b1b316570877034868aabbbc076
+      Office: df9b95798d123a24f0d62289b1b5346e
+      SM-G935F: 33ef4507c9b8cab6b8d4f8b7ab74f648e794908f
+      Bedroom:  3f8a31a923ce926524b9d96f0d62d208
+      Livingroom: 145a31667fe6786c59563d3396fc6a66 
+      Hass.io: Hass.io
 
 
+    # aliases:
+    #     aca284739cb7a61bd37df07f7f77238646c836c3: SP3
+    #     e506539d1b492b1b316570877034868aabbbc076: NUC
+    #     df9b95798d123a24f0d62289b1b5346e: Office
+    #     33ef4507c9b8cab6b8d4f8b7ab74f648e794908f: SM-G935F
+    #     3f8a31a923ce926524b9d96f0d62d208: Bedroom
+    #     145a31667fe6786c59563d3396fc6a66: Livingroom
+    #     Hass.io: Hass.io
 

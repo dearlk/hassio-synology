@@ -163,16 +163,16 @@ studio_light_off:
     - service: switch.turn_off
       entity_id: switch.livingroom_studio_light
 
-
 #############################################################################################
-play_morning_music:
-  alias: play monring music
+play_morning_music_by_room:
+  alias: play monring music by room
   sequence:
-  - service: script.turn_on
-    entity_id: script.volume_down
+  - service: script.volume_down
+    data_template:
+      rname: '{{ rname }}'
   - service: media_extractor.play_media
     data_template: 
-      entity_id: media_player.office
+      entity_id: media_player.{{ rname }}
       media_content_id: '{{ [
                              "https://www.youtube.com/watch?v=qpxINQEdUyE", 
                              "https://www.youtube.com/watch?v=6E3MMKzBn1g", 
@@ -180,42 +180,100 @@ play_morning_music:
                              "https://www.youtube.com/watch?v=grk1w2Xb_vo"
                             ] | random }}'
       media_content_type: "music"     
+#
 volume_down:
   sequence:
     - service: media_player.volume_set
-      data:
-        entity_id: media_player.office
+      data_template:
+        entity_id: media_player.{{ rname }}
         volume_level: 0.1
-    - service: script.turn_on
-      data:
-        entity_id: script.volume_fade_in
+    - service: script.volume_fade_in
+      data_template:
+        rname: '{{ rname }}'
+#
 volume_fade_in:
   sequence:
     - service: media_player.volume_set
       data_template:
-        entity_id: media_player.office
+        entity_id: media_player.{{ rname }}
         volume_level: >
-          {% set current = state_attr('media_player.office','volume_level') | float %}
+          {% set current = state_attr("media_player.{{ rname }}","volume_level") | float %}
           {% set next = current + 0.1 %}
           {% if next > 1 %}
             {% set next = 1 %}
           {% endif %}
           {{ next }}
     - service_template: >
-        {% if state_attr('media_player.office','volume_level') | float < 0.5 %}
+        {% if state_attr("media_player.{{ rname }}","volume_level") | float < 0.5 %}
           script.turn_on
         {% else %}
           script.turn_off
         {% endif %}
-      data:
-        entity_id: script.fade_in_stop
+      entity_id: script.fade_in_stop
+      data_template:
+        variables:
+          rname: '{{ rname }}'
+#
 fade_in_stop:
   sequence:
   - delay:
-      seconds: 300
-  - service: script.turn_on
-    data:
-      entity_id: script.volume_fade_in
+      seconds: 60
+  - service: script.volume_fade_in
+    data_template:
+      rname: '{{ rname }}'
+# #############################################################################################
+# #############################################################################################
+# play_morning_music:
+#   alias: play monring music
+#   sequence:
+#   - service: script.turn_on
+#     entity_id: script.volume_down
+#   - service: media_extractor.play_media
+#     data_template: 
+#       entity_id: media_player.office
+#       media_content_id: '{{ [
+#                              "https://www.youtube.com/watch?v=qpxINQEdUyE", 
+#                              "https://www.youtube.com/watch?v=6E3MMKzBn1g", 
+#                              "https://www.youtube.com/watch?v=PO7kT1h21CU", 
+#                              "https://www.youtube.com/watch?v=grk1w2Xb_vo"
+#                             ] | random }}'
+#       media_content_type: "music"     
+# volume_down:
+#   sequence:
+#     - service: media_player.volume_set
+#       data:
+#         entity_id: media_player.office
+#         volume_level: 0.1
+#     - service: script.turn_on
+#       data:
+#         entity_id: script.volume_fade_in
+# volume_fade_in:
+#   sequence:
+#     - service: media_player.volume_set
+#       data_template:
+#         entity_id: media_player.office
+#         volume_level: >
+#           {% set current = state_attr('media_player.office','volume_level') | float %}
+#           {% set next = current + 0.1 %}
+#           {% if next > 1 %}
+#             {% set next = 1 %}
+#           {% endif %}
+#           {{ next }}
+#     - service_template: >
+#         {% if state_attr('media_player.office','volume_level') | float < 0.5 %}
+#           script.turn_on
+#         {% else %}
+#           script.turn_off
+#         {% endif %}
+#       data:
+#         entity_id: script.fade_in_stop
+# fade_in_stop:
+#   sequence:
+#   - delay:
+#       seconds: 300
+#   - service: script.turn_on
+#     data:
+#       entity_id: script.volume_fade_in
 # #############################################################################################
 spotify_morning:
   alias: Spotify Morning
@@ -570,13 +628,13 @@ test_polly:
            </speak>
 play_door_chimes:
   sequence:
-    - wait_template: > 
-        {% set player  = 'media_player.' + states.input_select.broadcast_speaker.state %}
-        {% if states.player.state != "playing" %}
-          True
-        {%else%}
-          False
-        {%endif%}  
+    # - wait_template: > 
+    #     {% set player  = 'media_player.' + states.input_select.broadcast_speaker.state %}
+    #     {% if states.player.state != "playing" %}
+    #       True
+    #     {%else%}
+    #       False
+    #     {%endif%}  
     - service: media_extractor.play_media
       data_template:
         entity_id: 'media_player.{{states.input_select.broadcast_speaker.state}}'

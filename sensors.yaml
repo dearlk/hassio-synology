@@ -1,4 +1,32 @@
 
+  - platform: template
+    sensors:
+      jyoti_mobile_in_use:    
+        value_template: >-
+              {%- if is_state("binary_sensor.jyoti_mobile_screen_locked", "on") %}No
+              {%- elif is_state("binary_sensor.jyoti_mobile_screen_locked", "off") %}Yes
+              {%- else -%}Sorry, Don't know{%- endif -%}
+      lalit_mobile_in_use:    
+        value_template: >-
+              {%- if is_state("binary_sensor.lalit_mobile_screen_locked", "on") %}No
+              {%- elif is_state("binary_sensor.lalit_mobile_screen_locked", "off") %}Yes
+              {%- else -%}Sorry, Don't know{%- endif -%}
+
+
+  - platform: mqtt
+    state_topic: 'zanzito/lalit/battery_level'
+    name: lalit mobile battery
+    qos: 0
+    unit_of_measurement: "%"
+    device_class: battery
+
+  - platform: mqtt
+    state_topic: 'zanzito/jyoti/battery_level'
+    name: jyoti mobile battery
+    qos: 0
+    unit_of_measurement: "%"
+    device_class: battery
+    
   - platform: time_date
     display_options:
       - 'time'
@@ -113,19 +141,7 @@
       - summary
       - cloud_cover
 
-  # - platform: rest
-  #   resource: https://ml.internalpositioning.com/location?group=smallsponge&user=lalit
-  #   value_template: '{{ value_json.guesses[0].location }}'
-  #   method: GET
-  #   name: lalit_location
-  #   scan_interval: 5
 
-  # - platform: rest
-  #   resource: https://cloud.internalpositioning.com/view/location/myhome/lalit
-  #   value_template: '{{ value_json.guesses[0].location }}'
-  #   method: GET
-  #   name: lalit_location
-  #   scan_interval: 5
 
 
 
@@ -145,7 +161,7 @@
   - platform: places
     name: jyoti
     devicetracker_id: device_tracker.jyoti
-    options: zone, place
+    options: zone, place, formatted_address
     map_provider: google
     map_zoom: 17
     home_zone: zone.home
@@ -153,11 +169,7 @@
 
 
     
-    
-  # - platform: mqtt
-  #   state_topic: 'myhome/location/lalit'
-  #   name: lalit_location
-  #   value_template: '{{ value_json.guesses[0].location }}'    
+
     
 
     

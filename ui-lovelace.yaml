@@ -22,6 +22,8 @@ resources:
 title: My Home
 views:
   - title: Home
+    path: home
+    theme: happy
     icon: mdi:home
     # badges:
     #   #- sensor.time
@@ -44,6 +46,14 @@ views:
     #   - sensor.systemmonitor_memory_use_percent
 
     cards:
+      - type: picture-glance
+        entities:
+          - group.livingroom_lights
+          - group.livingroom_lamps
+          - binary_sensor.main_door
+        camera_image: camera.combined
+        camera_view: live
+
       - type: vertical-stack            
         cards:
           - type: vertical-stack            
@@ -53,14 +63,47 @@ views:
                 show_header_toggle: false
                 entities:
                   - sensor.jyoti
-                  #- entity: sensor.jyoti_mobile_in_use
-                  - entity: binary_sensor.jyoti_phone_screen_locked  
-                  - entity: sensor.jyoti_room_location
+                  - entity: binary_sensor.jyoti_mobile_zanzito_status
+                    name: Zanzito
+                    secondary_info: last-changed
+                  - entity: sensor.jyoti_mobile_battery                  
+                    name: Battery
+                    secondary_info: last-changed
+                  - entity: binary_sensor.jyoti_mobile_charging
+                    name: Charging
+                    secondary_info: last-changed                    
+                  - entity: sensor.jyoti_mobile_in_use
+                    name: Active
+                    icon: mdi:cellphone-android
+                    secondary_info: last-changed
+                  - entity: sensor.jyoti_room_location 
+                    name: Room
+                    secondary_info: last-changed
+
+              - type: entities
+                show_header_toggle: false
+                entities:
                   - sensor.lalit
-                  #- entity: sensor.lalit_mobile_in_use
-                  - entity: binary_sensor.lalit_phone_screen_locked
+                  - entity: binary_sensor.lalit_mobile_zanzito_status
+                    name: Zanzito
+                    secondary_info: last-changed
+                  - entity: sensor.lalit_mobile_battery                  
+                    name: Battery
+                    secondary_info: last-changed
+                  - entity: binary_sensor.lalit_mobile_charging
+                    name: Charging
+                    secondary_info: last-changed
+                  - entity: sensor.lalit_mobile_in_use
+                    name: Active
+                    icon: mdi:cellphone-android
+                    secondary_info: last-changed
                   - entity: sensor.lalit_room_location 
+                    name: Room
+                    secondary_info: last-changed
+                  - type: divider
                   - entity: device_tracker.mom                                    
+                  - type: cast
+                    view: "/lovelace/home"
               - type: custom:auto-entities
                 card:
                   type: entities
@@ -98,10 +141,19 @@ views:
           - type: custom:auto-entities
             filter:
               include: 
-                - domain: "binary_sensor"
+                - entity_id: "binary_sensor.*motion"
                   state: 'on'
                   options:
                     secondary_info: last-changed
+                - entity_id: "binary_sensor.*door"
+                  state: 'on'
+                  options:
+                    secondary_info: last-changed
+                
+                # - domain: "sensor"
+                #   #state: 'on'
+                #   options:
+                #     secondary_info: last-changed
             card:
               type: entities
           - type: custom:auto-entities
@@ -124,6 +176,7 @@ views:
 #
 ##############################################################################################
   - title: Livingroom
+    path: livingroom
     icon: mdi:sofa
     # badges:
     #   #- sensor.office_temperature
@@ -303,29 +356,36 @@ views:
         camera_image: camera.familyroom
         camera_view: live
 
-      - type: custom:auto-entities
-        card:
-          type: entities
-        filter:
-          include:
-            - entity_id: binary_sensor.familyroom_door
-              options:
-                secondary_info: last-changed
-            - entity_id: binary_sensor.familyroom_motion
-              options:
-                secondary_info: last-changed                
-            - entity_id: light.familyroom_light
-              options:
-                secondary_info: last-changed
-            - entity_id: light.temple_lamp
-              options:
-                secondary_info: last-changed
-            - entity_id: binary_sensor.family_bathroom_motion
-              options:
-                secondary_info: last-changed
-            - entity_id: light.family_bathroom_light
-              options:
-                secondary_info: last-changed                
+      - type: entities
+        title: Bedroom
+        show_header_toggle: false
+        entities:
+          - entity: binary_sensor.familyroom_door
+            name: Door
+            secondary_info: last-changed
+          - entity: binary_sensor.familyroom_motion
+            name: Motion
+            secondary_info: last-changed                
+          - entity: light.familyroom_light
+            name: Light
+            secondary_info: last-changed
+          - entity: light.temple_lamp
+            name: Lamp
+            secondary_info: last-changed
+      - type: entities
+        title: Bathroom
+        show_header_toggle: false
+        entities:          
+          - entity: binary_sensor.family_bathroom_door
+            name: Door
+            icon: mdi:human-female-female
+            secondary_info: last-changed
+          - entity: binary_sensor.family_bathroom_motion
+            name: Motion
+            secondary_info: last-changed
+          - entity: light.family_bathroom_light
+            name: Light
+            secondary_info: last-changed                
 ##############################################################################################
 #
 # Bedroom config
@@ -342,34 +402,55 @@ views:
           - light.bedroom_mini_lamp
           - entity: climate.bedroom_aircon
             icon: mdi:air-conditioner
-          - entity: switch.bedroom_tv
+          - entity: binary_sensor.bedroom_tv
             name: TV
             icon: mdi:television
           - entity: fan.bedroom_air_purifier
         camera_image: camera.bedroom
         camera_view: live
-      - type: custom:auto-entities
-        card:
-          type: entities
-        filter:
-          include:
-            - entity_id: light.bedroom_mini_lamp
-              options:
-                secondary_info: last-changed
-            - entity_id: light.bedroom_lamp
-              options:
-                secondary_info: last-changed
-            - entity_id: light.bedroom_light
-              options:
-                secondary_info: last-changed
+      - type: entities
+        title: Bedroom
+        show_header_toggle: false
+        entities:
+          - entity: binary_sensor.bedroom_motion
+            name: Motion
+            secondary_info: last-changed
+          - entity: binary_sensor.bedroom_door
+            name: Door
+            secondary_info: last-changed
+          - entity: light.bedroom_mini_lamp
+            name: Mini Lamp
+            secondary_info: last-changed
+          - entity: light.bedroom_lamp
+            name: Lamp
+            secondary_info: last-changed
+          - entity: light.bedroom_light
+            name: Light
+            secondary_info: last-changed
+          - entity: light.bedroom_fan
+            name: Fan Power
+            secondary_info: last-changed
+          - entity: fan.bedroom_fan
+            name: Fan
+            secondary_info: last-changed
 
-            - entity_id: light.bathroom_light
-              options:
-                secondary_info: last-changed
-
-            - entity_id: climate.bedroom_aircon
-              options:
-                secondary_info: last-changed
+      - type: entities
+        title: Bathroom
+        show_header_toggle: false
+        entities:
+          - entity: binary_sensor.bathroom_door
+            name: Door
+            secondary_info: last-changed
+          - entity: binary_sensor.bathroom_motion
+            name: motion
+            secondary_info: last-changed
+          - entity: light.bathroom_light
+            name: Light
+            secondary_info: last-changed
+      
+      - type: entities
+        entities:
+          - entity: climate.bedroom_aircon
 
       - type: custom:mini-media-player
         entity: media_player.bedroom

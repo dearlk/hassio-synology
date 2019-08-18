@@ -22,3 +22,31 @@
   - platform: local_file
     file_path: /config/www//kitchen.jpg
     name: kitchen
+
+  - platform: combined
+    base_address: !secret base_url_full
+    entities:
+      - camera.livingroom
+      - camera.bedroom
+
+#zanzito mqtt cameras
+  - platform: mqtt
+    topic: zanzito/shared_pictures/lalit
+    name: lalit phone camera
+  - platform: mqtt
+    topic: zanzito/shared_pictures/jyoti
+    name: jyoti phone camera
+
+  # - platform: mjpeg
+  #   mjpeg_url: http://localhost:8099/camera.mjpg
+  #   name: ariela 
+
+#ariela mqtt cameras
+  # - platform: mqtt
+  #   topic: homeassistant/camera/android_lalit_backcamera
+  #   name: lalit phone back camera
+  # - platform: mqtt
+  #   topic: homeassistant/camera/android_lalit_frontcamera
+  #   name: lalit phone front camera
+
+  

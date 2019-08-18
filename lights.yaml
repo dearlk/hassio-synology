@@ -156,19 +156,30 @@
           data:
             entity_id: switch.bedroom_lamp 
  
-      #bedroom lamp
+      #bedroom light
       bedroom_light:
         friendly_name: bedroom light
+        value_template: "{{ states.switch.bedroom_fan_light.state }}"
+        turn_on:
+          service: switch.toggle
+          data:
+            entity_id: switch.bedroom_fan_light
+        turn_off:
+          service: switch.toggle
+          data:
+            entity_id: switch.bedroom_fan_light 
+ 
+      bedroom_fan:
+        friendly_name: bedroom fan
         value_template: "{{ states.switch.bedroom_light.state }}"
         turn_on:
-          service: switch.turn_on
+          service: switch.toggle
           data:
             entity_id: switch.bedroom_light
         turn_off:
-          service: switch.turn_off
+          service: switch.toggle
           data:
             entity_id: switch.bedroom_light 
- 
 
       #office light
       office_light:
@@ -208,19 +219,3 @@
           service: switch.turn_off
           data:
             entity_id: switch.kitchen_lights
-
-  # - platform: group
-  #   name: Livingroom Lights
-  #   entities:
-  #     - light.livingroom_door_light
-  #     - light.livingroom_center_light
-  #     - light.livingroom_studio_light
-  #     - light.livingroom_gallery_light
-
-  # - platform: group
-  #   name: Livingroom Lamps
-  #   entities:
-  #     - light.livingroom_dining_lamp
-  #     - light.livingroom_sofa_lamp
-  #     - light.livingroom_tv_lamp
-      

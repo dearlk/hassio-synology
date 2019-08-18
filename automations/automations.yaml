@@ -82,7 +82,7 @@
       entity_id: binary_sensor.office_door
       state: 'off'   
   action:
-    - service: climate.set_operation_mode
+    - service: climate.turn_on
       data_template:
         entity_id: climate.office_aircon
         operation_mode: 'cool'
@@ -120,7 +120,7 @@
 - alias: daily snapshot
   trigger: 
     platform: time
-    at: '23:00:00'
+    at: '02:00:00'
   # condition:
   #   condition: time
   #   weekday:
@@ -556,3 +556,117 @@
     - service: script.turn_on
       data:
         entity_id: script.xiaomi_vacuum_clean_hall
+# ###################################################################################
+# - alias: send camera picture on motion in livingroom
+#   initial_state: false
+#   trigger: 
+#     - entity_id: binary_sensor.livingroom_motion
+#       platform: state
+#       to: "on"
+#       from: "off"
+#   condition:
+#     # - condition: or
+#     #   conditions:
+#     #     - condition: state
+#     #       state: "not_home"
+#     #       entity_id: device_tracker.jyoti
+#     #     - condition: state
+#     #       state: "not_home"
+#     #       entity_id: device_tracker.lalit
+#     - condition: state
+#       state: 'on'
+#       entity_id: input_boolean.send_camera_picture_notification
+#   action:
+#     - delay: '00:00:05'
+#     - service: notify.ha_notifier
+#       data_template:
+#         message: 'someone in livingroom'
+#         data:  
+#           photo:
+#             - url: !secret livingroom_camera_url
+
+# ###################################################################################
+# - alias: send camera picture on motion in bedroom
+#   initial_state: false
+#   trigger: 
+#     - entity_id: binary_sensor.bedroom_motion
+#       platform: state
+#       to: "on"
+#       from: "off"    
+#     - entity_id: binary_sensor.bedroom_door
+#       platform: state
+#       to: "on"
+#       from: "off"    
+#   condition:
+#     # - condition: or
+#     #   conditions:
+#     #     - condition: state
+#     #       state: "not_home"
+#     #       entity_id: device_tracker.jyoti
+#     #     - condition: state
+#     #       state: "not_home"
+#     #       entity_id: device_tracker.lalit
+#     - condition: state
+#       state: 'on'
+#       entity_id: input_boolean.send_camera_picture_notification
+#   action:
+#     - delay: '00:00:05'
+#     - service: notify.ha_notifier
+#       data_template:
+#         message: 'someone in bedroom'
+#         data:  
+#           photo:
+#             - url: !secret bedroom_camera_url
+            
+            
+###################################################################################
+- alias: mobile battery alert
+  initial_state: true
+  trigger: 
+    - entity_id: sensor.jyoti_mobile_battery
+      platform: numeric_state
+      above: 0
+      below: 15
+    - entity_id: sensor.lalit_mobile_battery
+      platform: numeric_state
+      above: 0
+      below: 15
+  condition:
+    - condition: or
+      conditions:
+        - condition: template
+          value_template: '{{ if (trigger.to_state.entity_id.split(".")[1].split("_")[0]=="jyoti") and (is_state(binary_sensor.jyoti_mobile_charging)=="off") }}'
+        - condition: template
+          value_template: '{{ if (trigger.to_state.entity_id.split(".")[1].split("_")[0]=="lalit") and (is_state(binary_sensor.lalit_mobile_charging)=="off") }}'
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.send_battery_notification
+  action:
+    - service: python_script.notify
+      data_template: 
+        message: '{{trigger.to_state.entity_id.split(".")[1].split("_")[0]}}, your mobile battery is {{trigger.to_state.state}}%, please connect your mobile to charger!'
+        announce: 1
+        room: home
+######################################################################################################
+- alias: TEST RESPONSE
+  initial_state: true
+  trigger:
+  - event_data:
+      action: open_door
+    event_type: ariela_notification_clicked
+    platform: event
+  condition: []
+  action:
+  - data_template:
+      message: "{{ trigger.event.data }}"
+    service: python_script.notify
+###########################################
+- alias: set log level    
+  initial_state: true
+  trigger:
+    - platform: state
+      entity_id: input_select.log_level
+  action:
+    - service: logger.set_default_level
+      data_template:
+        level: '{{states.input_select.log_level.state}}'    
