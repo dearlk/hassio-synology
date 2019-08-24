@@ -42,9 +42,9 @@
         friendly_name: "bathroom light"
         command_on: '6RRGAN8JCRYWCQkWFgkJFhYJFgkWCQkWCRYWCQkWCRYWCQkWFgkWCQkWCRYWCRYJFgkJFhYJFgkWCRYJCRYJFgkWFgkJFgkAAUg='
         command_off: '6RRGAN8JCRYWCQkWCRYWCQkWFgkWCRYJFgkJFgkWCRYJFhYJCRYWCQkWCRYJFgkWFgkWCQkWCRYWCRYJCRYWCRYJFgkJFgkAAUg='
-# bedroom light ################################################################################
-      bedroom_light:
-        friendly_name: "bedroom light"
+# bedroom main light ################################################################################
+      bedroom_main_light:
+        friendly_name: "bedroom main light"
         command_on: '6RRGAN8JFgkWCQkWFgkWCQkWFgkWCRYJFgkWCRYJFgkJFhYJFgkJFhYJCRYWCQkWCRYWCQkWCRYJFhYJCRYJFgkWCRYJFgkAAUg='
         command_off: '6RRGAN8JCRYWCQkWFgkWCQkWFgkWCQkWCRYJFgkWFgkWCQkWCRYJFgkWCRYJFhYJFgkWCQkWCRYWCQkWFgkWCRYJFgkJFgkAAUg='
 # family bathroom switch ################################################################################

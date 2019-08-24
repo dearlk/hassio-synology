@@ -258,6 +258,14 @@
   condition:
     - condition: template
       value_template: '{{trigger.event.data.confidence|float>60}}'
+    - condition: or
+      conditions:
+        - condition: state
+          state: 'not_home'
+          entity_id: device_tracker.lalit_nmap
+        - condition: state
+          state: 'not_home'
+          entity_id: device_tracker.jyoti_nmap
   action:
     - service: python_script.notify
       data_template:
@@ -268,17 +276,18 @@
       state: 'on'
       entity_id: input_boolean.send_camera_picture_notification
     - service: notify.ha_notifier
-      data_template:
+      data_template: 
         message: 'person detected'
-        data_template: >
+        data: 
           photo:
-            - url: 
-                {% set room =trigger.event.data.entity_id.split(".")[1].split("_")[1] %}
-                {%- if room =="livingroom" -%} 
-                  !secret livingroom_camera_url 
-                {%- elif room =="bedroom" -%} 
-                  !secret bedroom_camera_url 
-                {%- endif -%} 
+            #- url: !secret livingroom_camera_url
+            - url: >
+                {%- set room=trigger.event.data.entity_id.split(".")[1].split("_")[1] -%}
+                {%- if room=="livingroom" -%}
+                    !secret livingroom_camera_url
+                {%- elif room=="bedroom" -%}
+                    !secret bedroom_camera_url
+                {%- endif -%}
 #######################################################################
 - alias: face recognised
   initial_state: true      

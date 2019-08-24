@@ -185,3 +185,4 @@ image_processing:
 variable:
   base_url_full: 
     value: !secret base_url_full
+snips:

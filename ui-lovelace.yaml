@@ -424,11 +424,11 @@ views:
           - entity: light.bedroom_lamp
             name: Lamp
             secondary_info: last-changed
-          - entity: light.bedroom_light
-            name: Light
+          - entity: light.bedroom_main_light
+            name: Main Light
             secondary_info: last-changed
-          - entity: light.bedroom_fan
-            name: Fan Power
+          - entity: light.bedroom_fan_light
+            name: Fan Light
             secondary_info: last-changed
           - entity: fan.bedroom_fan
             name: Fan

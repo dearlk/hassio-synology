@@ -61,7 +61,7 @@ class MQTTApp(hass.Hass):
     guesses = payload.get("guesses")
     last_probability=0
     for guess in guesses:
-      probability = float(guess["probability"])
+      probability = guess["probability"]
       if probability > last_probability:
         last_probability = probability
         room = guess["location"]

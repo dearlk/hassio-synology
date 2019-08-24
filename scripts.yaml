@@ -169,10 +169,10 @@ play_morning_music_by_room:
   sequence:
   - service: script.volume_down
     data_template:
-      rname: '{{ rname }}'
+      rname: '{{rname}}'
   - service: media_extractor.play_media
     data_template: 
-      entity_id: media_player.{{ rname }}
+      entity_id: media_player.{{rname}}
       media_content_id: '{{ [
                              "https://www.youtube.com/watch?v=qpxINQEdUyE", 
                              "https://www.youtube.com/watch?v=6E3MMKzBn1g", 
@@ -185,26 +185,30 @@ volume_down:
   sequence:
     - service: media_player.volume_set
       data_template:
-        entity_id: media_player.{{ rname }}
+        entity_id: media_player.{{rname}}
         volume_level: 0.1
     - service: script.volume_fade_in
       data_template:
-        rname: '{{ rname }}'
+        rname: '{{rname}}'
 #
 volume_fade_in:
   sequence:
     - service: media_player.volume_set
       data_template:
-        entity_id: media_player.{{ rname }}
+        entity_id: media_player.{{rname}}
         volume_level: >
-          {% set current = state_attr("media_player.{{ rname }}","volume_level") | float %}
-          {% set next = current + 0.1 %}
+          {% set current = state_attr("media_player." +rname,"volume_level") | float %}
+          {% set next = current + 0.05 %}
           {% if next > 1 %}
             {% set next = 1 %}
           {% endif %}
           {{ next }}
+    - wait_template: '{{ is_state("script.fade_in_stop","off") }}'
+      timeout: '00:05:00'
+      continue_on_timeout: true
     - service_template: >
-        {% if state_attr("media_player.{{ rname }}","volume_level") | float < 0.5 %}
+        {% set max_vol = states.input_number.alarm_volume_level.state | float %}
+        {% if state_attr("media_player."+rname,"volume_level") | float < max_vol %}
           script.turn_on
         {% else %}
           script.turn_off
@@ -212,15 +216,16 @@ volume_fade_in:
       entity_id: script.fade_in_stop
       data_template:
         variables:
-          rname: '{{ rname }}'
+          rname: '{{rname}}'
 #
 fade_in_stop:
   sequence:
   - delay:
-      seconds: 60
+      #seconds: 60
+      minutes: '{{states.input_number.alarm_fade_delay.state|int}}'
   - service: script.volume_fade_in
     data_template:
-      rname: '{{ rname }}'
+      rname: '{{rname}}'
 # #############################################################################################
 # #############################################################################################
 # play_morning_music:

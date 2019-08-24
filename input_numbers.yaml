@@ -12,3 +12,15 @@
     min: 5
     max: 15
     step: 5
+
+  alarm_volume_level:
+    name: alarm volume level
+    min: 0.05
+    max: 0.5
+    step: 0.05
+  alarm_fade_delay:
+    name: alarm fade delay
+    min: 1
+    max: 15
+    step: 1
+    

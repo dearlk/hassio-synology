@@ -119,7 +119,7 @@
         entity_id: script.shutdown_livingroom
 ###########################################################################################
 - alias: main door is closed
-  initial_state: true
+  initial_state: false
   trigger:
     entity_id: binary_sensor.main_door
     platform: state

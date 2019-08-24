@@ -13,6 +13,11 @@
   #   initial: off
   #   icon: mdi:pill
 
+  debug_mode:
+    name: debug mode
+    initial: off
+    
+
   office_presence_check:
     name: Office Presence Check Mode
     initial: off

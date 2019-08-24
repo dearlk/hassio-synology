@@ -1,7 +1,8 @@
-# notify:
-#   module: notify
-#   class: Notify
-  
+service_listener:
+  module: service_listener
+  class: ServiceListener
+  constrain_input_boolean: input_boolean.debug_mode,on
+
 mqtt_app_lalit:
   module: mqtt_app
   class: MQTTApp
@@ -19,3 +20,6 @@ sunset_lights:
   sunset_lights: group.sunset_lights
   constrain_input_boolean: input_boolean.vacation_mode,off
 
+snips_mqtt_app:
+  module: snips_mqtt_app
+  class: SnipsMQTTApp
