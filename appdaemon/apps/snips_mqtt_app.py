@@ -31,6 +31,7 @@ class SnipsMQTTApp(hass.Hass):
     self.listen_event(self.intent_received, "MQTT_MESSAGE", topic = 'hermes/nlu/intentParsed', namespace="mqtt")
     self.listen_event(self.yesResponse_intent_received, "MQTT_MESSAGE", topic = 'hermes/intent/dearlk:yesResponse', namespace="mqtt")
     self.listen_event(self.noResponse_intent_received, "MQTT_MESSAGE", topic = 'hermes/intent/dearlk:noResponse', namespace="mqtt")
+    self.listen_event(self.waitResponse_intent_received, "MQTT_MESSAGE", topic = 'hermes/intent/dearlk:waitResponse', namespace="mqtt")
     self.call_service("mqtt/publish", topic="hermes/dialogueManager/startSession", payload=json.dumps({'init':{'type':'notification','text':random.choice(self._start_greeting)}}))
     
 #############################################################  
@@ -63,11 +64,11 @@ class SnipsMQTTApp(hass.Hass):
     self.log(reply)
     #self.log("payload={},sessionId={},intent={}".format(payload, sessionId, intent))
     self.log(data)
-    if intent == "dearlk:yesResponse":
-      response = json.dumps({'sessionId':sessionId,'text':reply})
-      self.call_service("mqtt/publish", topic="hermes/dialogueManager/endSession", payload=response)
-      response = json.dumps({'init':{'type':'notification','text':random.choice(self._yes_response_messages)}})
-      self.call_service("mqtt/publish", topic="hermes/dialogueManager/startSession", payload=response)
+    response = json.dumps({'sessionId':sessionId,'text':reply})
+    self.call_service("mqtt/publish", topic="hermes/dialogueManager/endSession", payload=response)
+    # action here
+    response = json.dumps({'init':{'type':'notification','text':random.choice(self._yes_response_messages)}})
+    self.call_service("mqtt/publish", topic="hermes/dialogueManager/startSession", payload=response)
     self.log("----------------------------------------------------------------------------------------")       
 
 #############################################################  
@@ -78,7 +79,23 @@ class SnipsMQTTApp(hass.Hass):
     sessionId = payload.get('sessionId')
     #self.log("payload={},sessionId={},intent={}".format(payload, sessionId, intent))
     self.log(data)
-    if intent == "dearlk:noResponse":
-      response = json.dumps({'sessionId':sessionId,'text':random.choice(self._no_response_messages)})
-      self.call_service("mqtt/publish", topic="hermes/dialogueManager/endSession", payload=response)
+    response = json.dumps({'sessionId':sessionId,'text':random.choice(self._no_response_messages)})
+    self.call_service("mqtt/publish", topic="hermes/dialogueManager/endSession", payload=response)
+    self.log("----------------------------------------------------------------------------------------")       
+
+#############################################################  
+  def waitResponse_intent_received(self, event_name, data, kwargs):
+    self.log("----------------------------------------------------------------------------------------") 
+    payload = json.loads(data['payload'])
+    sessionId = payload.get('sessionId')
+    value = payload.get("slots")[0]["value"]
+    for k in value:
+      if k != "kind" and k != "precision":
+        if int(value[k]) > 0:
+          period, duration=k,int(value[k])
+          break
+    self.log("value={},period={},duration={}".format(value, period, duration))
+    #self.log(data)
+    response = json.dumps({'sessionId':sessionId,'text':'ok will do after {} {}'.format(duration, period)})
+    self.call_service("mqtt/publish", topic="hermes/dialogueManager/endSession", payload=response)
     self.log("----------------------------------------------------------------------------------------")       
