@@ -1,0 +1,21 @@
+
+  assistant_broadcast:
+    url: !secret assistant_relay_url
+    method: POST
+    content_type: 'application/json'
+    payload: '{"command":"{{ command }}", "broadcast":true}'
+  assistant_converse:
+    url: !secret assistant_relay_url
+    method: POST
+    content_type: 'application/json'
+    payload: '{"command":"{{ command }}", "converse":true}'
+  assistant_relay:
+    url: !secret assistant_relay_url
+    method: POST
+    content_type: 'application/json'
+    payload: '{"command":"{{ command }}", "user":"username"}'
+  assistant_preset:
+    url: !secret assistant_relay_url
+    method: POST
+    content_type: 'application/json'
+    payload: '{"preset":"{{ preset }}"}'
