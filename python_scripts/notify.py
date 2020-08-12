@@ -58,7 +58,7 @@ if (text is not None and int(text)==1) or ((BROADCAST_MODE == "TEXT" or BROADCAS
 
 #announce######################################################################################################### 
 if announce is not None and int(announce)==1 or (BROADCAST_MODE == "ANNOUNCE" or BROADCAST_MODE == "ALL"):
-  if (announcement_mode=='on' and IS_ANYONE_HOME) or (override is not none and override==1):
+  if (announcement_mode=='on' and IS_ANYONE_HOME) or (override is not None and override==1):
     logger.info("announcing now...")  
     if BROADCAST_AGENT == "google_broadcast":
       service_data = {'command': message}
