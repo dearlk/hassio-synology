@@ -1,30 +1,53 @@
 
-  # - name: html5
-  #   platform: html5
-  #   gcm_api_key: !secret html5_gcm_api_key 
-  #   gcm_sender_id: !secret html5_gcm_sender_id
+  - name: html5
+    platform: html5
+    vapid_pub_key: !secret fcm_public_key
+    vapid_prv_key: !secret fcm_private_key
+    vapid_email: !secret email
 
-  - name: google_broadcast
-    platform: rest
-    resource: !secret google_assistant_resource
-  - name: google_command
-    platform: rest
-    resource: !secret google_assistant_command_resource
+  # - name: google_broadcast
+  #   platform: rest
+  #   resource: !secret google_assistant_resource
+  # - name: google_command
+  #   platform: rest
+  #   resource: !secret google_assistant_command_resource
+
+  # - name: google_broadcast
+  #   platform: rest
+  #   resource: !secret google_assistant_resource
+  # - name: google_command
+  #   platform: rest
+  #   resource: !secret google_assistant_command_resource
+  - name: pushbullet
+    platform: pushbullet
+    api_key: !secret pushbullet_api_key
+
   - name: pushover
     platform: pushover
     api_key: !secret pushover_api_key
     user_key: !secret pushover_user_key
+  
   - name: ha_notifier
     platform: group
     services:
       - service: lalit
       - service: jyoti
+      #- service: sheild_tv
+      - service: pushover
+      - service: pushbullet
+
   - name: lalit
     platform: zanzito
     device-name: lalit
+  
   - name: jyoti
     platform: zanzito
     device-name: jyoti
-  - name: whatsapp
-    platform: twilio_whatsapp
-    from_number: whatsapp:+14155238886
+  
+  # - name: whatsapp
+  #   platform: twilio_whatsapp
+  #   from_number: whatsapp:+14155238886
+
+  - platform: nfandroidtv
+    name: sheild tv
+    host: !secret shield_tv_ip

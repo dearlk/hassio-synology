@@ -1,9 +1,0 @@
-# Global variables
-notify = "zanzito_lalit"
-
-def logger (self, message, kwargs):
-  self.log(message)	
-
-def add (a,b):
-  return (a+b) 
-

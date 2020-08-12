@@ -1,0 +1,117 @@
+############################################################################
+- alias: someone in kitchen based on sun events
+  initial_state: false
+  trigger:
+    - entity_id: binary_sensor.kitchen_motion
+      platform: state
+      to: 'on'
+      #from: 'off'
+    - entity_id: binary_sensor.kitchen_motion2
+      platform: state
+      to: 'on'
+      #from: 'off'
+  condition:
+    - condition: state
+      entity_id: input_boolean.kitchen_automation_check
+      state: 'on'
+    - condition: state
+      entity_id: light.kitchen_light
+      state: 'off'
+    - condition: sun
+      after: sunset
+      after_offset: '-01:00:00'
+      before: sunrise
+      before_offset: '+03:00:00'
+  action:
+    - service: light.turn_on
+      entity_id: light.kitchen_light
+########
+- alias: someone in kitchen based on sunlight
+  initial_state: false
+  trigger:
+    - entity_id: binary_sensor.kitchen_motion
+      platform: state
+      to: 'on'
+    - entity_id: binary_sensor.kitchen_motion2
+      platform: state
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: input_boolean.kitchen_automation_check
+      state: 'on'
+    - condition: state
+      entity_id: light.kitchen_light
+      state: 'off'
+    - condition: numeric_state
+      entity_id: sensor.sunlight
+      #above: 0
+      below: 500
+  action:
+    - service: light.turn_on
+      entity_id: light.kitchen_light
+
+- alias: someone in kitchen 
+  initial_state: true
+  trigger:
+    - entity_id: binary_sensor.kitchen_motion
+      platform: state
+      to: 'on'
+    - entity_id: binary_sensor.kitchen_motion2
+      platform: state
+      to: 'on'
+  condition:
+    - condition: state
+      entity_id: input_boolean.kitchen_automation_check
+      state: 'on'
+    - condition: state
+      entity_id: light.kitchen_light
+      state: 'off'
+  action:
+    - service: light.turn_on
+      entity_id: light.kitchen_light
+    - service: switch.turn_on
+      entity_id: switch.sonoff_gas
+      
+##############################################################################
+
+###############
+- alias: No one in kitchen turn off light
+  initial_state: true
+  trigger:
+    platform: template
+    value_template: > 
+      {% set no_motion_since=states.binary_sensor.kitchen_motion.attributes['No motion since'] | int %}
+      {% set current_state=states.binary_sensor.kitchen_motion.state %}
+      {{ (is_state("binary_sensor.morning","on") and current_state=="off" and no_motion_since > 60 * 5) or
+         (is_state("binary_sensor.evening","on") and current_state=="off" and no_motion_since > 60 * 60) or
+         (is_state("binary_sensor.night","on") and current_state=="off" and no_motion_since > 60 * 5) or 
+         (is_state("binary_sensor.morning","off") and 
+          is_state("binary_sensor.evening","off") and
+          is_state("binary_sensor.night","off") and 
+          current_state=="off" and 
+          no_motion_since > 2 * 60
+          )
+      }}
+  condition:
+    - condition: state
+      entity_id: input_boolean.kitchen_automation_check
+      state: 'on'
+  action:
+    - service: light.turn_off
+      entity_id: light.kitchen_light
+###############
+- alias: No one in kitchen turn off gas power
+  initial_state: true
+  trigger:
+    platform: template
+    value_template: > 
+      {% set no_motion_since=states.binary_sensor.kitchen_motion.attributes['No motion since'] | int %}
+      {% set current_state=states.binary_sensor.kitchen_motion.state %}
+      {{ (current_state=="off" and no_motion_since > 60*2) }}
+  condition:
+    - condition: state
+      entity_id: input_boolean.kitchen_automation_check
+      state: 'on'  
+  action:
+    - service: switch.turn_off
+      entity_id: switch.sonoff_gas

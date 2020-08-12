@@ -1,0 +1,782 @@
+# office_ac_on:
+  # alias: Office Ac On
+  # sequence:
+  # - service: broadlink.send_packet_192_168_1_7
+    # data:
+      # packet:
+      # - JgAGAW0zEAsPDA8nDwwPJg8MDwwPDA8mDycPDA8LEAsPJw8mEAsPDA8MDwwPCxALDwwPDA8MDwsQCw8MDwwPJhALDwwPDA8MDwsQCw8MDycPCxALDwwPDA8mECYPJw8mDycPJw8mDycPDA8LDycPDA8MDwsPDA8MDwwPDA8LDycPJw8LDwwPJw8MDwsQCw8nDwwPCw8nDycPCxALDwwPDA8MDwsQCw8MDwwPDA8LECYPDA8MDwsQCw8MDwwPDA8LEAsPDA8MDwwPCxALDwwPDA8MDwsQCw8MDwwPDA8MDwsPDA8MDwwPDA8LDwwPDA8MDyYPDA8MDwwPJg8nDycPCw8MDwwPDA8ADQUAAA==
+# office_ac_off:
+  # alias: Office Ac Off
+  # sequence:
+  # - service: broadlink.send_packet_192_168_1_7
+    # data:
+      # packet:
+      # - JgB2AG0zEAsPDA8nDwsQJg8MDwwPCxAmDycPDA8LDwwPJw8mDwwPDA8MDwwPCw8MDwwPDA8MDwsPDA8MDwwPJhALDwwPDA8MDwsPDA8MDycPCxALDwwPDA8mEAsPDA8MDwwPCxALDycPDA8mDycPJhAmDycPJg8ADQUAAA==
+# livingroom_tv_on:
+#   alias: Tv On
+#   sequence:
+#   - service: input_boolean.turn_on
+#     entity_id: input_boolean.livingroom_tv_state
+#   - service: remote.send_command
+#     data:
+#       command: PowerOn
+#       device: Samsung TV
+#       entity_id: remote.harmony_hub
+# livingroom_tv_off:
+#   alias: Tv Off
+#   sequence:
+#   - service: input_boolean.turn_off
+#     entity_id: input_boolean.livingroom_tv_state
+#   # - service: remote.send_command
+#   #   data:
+#   #     command: PowerOff
+#   #     device: Samsung TV
+#   #     entity_id: remote.harmony_hub
+#   - service: media_player.turn_off
+#     data:
+#       entity_id: media_player.shield_tv
+
+# livingroom_tv_channel_up:
+#   alias: Channel Up
+#   sequence:
+#   - data:
+#       command: ChannelUp
+#       device: Samsung TV
+#       entity_id: remote.harmony_hub
+#     service: remote.send_command
+# livingroom_tv_channel_down:
+#   alias: Channel Down
+#   sequence:
+#   - data:
+#       command: ChannelDown
+#       device: Samsung TV
+#       entity_id: remote.harmony_hub
+#     service: remote.send_command
+# livingroom_tv_mute:
+#   alias: Tv Mute
+#   sequence:
+#   - data:
+#       command: Mute
+#       device: Samsung TV
+#       entity_id: remote.harmony_hub
+#     service: remote.send_command
+# livingroom_tv_volume_up:
+#   alias: Tv Volume Up
+#   sequence:
+#   - data:
+#       command: VolumeUp
+#       device: Samsung TV
+#       entity_id: remote.harmony_hub
+#     service: remote.send_command
+# livingroom_tv_volume_down:
+#   alias: Tv Volume Down
+#   sequence:
+#   - data:
+#       command: VolumeDown
+#       device: Samsung TV
+#       entity_id: remote.harmony_hub
+#     service: remote.send_command
+
+# livingroom_aircon_on:
+#   alias: Aircon on
+#   sequence:
+#   - data:
+#       command: PowerToggle
+#       device: '49816813'
+#       entity_id: remote.harmony_hub
+#     service: remote.send_command
+#   - service: input_boolean.turn_on
+#     entity_id: input_boolean.livingroom_aircon
+
+
+# livingroom_aircon_off:
+#   alias: Aircon off
+#   sequence:
+#   - data:
+#       command: 'Off'
+#       device: '49816813'
+#       entity_id: remote.harmony_hub
+#     service: remote.send_command
+#   - service: input_boolean.turn_off
+#     entity_id: input_boolean.livingroom_aircon
+
+
+# #############################################################################################
+# studio_light_on:
+#   alias: Studio light on
+#   sequence:
+#     - service: input_boolean.turn_on
+#       entity_id: input_boolean.studio_light_state
+#     - service: switch.turn_on
+#       entity_id: switch.livingroom_studio_light
+
+# studio_light_off:
+#   alias: Studio light off
+#   sequence:
+#     - service: input_boolean.turn_off
+#       entity_id: input_boolean.studio_light_state
+#     - service: switch.turn_off
+#       entity_id: switch.livingroom_studio_light
+
+# #############################################################################################
+# play_morning_music_by_room:
+#   alias: play monring music by room
+#   sequence:
+#   - service: script.volume_down
+#     data_template:
+#       rname: '{{rname}}'
+#   - service: media_extractor.play_media
+#     data_template: 
+#       entity_id: media_player.{{rname}}
+#       media_content_id: '{{ [
+#                              "https://www.youtube.com/watch?v=qpxINQEdUyE", 
+#                              "https://www.youtube.com/watch?v=6E3MMKzBn1g", 
+#                              "https://www.youtube.com/watch?v=PO7kT1h21CU", 
+#                              "https://www.youtube.com/watch?v=grk1w2Xb_vo"
+#                             ] | random }}'
+#       media_content_type: "music"     
+# #
+# volume_down:
+#   sequence:
+#     - service: media_player.volume_set
+#       data_template:
+#         entity_id: media_player.{{rname}}
+#         volume_level: 0.1
+#     - service: script.volume_fade_in
+#       data_template:
+#         rname: '{{rname}}'
+# #
+# volume_fade_in:
+#   sequence:
+#     - service: media_player.volume_set
+#       data_template:
+#         entity_id: media_player.{{rname}}
+#         volume_level: >
+#           {% set current = state_attr("media_player." +rname,"volume_level") | float %}
+#           {% set next = current + 0.05 %}
+#           {% if next > 1 %}
+#             {% set next = 1 %}
+#           {% endif %}
+#           {{ next }}
+#     - wait_template: '{{ is_state("script.fade_in_stop","off") }}'
+#       timeout: '00:05:00'
+#       continue_on_timeout: true
+#     - service_template: >
+#         {% set max_vol = states.input_number.alarm_volume_level.state | float %}
+#         {% if state_attr("media_player."+rname,"volume_level") | float < max_vol %}
+#           script.turn_on
+#         {% else %}
+#           script.turn_off
+#         {% endif %}
+#       entity_id: script.fade_in_stop
+#       data_template:
+#         variables:
+#           rname: '{{rname}}'
+# #
+# fade_in_stop:
+#   sequence:
+#   - delay:
+#       #seconds: 60
+#       minutes: '{{states.input_number.alarm_fade_delay.state|int}}'
+#   - service: script.volume_fade_in
+#     data_template:
+#       rname: '{{rname}}'
+# # #############################################################################################
+# # #############################################################################################
+# # play_morning_music:
+# #   alias: play monring music
+# #   sequence:
+# #   - service: script.turn_on
+# #     entity_id: script.volume_down
+# #   - service: media_extractor.play_media
+# #     data_template: 
+# #       entity_id: media_player.office
+# #       media_content_id: '{{ [
+# #                              "https://www.youtube.com/watch?v=qpxINQEdUyE", 
+# #                              "https://www.youtube.com/watch?v=6E3MMKzBn1g", 
+# #                              "https://www.youtube.com/watch?v=PO7kT1h21CU", 
+# #                              "https://www.youtube.com/watch?v=grk1w2Xb_vo"
+# #                             ] | random }}'
+# #       media_content_type: "music"     
+# # volume_down:
+# #   sequence:
+# #     - service: media_player.volume_set
+# #       data:
+# #         entity_id: media_player.office
+# #         volume_level: 0.1
+# #     - service: script.turn_on
+# #       data:
+# #         entity_id: script.volume_fade_in
+# # volume_fade_in:
+# #   sequence:
+# #     - service: media_player.volume_set
+# #       data_template:
+# #         entity_id: media_player.office
+# #         volume_level: >
+# #           {% set current = state_attr('media_player.office','volume_level') | float %}
+# #           {% set next = current + 0.1 %}
+# #           {% if next > 1 %}
+# #             {% set next = 1 %}
+# #           {% endif %}
+# #           {{ next }}
+# #     - service_template: >
+# #         {% if state_attr('media_player.office','volume_level') | float < 0.5 %}
+# #           script.turn_on
+# #         {% else %}
+# #           script.turn_off
+# #         {% endif %}
+# #       data:
+# #         entity_id: script.fade_in_stop
+# # fade_in_stop:
+# #   sequence:
+# #   - delay:
+# #       seconds: 300
+# #   - service: script.turn_on
+# #     data:
+# #       entity_id: script.volume_fade_in
+# # #############################################################################################
+# spotify_morning:
+#   alias: Spotify Morning
+#   sequence:
+#   - service: media_player.volume_set
+#     data_template:
+#       entity_id: 'media_player.{{states.sensor.lalit_room_location.state}}_home'
+#       volume_level: 0.2
+#   - delay: '00:00:05'  
+#   - service: spotcast.start
+#     data_template:
+#       device_name: '{{states.sensor.lalit_room_location.state}}'
+#       uri: '{{ [
+#                             "spotify:user:spotify:playlist:37i9dQZF1DXbKpCeB6bby3",
+#                             "spotify:user:spotify:playlist:37i9dQZF1DX4PP3DA4J0N8",
+#                             "spotify:user:spotify:playlist:37i9dQZF1DXebxttQCq0zA"
+#                ] | random }}'
+#   - delay: '00:00:05'
+#   - service: script.turn_on
+#     entity_id: script.spotify_volume_down
+
+# # spotify_evening:
+# #   alias: Spotify Evening
+# #   sequence:
+# #   - service: media_player.select_source
+# #     data:
+# #       entity_id: media_player.spotify
+# #       source: 'Hass.io'
+# #   - delay: '00:00:30'
+# #   - service: script.turn_on
+# #     entity_id: script.spotify_volume_down
+# #   - service: media_player.play_media
+# #     data_template:
+# #       entity_id: media_player.spotify
+# #       media_content_type: playlist
+# #       media_content_id: '{{ [
+# #                             "spotify:user:spotify:playlist:7sXrmazSWcD5jGDX64EpqG",
+# #                             "spotify:user:spotify:playlist:5zPkrQhayMoOluFPTqP5t8",
+# #                             "spotify:user:spotify:playlist:37i9dQZF1DXbcPC6Vvqudd"
+# #                             ] | random }}'
+
+# spotify_volume_down:
+#   sequence:
+#     - service: media_player.volume_set
+#       data_template:
+#         entity_id: 'media_player.{{states.sensor.lalit_room_location.state}}_home'
+#         volume_level: 0.1
+#     - service: script.turn_on
+#       data:
+#         entity_id: script.spotify_volume_fade_in
+
+# spotify_volume_fade_in:
+#   sequence:
+#     - service: media_player.volume_set
+#       data_template:
+#         entity_id: 'media_player.{{states.sensor.lalit_room_location.state}}_home'
+#         volume_level: >
+#           {% set speaker = 'media_player.'+states.sensor.lalit_room_location.state +'_home' %}
+#           {% set current = state_attr(speaker,'volume_level') %}
+#           {% set next = current + 0.1 %}
+#           {% if next > 1 %}
+#             {% set next = 1 %}
+#           {% endif %}
+#           {{ next }}
+#     - service_template: >
+#         {% set speaker = 'media_player.'+states.sensor.lalit_room_location.state +'_home' %}
+#         {% if state_attr(speaker,'volume_level') < 0.5 %}
+#           script.turn_on
+#         {% else %}
+#           script.turn_off
+#         {% endif %}
+#       data:
+#         entity_id: script.spotify_fade_in_stop
+
+# spotify_fade_in_stop:
+#   sequence:
+#   - delay:
+#       seconds: 300
+#   - service: script.turn_on
+#     data:
+#       entity_id: script.spotify_volume_fade_in
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# # ##living room fan control scripts########################################################
+# livingroom_fan_off:
+#   alias: Living Room Fan Off
+#   sequence:
+#   # - service: switch.broadlink_send_packet_192_168_1_7
+#   - service: broadlink.send
+#     data:
+#       host: !secret broadlink_rmproplus_host
+#       packet:
+#       - ZBIcAAkPCQ8JDwgPCQ8JCBAPCQ8JDwkPCA8JDwkAAQUAAAAAAAAAAAAAAAA=
+#   - service: input_boolean.turn_off
+#     entity_id: input_boolean.livingroom_fan_state
+# # ##############
+# livingroom_fan_on:
+#   alias: Living Room Fan On
+#   sequence:
+#   - service: script.turn_on
+#     entity_id: script.turn_on_livingroom_fan_power
+#   # - service: switch.broadlink_send_packet_192_168_1_7
+#   - service: broadlink.send
+#     data:
+#       host: !secret broadlink_rmproplus_host
+#       packet:
+#       - ZBYcAAkHEA8JDwkPCQ8JDwkPCQ8JDwkPCQ8JDwkAAQUAAAAAAAAAAAAAAAA=
+#   - service: input_boolean.turn_on
+#     entity_id: input_boolean.livingroom_fan_state
+# # ##############
+# livingroom_fan_speed:
+#   alias: Living Room Fan Speed
+#   sequence:
+#   - service_template: '{%if speed is defined and speed=="medium"%}script.livingroom_fan_medium{%elif speed is defined and speed=="high"%}script.livingroom_fan_high{%elif speed is defined and speed=="low"%}script.livingroom_fan_on{%endif%}'
+
+# # ##############
+# turn_on_livingroom_fan_power: 
+#   alias: "turn on Living Room Fan power"
+#   sequence: 
+#   - service: switch.turn_on
+#     entity_id: switch.livingroom_fan_power
+#   - delay: 00:00:02
+#   - service: switch.turn_off
+#     entity_id: switch.living_room_fan_light
+# # ##############
+# livingroom_fan_medium:
+#   alias: Livingroom Fan Medium
+#   sequence:
+#   # - service: switch.broadlink_send_packet_192_168_1_7
+#   - service: broadlink.send
+#     data:
+#       host: !secret broadlink_rmproplus_host
+#       packet:
+#       - ZB0cAAkPCQ8JDwkPCQcQDwkPCQ8JDwkPCQ8JDwkAAQUAAAAAAAAAAAAAAAA=
+# livingroom_fan_high:
+#   alias: Livingroom Fan High
+#   sequence:
+#   # - service: switch.broadlink_send_packet_192_168_1_7
+#   - service: broadlink.send
+#     data:
+#       host: !secret broadlink_rmproplus_host
+#       packet:
+#       - ZCEcAAkPCQ8JDwkIEA8JDwkPCA8JDwkPCQ8JDwkAAQUAAAAAAAAAAAAAAAA=
+######################################################################################################################################################
+
+bed_time: 
+  alias: "bed time"
+  sequence: 
+  - service: script.turn_on
+    entity_id: script.livingroom_aircon_off
+  - service: switch.turn_off
+    entity_id: switch.livingroom_fan_gang
+  - service: switch.turn_off
+    entity_id: switch.livingroom_light_gang
+  - service: switch.turn_off
+    entity_id: group.livingroom_lamps
+  - service: script.turn_on
+    entity_id: script.livingroom_tv_off
+
+
+shutdown_everything:
+  alias: "shutdown everything"
+  sequence: 
+  - service: script.turn_on
+    entity_id: script.bed_time
+  - service: switch.turn_off
+    entity_id: group.all_switches
+  - service: light.turn_off
+    entity_id: group.all_lights
+    
+sunset_lights_on:
+  alias: sunset lights on
+  sequence: 
+  - service: python_script.notify
+    data:
+      message: Looks like someone at home, switching on sunset lights
+  - service: switch.turn_on
+    entity_id: group.sunset_lights
+##############      
+
+switches_off:
+  alias: Switches off
+  sequence:
+    service: input_boolean.turn_off
+press_button:
+  alias: Press button
+  sequence:
+    service: input_text.set_value
+    data:
+      entity_id: input_text.button
+    data_template:
+      value: "{{ value }}"
+
+# shutdown_bedroom:
+#   alias: "shutdown bedroom"
+#   sequence: 
+#     - service: homeassistant.turn_off
+#       entity_id: group.bedroom
+
+# shutdown_office:
+#   alias: "shutdown office"
+#   sequence: 
+#     - service: homeassistant.turn_off
+#       entity_id: group.office
+
+# shutdown_familyroom:
+#   alias: "shutdown familyroom"
+#   sequence: 
+#     - service: homeassistant.turn_off
+#       entity_id: group.familyroom
+
+# shutdown_livingroom:
+#   alias: "shutdown livingroom"
+#   sequence:
+#     - service: switch.turn_off
+#       entity_id: switch.livingroom_aircon
+#     - service: switch.turn_off
+#       entity_id: group.livingroom_lights
+#     - service: switch.turn_off
+#       entity_id: group.livingroom_lamps
+#     - service: fan.turn_off
+#       entity_id: fan.livingroom_fan
+#     - service: switch.turn_off
+#       entity_id: switch.livingroom_fan_gang
+#     - service: script.turn_on
+#       entity_id: script.livingroom_tv_off
+#     - service: input_boolean.turn_off
+#       entity_id: input_boolean.livingroom_presence_check
+#     - service: switch.turn_off
+#       entity_id: switch.sonofff_gas
+
+# ###############################################################
+# bedroom_fan_on:
+#   alias: "bedroom fan on"
+#   sequence: 
+#     - service: switch.turn_on
+#       entity_id: switch.bedroom_fan
+#     - service: input_boolean.turn_on
+#       entity_id: input_boolean.bedroom_fan_state
+# bedroom_fan_off:
+#   alias: "bedroom fan off"
+#   sequence: 
+#     - service: switch.turn_off
+#       entity_id: switch.bedroom_fan
+#     - service: input_boolean.turn_off
+#       entity_id: input_boolean.bedroom_fan_state
+# bedroom_fan_speed:
+#   alias: "bedroom fan speed"
+#   sequence: 
+#     - service: switch.turn_on
+#       data_template:
+#         entity_id: >-
+#           {%- if speed == 'low' -%}
+#              switch.bedroom_fan
+#           {%- elif speed == 'medium' -%}
+#              switch.bedroom_fan_med
+#           {%- elif speed == 'high' -%}
+#              switch.bedroom_fan_high    
+#           {%- endif -%}  
+
+# bedroom_fan_high:
+#   sequence:
+#     - service: switch.turn_on
+#       entity_id: switch.bedroom_main_light
+#     - service: switch.turn_on
+#       entity_id: switch.bedroom_fan_high
+
+# play_door_chimes:
+#   sequence:
+#     - service: media_extractor.play_media
+#       data_template:
+#         entity_id: 'media_player.{{states.input_select.broadcast_speaker.state}}'
+#         media_content_id: !secret base_url_door_chimes 
+#         media_content_type: "music"
+
+#################################################################################################
+# Xiaomi Roborock Vacuum Zone Cleaning 
+#################################################################################################
+# xiaomi_vacuum_clean_the_kitchen:
+#   sequence:
+#     - service: xiaomi_miio.vacuum_clean_zone
+#       data_template:
+#         entity_id: vacuum.xiaomi_vacuum_cleaner
+#         zone: [[20375,19250,23675,22074]]
+#         repeats: 2
+# xiaomi_vacuum_clean_the_studio:
+#   sequence:
+#     - service: xiaomi_miio.vacuum_clean_zone
+#       data_template:
+#         entity_id: vacuum.xiaomi_vacuum_cleaner
+#         zone: [[16752, 23735, 22902, 29685]]
+#         repeats: 2    
+# xiaomi_vacuum_clean_the_bedroom:
+#   sequence:
+#     - service: xiaomi_miio.vacuum_clean_zone
+#       data_template:
+#         entity_id: vacuum.xiaomi_vacuum_cleaner
+#         zone: [[11202, 15263, 15902, 20163]]
+#         repeats: 1    
+# xiaomi_vacuum_clean_the_office:
+#   sequence:
+#     - service: xiaomi_miio.vacuum_clean_zone
+#       data_template:
+#         entity_id: vacuum.xiaomi_vacuum_cleaner
+#         zone: [[14193, 21043, 19393, 27193]]
+#         repeats: 1
+# xiaomi_vacuum_clean_the_home:
+#   sequence:
+#     - service: vacuum.start
+
+# #####################################################
+# ask_for_bedroom_shutdown:
+#   sequence:
+#     - condition: state
+#       state: 'off'
+#       entity_id: input_boolean.pending_bedroom_shutdown_reply
+#     - service: notify.html5
+#       data:
+#         title: No one in bedroom
+#         message: Looks like no one is in bedroom, do you want me to switching off everyting in bedroom?
+#         data:
+#           tag: bedroom_shutdown_notification
+#           room_name: bedroom
+#           actions:
+#             - action: yes_shutdown
+#               title: Yes, please
+#             - action: no_shutdown
+#               title: No, leave it
+#     - service: input_boolean.turn_on
+#       entity_id: input_boolean.pending_bedroom_shutdown_reply
+
+# ask_for_reminder_shutdown:
+#   sequence:
+#     - service: notify.html5
+#       data:
+#         title: No one in bedroom
+#         message: do you want me to remind you in half an hour?
+#         data:
+#           tag: bedroom_shutdown_notification
+#           room_name: bedroom
+#           actions:
+#             - action: remind_me_in_30_min
+#               title: Ok  
+#             - action: no_remind
+#               title: No, forget it! 
+
+# ######bedroom aircon and fan on off
+# bedroom_ac_on_fan_off:
+#   sequence:
+#     - service: switch.turn_on
+#       entity_id: switch.bedroom_aircon
+#     - service: switch.turn_off
+#       entity_id: switch.bedroom_fan
+# bedroom_ac_off_fan_on:
+#   sequence:
+#     - service: switch.turn_off
+#       entity_id: switch.bedroom_aircon
+#     - service: switch.turn_on
+#       entity_id: script.bedroom_fan_high
+
+battery_full:
+  sequence:
+    - service: python_script.notify
+      data:
+        message: looks like battery is charged fully, switching off the charger
+        room: office
+        announce: 1
+    - service: homeassistant.turn_off
+      data:
+        entity_id: switch.sonoff_bedroom_charger
+
+# lalit_reached_home:
+#   sequence:
+#     # - wait_template: "{{states.binary_sensor.main_door.state=='on'}}"
+#     #   timeout: '00:10:00'
+#     #   continue_on_timeout: true
+#     # - delay: '00:00:05'
+#     # - service: python_script.notify
+#     #   data:
+#     #     message: Lalit has reached home now
+#     #     text: 1
+#     #     to: lalit  
+#     - service: rest_command.assistant_preset
+#       data:
+#         preset: arrivedhome
+#     - service: input_boolean.turn_on
+#       entity_id: input_boolean.lalit_at_home    
+
+# lalit_left_home:
+#   sequence:
+#     # - wait_template: "{{states.device_tracker.lalit_nmap.state=='not_home'}}"
+#     #   timeout: '00:05:00'    
+#     #   continue_on_timeout: false
+#     # - service: python_script.notify
+#     #   data:
+#     #     message: Lalit has left home now
+#     #     text: 1
+#     #     to: lalit    
+#     - service: rest_command.assistant_preset
+#       data:
+#         preset: ontheway
+#     - service: input_boolean.turn_off
+#       entity_id: input_boolean.lalit_at_home
+#     # - service: python_script.set_state
+#     #   data:
+#     #     entity_id: sensor.lalit_room_location
+#     #     state: "Not at home"
+
+#####################################################
+# ask_for_studio_light:
+#   sequence:
+#     - service: notify.html5
+#       data:
+#         title: Studio Light Alert
+#         message: is light on, turn it off?
+#         data:
+#           tag: studio_light_notification
+#           actions:
+#             - action: yes_turn_off
+#               title: Yes, turn it off
+#             - action: no_light_off
+#               title: No, it's off
+
+
+# #################################################################################################
+# # Xiaomi Roborock s6 Vacuum room Cleaning 
+# #################################################################################################
+# xiaomi_vacuum_clean_the_kitchen:
+#   sequence:
+#     - service: xiaomi_miio.vacuum_clean_segment
+#       data:
+#         entity_id: vacuum.dusty
+#         segments: 18
+
+# xiaomi_vacuum_clean_the_studio:
+#   sequence:
+#     - service: xiaomi_miio.vacuum_clean_segment
+#       data:
+#         entity_id: vacuum.dusty
+#         segments: 17
+
+# xiaomi_vacuum_clean_the_bedroom:
+#   sequence:
+#     - service: xiaomi_miio.vacuum_clean_segment
+#       data:
+#         entity_id: vacuum.dusty
+#         segments: 20
+
+# xiaomi_vacuum_clean_the_office:
+#   sequence:
+#     - service: xiaomi_miio.vacuum_clean_segment
+#       data:
+#         entity_id: vacuum.dusty
+#         segments: 23
+
+# xiaomi_vacuum_clean_the_home:
+#   sequence:
+#     - service: vacuum.start
+#       data:
+#         entity_id: vacuum.dusty
+
+#######################################################################
+# zanzito_play_alarm:
+#   alias: Play alarm on Zanzito device
+#   sequence:
+#     service: mqtt.publish
+#     data_template:
+#       topic: 'zanzito/{{ dest_id }}/alarm/play'
+#       payload: '{{ message }}'
+#       qos: 1
+#       retain: 0
+# zanzito_stop_alarm:
+#   alias: Stop alarm on Zanzito device
+#   sequence:
+#     service: mqtt.publish
+#     data_template:
+#       topic: 'zanzito/{{ dest_id }}/alarm/stop'
+#       payload: '<your-message>'
+#       qos: 1
+#       retain: 0
+#######################################################################      
+sos_call:
+  # repeat:
+  #   count: 2  
+  sequence:
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.home
+        volume_level: 1.0
+    - service: media_player.volume_mute
+      data:
+        entity_id: media_player.shield_tv
+        is_volume_muted: true 
+    - service: media_player.volume_mute
+      data:
+        entity_id: media_player.fire_tv
+        is_volume_muted: true 
+    - service: media_extractor.play_media
+      data_template:
+        entity_id: "media_player.home"
+        media_content_id: "{{states.variable.base_url_full.state}}/local/alert-4.mp3"
+        media_content_type: "music"     
+    - delay: "00:00:03"            
+    - service: python_script.notify
+      data:
+        message: "SOS call here, Jyoti is calling. Please attend her immediately!!!"
+        announce: 1
+        override: 1
+    - delay: "00:00:06"                    
+    - service: media_extractor.play_media
+      data_template:
+        entity_id: "media_player.home"
+        media_content_id: "{{states.variable.base_url_full.state}}/local/alert-4.mp3"
+        media_content_type: "music"     
+    # - service: media_player.volume_mute
+    #   data:
+    #     entity_id: media_player.shield_tv
+    #     is_volume_muted: false
+    # - service: media_player.volume_mute
+    #   data:
+    #     entity_id: media_player.fire_tv
+    #     is_volume_muted: false
+    - service: mqtt.publish
+      data:
+        topic: zanzito/lalit/alarm/play
+        payload: 'SOS call here, Jyoti is calling. Please attend her immediately!!!'
+    - service: notify.ha_notifier
+      data:
+        message: 'SOS call here, Jyoti is calling. Please attend her immediately!!!'
+  

@@ -1,15 +1,15 @@
 
-  - platform: spotify
-    client_id: !secret spotify_client_id
-    client_secret: !secret spotify_client_secret
-    aliases:
-      SP3: aca284739cb7a61bd37df07f7f77238646c836c3
-      NUC: e506539d1b492b1b316570877034868aabbbc076
-      Office: df9b95798d123a24f0d62289b1b5346e
-      SM-G935F: 33ef4507c9b8cab6b8d4f8b7ab74f648e794908f
-      Bedroom:  3f8a31a923ce926524b9d96f0d62d208
-      Livingroom: 145a31667fe6786c59563d3396fc6a66 
-      Hass.io: Hass.io
+  # - platform: spotify
+  #   client_id: !secret spotify_client_id
+  #   client_secret: !secret spotify_client_secret
+  #   aliases:
+  #     SP3: aca284739cb7a61bd37df07f7f77238646c836c3
+  #     NUC: e506539d1b492b1b316570877034868aabbbc076
+  #     Office: df9b95798d123a24f0d62289b1b5346e
+  #     SM-G935F: 33ef4507c9b8cab6b8d4f8b7ab74f648e794908f
+  #     Bedroom:  3f8a31a923ce926524b9d96f0d62d208
+  #     Livingroom: 145a31667fe6786c59563d3396fc6a66 
+  #     Hass.io: Hass.io
 
 
     # aliases:
@@ -21,3 +21,24 @@
     #     145a31667fe6786c59563d3396fc6a66: Livingroom
     #     Hass.io: Hass.io
 
+
+  # - platform: samsungtv_custom
+  #   host: !secret livingroom_tv_ip
+  #   mac: !secret livingroom_tv_ip
+  #   port: 8000
+
+  - platform: androidtv
+    host: !secret shield_tv_ip
+    name: Shield TV
+    adb_server_ip: localhost
+    adb_server_port: 5037
+    device_class: androidtv
+    get_sources: true
+    
+  - platform: androidtv
+    host: !secret fire_tv_ip
+    name: Fire TV    
+    adb_server_ip: localhost
+    adb_server_port: 5037
+    device_class: firetv
+    get_sources: true

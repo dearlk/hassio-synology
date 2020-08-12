@@ -8,35 +8,55 @@
   # #   initial: off
   # #   icon: mdi:television
 
-  # medicine_reminder_flag:
-  #   name: Medicine reminder flag
-  #   initial: off
-  #   icon: mdi:pill
+  medicine_reminder_flag:
+    name: Medicine reminder flag
+    #initial: on
+    icon: mdi:pill
 
   debug_mode:
     name: debug mode
     initial: off
-    
+  
+  sos_call:
+      name: SOS call
+      initial: off    
 
   office_presence_check:
     name: Office Presence Check Mode
     initial: off
-    icon: mdi:bedroom
+  office_automation_check:
+    name: Office Automation Check Mode
+    initial: on
 
   familyroom_presence_check:
     name: Familyroom Presence Check Mode
     initial: off
-    icon: mdi:bedroom
+  familyroom_automation_check:
+    name: Familyroom automation Check Mode
+    initial: on
 
   bedroom_presence_check:
     name: Bedroom Presence Check Mode
     initial: off
-    icon: mdi:bedroom
-
+  bedroom_automation_check:
+    name: Bedroom automation Check Mode
+    initial: on
+    
   livingroom_presence_check:
     name: Livingroom Presence Check Mode
     initial: off
-    icon: mdi:sofa
+  livingroom_automation_check:
+    name: Livingroom automation Check Mode
+    initial: on
+
+
+  kitchen_presence_check:
+    name: kitchen Presence Check Mode
+    initial: off
+  kitchen_automation_check:
+    name: kitchen automation Check Mode
+    initial: on
+
 
   workday_announcements_trigger:
     name: Workday announcement trigger
@@ -63,6 +83,9 @@
     icon: mdi:night
 
 
+  work_from_home:
+    name: work from home
+    initial: off
   livingroom_aircon:
     name: livingroom aircon
   livingroom_fan:
@@ -77,24 +100,40 @@
 
   bedroom_fan_state:
     name: bedroom fan state 
+  bedroom_fan:
+      name: bedroom fan
 
-
-  # jyoti_at_home:
-  #   name: jyoti at home
-  #   initial: on
-  #   icon: mdi:people
-  # lalit_at_home:
-  #   name: lalit at home 
-  #   initial: on
-  #   icon: mdi:people
+  jyoti_at_home:
+    name: jyoti at home
+    initial: on
+    icon: mdi:people
+  lalit_at_home:
+    name: lalit at home 
+    initial: on
+    icon: mdi:people
 
   automation_trigger_notification_mode:
     name: Automation Trigger Notification Mode
-    initial: off
+    
   send_camera_picture_notification:
     name: send camera picture notification
     icon: mdi:camera
-    #initial: off
+    
   send_battery_notification:
     name: send_battery_notification
     icon: mdi:mobile    
+  pending_bedroom_shutdown_reply:
+    name: pending_bedroom_shutdown_reply
+  
+  bedroom_fan_ac_toggel_state:
+    name: bedroom_fan_ac_toggel_state
+    initial: off
+  bedroom_fan_ac_toggel_switch:
+    name: bedroom_fan_ac_toggel_switch
+    initial: off    
+  automate_ac_with_tv_flag:
+    initial: off
+
+  eating_food_check_flag:
+    name: eating food check flag
+    initial: off

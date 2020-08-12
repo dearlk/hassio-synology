@@ -1,0 +1,265 @@
+######################################################################################  
+    
+- alias: daily snapshot
+  trigger: 
+    platform: time
+    at: '02:00:00'
+  condition:
+    condition: time
+    weekday:
+      - mon  
+  action:
+    - service: hassio.snapshot_full
+      data_template:
+        name: "hassio_fullsnapshot_{{ now().strftime('%Y%m%d') }}"
+    - service: python_script.notify
+      data:
+        message: "creating hassio_fullsnapshot_{{ now().strftime('%Y%m%d') }}"
+        text: 1
+        tell: lalit
+#####################################################################################    
+# - alias: shopping list reminder
+  # trigger:
+    # - entity_id: device_tracker.lalit_phone
+      # event: enter
+      # platform: zone
+      # zone: zone.waterway_point
+    # - entity_id: device_tracker.lalit_phone
+      # event: enter
+      # platform: zone
+      # zone: zone.punggol_mrt
+ # action:
+   # data:
+      # message: dont forget to check the shopping list and buy items from here
+   # service: notify.zanzito_lalit
+
+########################################################################################
+- alias: change theme
+  trigger:
+    platform: state
+    entity_id: input_select.theme
+  action:
+    service: frontend.set_theme
+    data_template:
+      name: "{{ states('input_select.theme') }}"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#####################################################################################
+#do not disturb
+- alias: "do not disturb"
+  trigger:
+    platform: state
+    entity_id: binary_sensor.livingroom_tv
+    to: 'on'
+  condition:
+    condition: state  
+    entity_id: input_boolean.do_not_disturb
+    state: 'on'
+  action:
+    - service: script.turn_on
+      entity_id: script.livingroom_tv_off
+    - service: media_player.volume_set
+      data:
+        volume_level: 1.0
+        entity_id: media_player.livingroom
+    - service: python_script.notify
+      data:
+        message: 'Sorry, it is bed time now, you better go to bed now and sleep!'
+        room: 'livingroom'
+
+
+
+#####################################################################################
+#turn down media volume
+- alias: "turn down media volume"
+  initial_state: true  
+  trigger:
+    platform: time
+    at: '22:00:00'
+  action:
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.home
+        volume_level: 0.3
+
+- alias: "turn up media volume"
+  initial_state: true
+  trigger:
+    platform: time
+    at: '06:55:00'
+  action:
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.bedroom
+        volume_level: 0.4
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.livingroom
+        volume_level: 1.0
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.office
+        volume_level: 0.5
+
+
+##########################################################################################
+#turn on sleep mode 
+- alias: "turn on sleep mode"
+  trigger:
+    # platform: template
+    # value_template: "{{ states('sensor.time') == (states.input_datetime.bed_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+    platform: state
+    to: 'off'
+    from: 'on'
+    entity_id: binary_sensor.livingroom
+  condition:
+    - condition: time
+      after: '22:00:00'
+      before: '02:00:00'
+  action:
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.sleep_mode
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.announcement_mode        
+#turn off sleep mode
+- alias: "turn off sleep mode"
+  trigger:
+    # platform: template
+    # value_template: "{{ states('sensor.time') == (states.input_datetime.morning_alarm_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+    platform: state
+    to: 'on'
+    from: 'off'
+    entity_id: binary_sensor.livingroom
+  condition:
+    - condition: time
+      after: '09:00:00'
+  action:
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.sleep_mode
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.announcement_mode        
+
+##########################################################################################
+#turn workday announcements trigger on
+- alias: "turn workday announcements trigger on"
+  trigger:
+    platform: template
+    value_template: "{{ states('sensor.time') == (states.input_datetime.morning_time_reminder.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+  condition:
+    - condition: state
+      entity_id: binary_sensor.workday
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.work_from_home
+      state:  'off'
+  action:
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.workday_announcements_trigger
+#workday_announcements
+- alias: "workday announcements"
+  trigger:
+    platform: time_pattern
+    minutes: '/05'
+  condition:
+    - condition: state
+      entity_id: input_boolean.workday_announcements_trigger
+      state: 'on'
+  action:
+    - service: python_script.notify
+      data_template:
+        message: "It's {{ now() | as_timestamp | timestamp_custom('%I:%M')}} now"
+        announce: 1
+
+#turn workday announcements trigger off
+- alias: "turn workday announcements trigger off"
+  trigger:
+    platform: time
+    at: '09:30:00'
+  action:
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.workday_announcements_trigger
+
+
+
+
+
+            
+            
+###################################################################################
+- alias: mobile battery alert
+  initial_state: true
+  trigger: 
+    - entity_id: sensor.lalit_mobile_battery
+      platform: numeric_state
+      above: 99
+  condition:
+    - condition: state
+      state: 'on'   
+      entity_id: binary_sensor.lalit_mobile_charging
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.send_battery_notification
+  action:
+    - service: python_script.notify
+      data_template: 
+        message: '{{trigger.to_state.entity_id.split(".")[1].split("_")[0]}}, your mobile battery is {{trigger.to_state.state}}%, please disconnect your mobile to charger!'
+        announce: 1
+        room: home
+######################################################################################################
+###################################################################################
+- alias: plant water level alert
+  initial_state: true
+  trigger: 
+    - platform: time_pattern
+      hours: '/1'
+  condition:
+    - condition: state
+      state: 'on'
+      entity_id: binary_sensor.daytime
+    - condition: numeric_state
+      below: 20   
+      entity_id: sensor.window_plant_moisture
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.livingroom_automation_check
+  action:
+    - service: python_script.notify
+      data_template: 
+        message: 'hey guys, looks like window plant water level is really low, please water today!!!'
+        announce: 1
+        room: home
+
+
+# #################################################### 
+- alias: sos webhook trigger
+  initial_state: true      
+  trigger:
+    platform: webhook
+    webhook_id: sos_call
+  action:
+    # - service: python_script.notify
+    #   data_template:
+    #     message: '{{trigger.data}}'
+    #- service: script.sos_call
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.sos_call    
+  

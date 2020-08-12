@@ -1,3 +1,7 @@
+notify:
+  module: notify
+  class: Notify
+  
 service_listener:
   module: service_listener
   class: ServiceListener
@@ -14,12 +18,112 @@ mqtt_app_jyoti:
   name: jyoti
   data: jyoti_data.json
 
+find3_mqtt_app_lalit:
+  module: find3_mqtt_app
+  class: FIND3MQTTApp
+  name: lalit
+  data: lalit_data.json
+find3_mqtt_app_jyoti:
+  module: find3_mqtt_app
+  class: FIND3MQTTApp
+  name: jyoti
+  data: jyoti_data.json
+
 sunset_lights:
   module: sunset_lights
   class: SunsetLights
   sunset_lights: group.sunset_lights
   constrain_input_boolean: input_boolean.vacation_mode,off
 
-snips_mqtt_app:
-  module: snips_mqtt_app
-  class: SnipsMQTTApp
+# room_change_app_lalit:
+#   module: room_change
+#   class: RoomChangeApp
+#   sensor: sensor.lalit_room_location
+
+# room_change_app_jyoti:
+#   module: room_change
+#   class: RoomChangeApp
+#   sensor: sensor.jyoti_room_location
+  
+weather_lights_app:
+  module: weather_lights
+  class: WeatherLights
+  sunset_lights: group.sunset_lights
+  daylight_sensor: sensor.sunlight
+
+  # lalit_reached_home:
+#   module: event_chain
+#   class: EventChain
+#   timeframe: 10
+#   action:
+#     entity_id: 'script.lalit_reached_home'
+#     service: 'turn_on'
+#     delay: 5
+#     # parameters:
+#     #   brighness: 10
+#   events:
+#     device_tracker:
+#       entity_id: 'device_tracker.lalit'
+#       target_state: "home"
+#       rank: 1
+#     front_door:
+#       entity_id: 'binary_sensor.main_door'
+#       target_state: "on"
+#       rank: 2
+
+# lalit_left_home:
+#   module: event_chain
+#   class: EventChain
+#   timeframe: 10
+#   action:
+#     entity_id: 'script.lalit_left_home'
+#     service: 'turn_on'
+#     delay: 05
+#     # parameters:
+#     #   brighness: 10
+#   events:
+#     device_tracker:
+#       entity_id: 'device_tracker.lalit'
+#       target_state: "not_home"
+#       rank: 2
+#     front_door:
+#       entity_id: 'binary_sensor.main_door'
+#       target_state: "on"
+#       rank: 1
+
+
+
+auto_fan_speed_master_bedroom:
+  module: auto_fan_speed
+  class: AutoFanSpeed
+  temp_sensor: sensor.bedroom_temperature
+  fan: fan.bedroom_fan
+  sun: sun.sun
+  speeds:
+    low: 20
+    medium: 22
+    high: 24
+    #sun_offset: -2
+  time:
+    start: "21:00:00"
+    end: "12:00:00"
+    turn_off_at_end_time: True
+  debug: false
+
+
+
+office_lights:
+  module: room_lights_automation
+  class: RoomLightsAutomation
+  room: office
+  motion_sensor: binary_sensor.office_motion
+  daylight_sensor: sensor.sunlight_pct
+  constrain_input_boolean: input_boolean.office_automation_check
+
+# camera_scanner:
+#   module: camera_scanner
+#   class: CameraScanner
+
+sos_call_app:
+  module: sos_call
+  class: SOSCall

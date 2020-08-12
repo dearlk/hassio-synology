@@ -1,5 +1,4 @@
 
-  
 
   log_level:
     name: log level
@@ -10,7 +9,7 @@
      - 'warn'
      - 'error'
     initial: 'info'  
-  
+
   clock_speaker:
     name: Clock speaker
     options:
@@ -21,36 +20,8 @@
     initial: 'home'
     icon: mdi:speaker
 
-  livingroom_fan:
-    name: Living Room Fan
-    options:
-     - 'Off'
-     - 'Low'
-     - 'Medium'
-     - 'High'
-    initial: 'Off'
-    icon: mdi:fan
-  # spotify_playlist:
-    # name: 'Playlist:'
-    # options:
-      # - Morning Commute
-      # - Cinematic Chill-Out
-      # - FUTURESYNTH
-      # - From a Smokey Bar
-      # - Piano in the Background
-    # icon: mdi:spotify
-  # spotify_source:
-    # name: 'Source:'
-    # options:
-      # - SP3
-      # - Office speaker
-      # - Living Room speaker
-      # - Bedroom speaker
-      # - Office speaker
-      # - Home
-    # initial: SP3
-    # icon: mdi:speaker-wireless
-    
+
+
   theme:
     name: Theme
     options:
@@ -85,7 +56,7 @@
      - 'ALL'
      - 'NONE'
     initial: 'TEXT'
-  
+
   broadcast_speaker:
     name: Broadcast speaker
     options:
@@ -94,7 +65,7 @@
      - 'office'
      - 'bedroom'
      - 'livingroom_office'
-    initial: 'livingroom'
+    initial: 'home'
     icon: mdi:speaker
 
   last_door_opened:

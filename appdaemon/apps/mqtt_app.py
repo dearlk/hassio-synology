@@ -20,12 +20,17 @@ import sys,getopt
 class MQTTApp(hass.Hass):
 
   def initialize(self):
+    self.last_probability=0
+    self.new_probability=0
+    self.last_room=None
+    self.new_room=None
+
     self.prefix = self.args.get("name")
     self.log("monitoring MQTT messages for zanzito/{}...".format(self.prefix))
     self.set_namespace("mqtt")
     self.listen_event(self.device_info_received, "MQTT_MESSAGE", topic = 'zanzito/{}/device_info'.format(self.prefix))
-    self.listen_event(self.find3_mqtt_received, "MQTT_MESSAGE", topic = 'myhome/location/{}'.format(self.prefix))
-    #self.listen_event(self.monitor_mqtt_received, "MQTT_MESSAGE", topic = 'monitor/office/{}'.format(self.prefix))
+    #self.listen_event(self.find3_mqtt_received, "MQTT_MESSAGE", topic = 'myhome/location/{}'.format(self.prefix))
+    
 #############################################################################################################################
   def device_info_received(self, event_name, data, kwargs):
     topic = data['topic']
@@ -35,6 +40,7 @@ class MQTTApp(hass.Hass):
     mobile_charging_value=""
     screen_locked_value=""
     #self.log("topic={},payload={},screen_locked={},mobile_charging={}".format(topic,payload,screen_locked,mobile_charging)) 
+    #self.log("device_info_received") 
     if screen_locked is not None:
       if screen_locked is True:
         screen_locked_value="on"
@@ -47,32 +53,5 @@ class MQTTApp(hass.Hass):
         mobile_charging_value="off"
     self.set_state("binary_sensor.{}_mobile_screen_locked".format(self.prefix),state=screen_locked_value,namespace="default")
     self.set_state("binary_sensor.{}_mobile_charging".format(self.prefix),state=mobile_charging_value,namespace="default")
-#############################################################  
-  def find_mqtt_received(self, event_name, data, kwargs):
-    topic = data['topic']
-    payload = json.loads(data['payload'])
-    room = payload.get("location")
-    #self.log("topic={},data={}".format(topic,data)) 
-    self.set_state("sensor.{}_room_location".format(self.prefix),state=room,namespace="default")
-#############################################################  
-  def find3_mqtt_received(self, event_name, data, kwargs):
-    topic = data['topic']
-    payload = json.loads(data['payload'])
-    guesses = payload.get("guesses")
-    last_probability=0
-    for guess in guesses:
-      probability = guess["probability"]
-      if probability > last_probability:
-        last_probability = probability
-        room = guess["location"]
-    self.set_state("sensor.{}_room_location".format(self.prefix),state=room,namespace="default")
 
-#############################################################  
-  def monitor_mqtt_received(self, event_name, data, kwargs):
-    self.log(data)
-    topic = data['topic']
-    payload = json.loads(data['payload'])
-    confidence = payload.get("confidence")
-    room = topic.split("/")[1]
-    #room = guesses[0]["location"]
-    self.set_state("sensor.{}_{}_monitor".format(self.prefix,room),state=confidence,namespace="default")
+

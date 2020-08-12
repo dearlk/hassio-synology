@@ -1,0 +1,5 @@
+shutdown_office:
+  alias: "shutdown office"
+  sequence: 
+    - service: homeassistant.turn_off
+      entity_id: group.office

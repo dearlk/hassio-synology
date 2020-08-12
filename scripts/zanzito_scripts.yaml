@@ -1,0 +1,18 @@
+zanzito_play_alarm:
+  alias: Play alarm on Zanzito device
+  sequence:
+    service: mqtt.publish
+    data_template:
+      topic: 'zanzito/{{ device_id }}/alarm/play'
+      payload: '{{ message }}'
+      qos: 1
+      retain: 0
+zanzito_stop_alarm:
+  alias: Stop alarm on Zanzito device
+  sequence:
+    service: mqtt.publish
+    data_template:
+      topic: 'zanzito/{{ device_id }}/alarm/stop'
+      payload: '{{ message }}'
+      qos: 1
+      retain: 0

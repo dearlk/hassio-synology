@@ -1,87 +1,77 @@
-  switch.tv:
-    icon: mdi:television
-    friendly_name: 'Living Room Smart TV'
-    assume_state: false
-  switch.office_ac_template_switch:
-    icon: mdi:air-conditioner
-    friendly_name: 'Office Aircon'
-    assume_state: false
-  switch.living_room_ac_template_switch:
-    icon: mdi:air-conditioner
-    friendly_name: 'Living Room Aircon'
-    assume_state: false
-  group.living_room_samsung_tv:
-    icon: mdi:television
-    friendly_name: 'Samsung Smart TV'
-    assume_state: false
-  switch.bedroom_fan:
-    icon: mdi:fan
-  switch.bedroom_fan_med:
-    icon: mdi:fan
-  switch.bedroom_fan_hi:
-    icon: mdi:fan
-  switch.bedroom_fan_light:
-    icon: mdi:lightbulb
-  group.lalit_location:
-    order: 1
-  group.jyoti_location:
-    order: 2
+switch.tv:
+  icon: mdi:television
+  friendly_name: Living Room Smart TV
+  assume_state: false
+switch.office_ac_template_switch:
+  icon: mdi:air-conditioner
+  friendly_name: Office Aircon
+  assume_state: false
+switch.living_room_ac_template_switch:
+  icon: mdi:air-conditioner
+  friendly_name: Living Room Aircon
+  assume_state: false
+group.living_room_samsung_tv:
+  icon: mdi:television
+  friendly_name: Samsung Smart TV
+  assume_state: false
+switch.bedroom_fan:
+  icon: mdi:fan
+switch.bedroom_fan_med:
+  icon: mdi:fan
+switch.bedroom_fan_hi:
+  icon: mdi:fan
+switch.bedroom_fan_light:
+  icon: mdi:lightbulb
+group.lalit_location:
+  order: 1
+group.jyoti_location:
+  order: 2
+sensor.lalit_home_to_work_travel_time:
+  icon: mdi:briefcase
+  friendly_name: Time to Office
+sensor.lalit_work_to_home_travel_time:
+  icon: mdi:home
+  friendly_name: Time to Home
+sensor.lalit:
+  icon: mdi:map-marker
+  friendly_name: Currently
+proximity.lalit_home:
+  icon: mdi:home
+  friendly_name: Home
+proximity.lalit_work:
+  icon: mdi:briefcase
+  friendly_name: Work
+sensor.jyoti_home_to_work_travel_time:
+  icon: mdi:briefcase
+  friendly_name: Time to Office
+sensor.jyoti_work_to_home_travel_time:
+  icon: mdi:home
+  friendly_name: Time to Home
+sensor.jyoti:
+  icon: mdi:map-marker
+  friendly_name: Currently
+proximity.jyoti_home:
+  icon: mdi:home
+  friendly_name: Home
+proximity.jyoti_work:
+  icon: mdi:briefcase
+  friendly_name: Work
+sensor.systemmonitor_memory_use_percent:
+  friendly_name: memory
+sensor.systemmonitor_processor_use:
+  friendly_name: cpu
+group.sensors:
+  hidden: false
+group.lalit:
+  hidden: false
+group.jyoti:
+  hidden: false
+group.all_automations:
+  hide_entity: true
+group.automations:
+  hide_entity: true
+group.all_switches:
+  hide_entity: true
+group.all_scripts:
+  hide_entity: true
 
-  sensor.lalit_home_to_work_travel_time:
-    icon: mdi:briefcase
-    friendly_name: 'Time to Office'
-  sensor.lalit_work_to_home_travel_time:
-    icon: mdi:home
-    friendly_name: 'Time to Home'
-  sensor.lalit:
-    icon: mdi:map-marker
-    friendly_name: 'Currently'
-  proximity.lalit_home:
-    icon: mdi:home
-    friendly_name: 'Home'
-  proximity.lalit_work:
-    icon: mdi:briefcase
-    friendly_name: 'Work'
-
-    
-  sensor.jyoti_home_to_work_travel_time:
-    icon: mdi:briefcase
-    friendly_name: 'Time to Office'
-  sensor.jyoti_work_to_home_travel_time:
-    icon: mdi:home
-    friendly_name: 'Time to Home'
-  sensor.jyoti:
-    icon: mdi:map-marker
-    friendly_name: 'Currently'
-  proximity.jyoti_home:
-    icon: mdi:home
-    friendly_name: 'Home'
-  proximity.jyoti_work:
-    icon: mdi:briefcase
-    friendly_name: 'Work'
-
-  sensor.systemmonitor_memory_use_percent:
-    friendly_name: memory 
-
-  sensor.systemmonitor_processor_use:
-    friendly_name: cpu
-
-
-  group.sensors:
-    hidden: false
-  group.lalit:
-    hidden: false
-  group.jyoti:
-    hidden: false
-  group.all_automations:
-    hide_entity: True
-  group.automations:
-    hide_entity: True    
-    #hidden: false
-  group.all_switches:
-    hide_entity: True    
-  group.all_scripts:
-    hide_entity: True    
-
-  
-    

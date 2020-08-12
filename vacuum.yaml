@@ -1,4 +1,9 @@
 
+  # - platform: xiaomi_miio
+  #   host: !secret xiaomi_robo_ip
+  #   token: !secret xiaomi_robo_token
+
   - platform: xiaomi_miio
-    host: !secret xiaomi_robo_ip
-    token: !secret xiaomi_robo_token
+    host: !secret xiaomi_roborocks6_ip
+    token: !secret xiaomi_roborocks6_token    
+    name: dusty

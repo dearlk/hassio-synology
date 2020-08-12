@@ -1,0 +1,141 @@
+# reached office
+- alias: Lalit Reached Office
+  initial_state: true
+  action:
+    data:
+      message: Lalit has reached office now
+    service: python_script.notify
+  trigger:
+    entity_id: device_tracker.lalit
+    event: enter
+    platform: zone
+    zone: zone.DB
+
+# left office
+- alias: Lalit Left Office
+  initial_state: true
+  action:
+    #   data:
+    #     message: Lalit has left office now
+    # - service: python_script.notify
+    - service: rest_command.assistant_preset
+      data:
+        preset: ontheway
+  trigger:
+    entity_id: device_tracker.lalit
+    event: leave
+    platform: zone
+    zone: zone.DB
+
+
+# reached home
+- alias: Lalit Reached home
+  initial_state: true
+  action:
+    # - wait_template: "{{ states.binary_sensor.main_door.state == 'on' }}"
+    # - delay: '00:00:10'
+    - service: script.turn_on
+      entity_id: script.lalit_reached_home
+  # condition:
+  #   - condition: state
+  #     state: 'off'
+  #     entity_id: input_boolean.lalit_at_home
+  # trigger:
+    # entity_id: device_tracker.lalit_nmap
+    # to: 'home'
+    # from: 'not_home'
+    # platform: state
+  trigger:
+    entity_id: device_tracker.lalit
+    event: enter
+    platform: zone
+    zone: zone.home
+
+
+# left home
+- alias: Lalit Left home
+  initial_state: true
+  action:
+    - service: script.turn_on
+      entity_id: script.lalit_left_home
+  # condition:
+  #   - condition: state
+  #     entity_id: device_tracker.lalit_nmap
+  #     state: 'not_home'
+  trigger:
+    entity_id: device_tracker.lalit
+    event: leave
+    platform: zone
+    zone: zone.home
+
+
+# # left home
+# - alias: Lalit Left home
+#   initial_state: true
+#   action:
+#     # - wait_template: "{{ states.device_tracker.lalit_nmap.state == 'not_home' }}"
+#     #   timeout: '00:05:00'
+#     - service: script.turn_on
+#       entity_id: script.lalit_left_home
+#   condition:
+#     - condition: state
+#       entity_id: input_boolean.lalit_at_home
+#       state: 'on'
+#   trigger:
+#     entity_id: binary_sensor.main_door
+#     to: 'on'
+#     platform: state
+
+
+
+#travelling
+- alias: Lalit is travelling
+  initial_state: true
+  trigger:
+    platform: event
+    event_type: places_state_update
+  condition:
+    - condition: template
+      value_template: '{{ trigger.event.data.entity == "lalit" }}'
+    - condition: template
+      value_template: '{{ trigger.event.data.devicetracker_zone != "home" and trigger.event.data.devicetracker_zone != "not_home" }}'
+    - condition: state
+      state: 'off'
+      entity_id: input_boolean.lalit_at_home
+  action:
+  - service: python_script.notify
+    data_template:
+      message: '{{trigger.event.data.entity}} has reached {{trigger.event.data.devicetracker_zone}}'
+
+########################################################################################
+- alias: turn on livingroom ac when lalit leaves office
+  trigger:
+    platform: zone
+    event: leave
+    zone: zone.DB
+    entity_id: device_tracker.lalit
+  condition:
+    - condition: time
+      after: "18:00:00"
+    - condition: state
+      entity_id: binary_sensor.workday
+      state: 'on'
+    - condition: state
+      entity_id: switch.livingroom_aircon
+      state: 'off'
+  action:
+    - service: python_script.notify
+      data_template:
+        message: "Lalit has left office, turning on livingroom aircon now, please close all windows!!!"
+    - service: script.turn_on
+      entity_id: script.livingroom_aircon_on
+    - delay: 
+        minutes: 5
+    - service: python_script.notify
+      data:
+        message: "Lalit is coming home, I've turned on livingroom aircon, please close all windows if not closed yet!!!"
+    - delay:
+        minutes: 10
+    - service: python_script.notify
+      data:
+        message: "Did you reminder to close all windows since livingroom aircon is on now?"

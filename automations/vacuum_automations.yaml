@@ -1,0 +1,24 @@
+
+- alias: vacuum.go to trash when full
+  initial_state: false
+  trigger: 
+    - entity_id: vacuum.dusty
+      platform: state
+      from: docked
+      to: cleaning
+  condition:
+    - condition: template
+      value_template: '{{ state_attr("vacuum.dusty","cleaning_count")|int %3 == 0}}'
+  action:
+    - service: vacuum.stop    
+      entity_id: vacuum.dusty
+    - delay: '00:00:30'
+    - service: python_script.notify
+      data_template: 
+        message: It's time to clean the dustbin, please clean and restart the dusty!!!
+        announce: 1
+        override: 1
+        room: home
+    # - service: rest_command.assistant_broadcast
+    #   data:
+    #     message: "It's time to clean the dustbin, please clean and restart the dusty!!!"

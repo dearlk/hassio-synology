@@ -11,24 +11,10 @@
     password: !secret bedroom_camera_pass
     name: bedroom
 
-  - platform: local_file
-    file_path: /config/www//office.jpg
+  - platform: mjpeg
     name: office
-
-  - platform: local_file
-    file_path: /config/www//familyroom.jpg
-    name: familyroom
-
-  - platform: local_file
-    file_path: /config/www//kitchen.jpg
-    name: kitchen
-
-  - platform: combined
-    base_address: !secret base_url_full
-    entities:
-      - camera.livingroom
-      - camera.bedroom
-
+    mjpeg_url: !secret bedroom_camera_url
+    
 #zanzito mqtt cameras
   - platform: mqtt
     topic: zanzito/shared_pictures/lalit
@@ -37,16 +23,8 @@
     topic: zanzito/shared_pictures/jyoti
     name: jyoti phone camera
 
-  # - platform: mjpeg
-  #   mjpeg_url: http://localhost:8099/camera.mjpg
-  #   name: ariela 
 
-#ariela mqtt cameras
-  # - platform: mqtt
-  #   topic: homeassistant/camera/android_lalit_backcamera
-  #   name: lalit phone back camera
-  # - platform: mqtt
-  #   topic: homeassistant/camera/android_lalit_frontcamera
-  #   name: lalit phone front camera
+
+
 
   

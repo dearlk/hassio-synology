@@ -1,5 +1,5 @@
 
-  group.all_automation:
-    hide_entity: True
-  group.automations:
-    hide_entity: True
+  # group.all_automation:
+  #   hide_entity: True
+  # group.automations:
+  #   hide_entity: True

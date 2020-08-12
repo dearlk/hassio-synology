@@ -1,18 +1,30 @@
+import glob
+import json
 import requests
 
-user_image = open("/volume1/photo/lalit.jpg","rb").read()
-response = requests.post("http://localhost:5001/v1/vision/face/register",
-files={"image":user_image},data={"userid":"lalit"}).json()
-print(response)
+IP = "192.168.1.165"
+PORT = "32769"
+lalit_dir = "C:\\lalit\\"
+jyoti_dir = "C:\\jyoti\\"
+TIMEOUT = 60 # seconds for a request
 
-user_image = open("/volume1/photo/jyoti.jpg","rb").read()
-response = requests.post("http://localhost:5001/v1/vision/face/register",
-files={"image":user_image},data={"userid":"jyoti"}).json()
+def process_image(file_path: str, userid: str):
+    """
+    Process an image with deepstack.
+    """
+    try:
+        user_image = open(file_path, "rb").read()
+        response = requests.post("http://{}:{}/v1/vision/face/register".format(IP,PORT),files={"image":user_image},data={"userid":userid}).json()
+        print(response)
+    except Exception as exc:
+        print(exc)
 
-print(response)
+lalit_files = glob.glob(lalit_dir + "*.jpg")
+for file in lalit_files:
+    print(file)
+    process_image(file,"lalit")
 
-user_image = open("/volume1/photo/mom.jpg","rb").read()
-response = requests.post("http://localhost:5001/v1/vision/face/register",
-files={"image":user_image},data={"userid":"mom"}).json()
-
-print(response)
+jyoti_files = glob.glob(jyoti_dir + "*.jpg")
+for file in jyoti_files:
+    print(file)
+    process_image(file,"jyoti")

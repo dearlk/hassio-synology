@@ -3,3 +3,4 @@
   - platform: harmony
     name: harmony_hub
     host: !secret harmony_ip
+    #activity: Watch Smart TV

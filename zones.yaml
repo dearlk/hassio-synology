@@ -1,9 +1,9 @@
 
 
   - name: Home@Indore
-    latitude: 22.7424954
-    longitude: 75.8863041
-    radius: 50
+    latitude: 22.7366601
+    longitude: 75.8844099
+    radius: 250
     icon: mdi:home-city-outline
 
   - name: UBS
@@ -19,9 +19,9 @@
     icon: mdi:work
 
   - name: home
-    latitude: 1.398049
-    longitude: 103.916551
-    radius: 50
+    latitude: 1.3979611
+    longitude: 103.9165584
+    radius: 500
     icon: mdi:home
 
   - name: harbour front 

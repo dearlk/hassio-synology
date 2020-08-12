@@ -1,110 +1,17 @@
-  # default_view:
-  #   name: Home
-  #   view: yes
-  #   icon: mdi:home
-  #   entities:
-  #     - sun.sun
-  #     - device_tracker.dad
-  #     - device_tracker.mom
-  #     #- device_tracker.lalit
-  #     #- device_tracker.jyoti
-  #     - binary_sensor.workday
-  #     - group.lalit_location
-  #     - group.jyoti_location
-  #     - media_player.home
-  #     - media_player.spotify
-  #     - group.sunset_lights
-
-
-  # family:
-  #   name: Family
-  #   entities:
-  #     - device_tracker.lalit
-  #     - device_tracker.jyoti
-  #     - device_tracker.dad
-  #     - device_tracker.mom
-
-
-  # lalit_home_tracker:
-  #   name: Home tracker
-  #   entities:
-  #     - device_tracker.lalit
-  #     - device_tracker.his_phone
-  #     - device_tracker.lalit_nmap
-  # lalit_tracker:
-  #   name: Location Tracker
-  #   entities:
-  #     - device_tracker.lalit
-  #     - device_tracker.his_phone
-
-  # jyoti_home_tracker:
-  #   name: Home tracker
-  #   entities:
-  #     - device_tracker.jyoti
-  #     - device_tracker.her_phone
-  #     - device_tracker.jyoti_nmap
-
-  # jyoti_tracker:
-  #   name: Location Tracker
-  #   entities:
-  #     - device_tracker.jyoti
-  #     - device_tracker.her_phone
-
-  # sensors:
-  #   name: Sensors
-  #   entities:
-  #     - binary_sensor.door_window_sensor_158d0001c2de18
-  #     - binary_sensor.door_window_sensor_158d0001e77d2e
-  #     - binary_sensor.door_window_sensor_158d0001f3469f
-  #     - binary_sensor.door_window_sensor_158d0002025aef
-  #     - binary_sensor.door_window_sensor_158d00022503f6
-  #     - binary_sensor.door_window_sensor_158d0001e74d9d
-  #     - binary_sensor.motion_sensor_158d0001aead85
-  #     - binary_sensor.motion_sensor_158d0001b17372
-  #     - binary_sensor.motion_sensor_158d0001d54193
-  #     - binary_sensor.motion_sensor_158d0001d5567f
-  #     - binary_sensor.motion_sensor_158d0001d556d0
-  #     - binary_sensor.motion_sensor_158d000223443e
-  # jyoti_location:
-  #   name: Jyoti
-  #   entities:
-  #     - device_tracker.her_phone
-  #     - device_tracker.jyoti_nmap
-  #     - sensor.jyoti
-  #     - proximity.jyoti_home
-  #     - proximity.jyoti_work
-  #     - binary_sensor.jyoti_home_towards
-  #     - binary_sensor.jyoti_work_towards
-  #     - sensor.jyoti_work_to_home_travel_time
-  #     - sensor.jyoti_home_to_work_travel_time
-  # lalit_location:
-  #   name: Lalit
-  #   entities:
-  #     - device_tracker.his_phone
-  #     - device_tracker.lalit_nmap
-  #     - sensor.lalit 
-  #     - proximity.lalit_home
-  #     - proximity.lalit_work
-  #     - binary_sensor.lalit_home_towards
-  #     - binary_sensor.lalit_work_towards
-  #     - sensor.lalit_work_to_home_travel_time
-  #     - sensor.lalit_home_to_work_travel_time
-
-#####weather
-  # weather:
-  #   name: Weather
-  #   icon: mdi:weather
-  #   entities:
-  #     - sensor.dark_sky_cloud_coverage
-  #     - sensor.dark_sky_daily_summary
+  all_devices:
+    name: all devices
+    entities:
+      - device_tracker.lalit
+      - device_tracker.jyoti
 #####global group
   all_lamps:
     name: 'All Lamps'
     icon: mdi:lamp
     entities:
       - group.livingroom_lamps
-      #- light.temple_lamp
+      - light.temple_lamp
       - light.bedroom_lamp
+      - switch.sonoff_office_lamp
   all_lights:
     name: 'All Lights'
     icon: mdi:light-bulb
@@ -118,13 +25,18 @@
     name: 'Sunset Light'
     icon: mdi:lamp
     entities:
-      - group.all_lamps
-      - group.livingroom_lights
+      - light.dining_cove_light
+      - light.studio_cove_light
       - light.gateway_light
+      #- light.gallery_light
+      - light.bedroom_lamp
+      - switch.sonoff_office_lamp
+      
+
 #Living Room #####################################################
   livingroom:
     name: 'Livingroom'
-    view: yes
+    #view: yes
     icon: mdi:sofa
     entities:
       - group.livingroom_fan
@@ -134,11 +46,10 @@
       - group.livingroom_lights
       - media_player.livingroom_home
       - media_player.livingroom_tv
-      #- switch.livingroom_fan_power
 #ac      
   livingroom_aircon:
     name: 'Livingroom Aircon'
-    control: hidden
+    #control: hidden
     entities:
       - script.livingroom_aircon_on
       - script.livingroom_aircon_off
@@ -146,9 +57,9 @@
   livingroom_lamps:
     name: 'Livingroom Lamps'
     entities:
-      - light.sofa_lamp
-      - light.console_lamp
-      - light.dining_lamp
+      - light.dining_cove_light
+      - light.studio_cove_light
+
   livingroom_lights:
     name: 'Livingroom Lights'
     entities:
@@ -156,135 +67,74 @@
       - light.center_light
       - light.door_light
       - light.gallery_light
+      - light.dining_cove_light
+      - light.studio_cove_light
+      - light.dining_light
+
 #fan      
   livingroom_fan:
     #control: hidden
     name: 'Livingroom Fan'
     entities:
       - light.studio_light
-      - input_select.livingroom_fan
+      - fan.livingroom_fan
 #tv      
   livingroom_samsung_tv:
     name: "Samsung Smart Tv"
-    control: hidden
+    #control: hidden
     icon: mdi:television
     entities:
-      - input_boolean.samsung_tv
-      - script.sab_tv
-      - script.sony_tv
-      - script.channel_up
-      - script.channel_down
-      - script.tv_mute
-      - script.tv_volume_up
-      - script.tv_volume_down
-#Office################################################
+      - input_boolean.livingroom_tv_state
+      #- script.tv_sab
+      #- script.tv_sony
+      - script.livingroom_tv_channel_up
+      - script.livingroom_tv_channel_down
+      - script.livingroom_tv_mute
+      - script.livingroom_tv_volume_up
+      - script.livingroom_tv_volume_down
+      - script.livingroom_tv_on
+      - script.livingroom_tv_off
+#Office######################################################################################################################
   office:
     name: 'Office'
-    view: yes
     icon: mdi:domain
     entities:
+      - switch.office_aircon
       - climate.office_aircon
       - media_player.office_home
       - light.office_light
       - light.gateway_light
-  office_aircon:
-    name: 'Office Aircon'
-    entities:
-      - switch.office_aircon
-#Family Room#################################################
-  familyrooms:
+      - switch.sonoff_office_lamp
+#Family Room######################################################################################################################
+  familyroom:
     name: 'Familyroom'
-    view: yes
     icon: mdi:face
     entities:
-      - climate.familyroom_aircon
+      - switch.familyroom_aircon
       - light.familyroom_light
-      #- switch.family_temple_lamp
-#Bedroom ################## #######################################    
+      - climate.familyroom_aircon
+      #- switch.familyroom_temple_lamp
+#Bedroom ########################################################################################################################    
   bedroom:
     name: 'Bedroom'
-    view: yes
     icon: mdi:hotel
     entities:
-      #- group.bedroom_fan_light
-      - group.bedroom_fan
-      - group.bedroom_lamp
+      #- fan.bedroom_fan
+      - switch.bedroom_fan_switch
+      - switch.bedroom_lamp
       - switch.bathroom_light
-      - switch.bedroom_light
+      - switch.bedroom_main_light
       #- media_player.bedroom_home
       - switch.bedroom_aircon
-  bedroom_fan_light:
-    name: 'Bedroom Fan Light'
-    icon: mdi:light-bulb
-    control: hidden
-    entities:
-      - switch.bedroom_fan_light
-  bedroom_fan:
-    name: 'Bedroom Fan'
-    icon: mdi:fan
-    control: hidden
-    entities:
-      - switch.bedroom_fan_light
-      - switch.bedroom_fan
-      - switch.bedroom_fan_med
-      - switch.bedroom_fan_high
-  bedroom_lamp:
-    name: 'Bedroom Lamp'
-    icon: mdi:lamp
-    control: hidden
-    entities:
-      - switch.bedroom_lamp      
+      - climate.bedroom_aircon
+      - switch.bedroom_tv
 ###########################################
-  automations:
-    name: Automations
-    view: yes
-    entities:
-      - group.all_automations
-###########################################
-  scriptsg:
-    name: Scripts
-    view: yes
-    entities:
-      - group.all_scripts
-###########################################
-  switches:
-    name: Switches
-    view: yes
-    entities:
-      - group.all_switches
-###########################################
-  sensorsg:
-    name: Sensors
-    view: yes
-    entities:
-      - group.sensors
-###########################################
-  locations:
-    name: Locations
-    view: yes
-    entities:
-      - group.jyoti_home_tracker
-      - group.jyoti_location
-      - group.lalit_home_tracker
-      - group.lalit_location
-  flags:
-    name: Flags
-    view: yes
-    entities:
-      - input_boolean.bedroom_presence_check
-      - input_boolean.do_not_disturb
-      - input_boolean.gallary_light_auto_mode
-      - input_boolean.guest_mode
-      - input_boolean.notify_home
-      - input_boolean.medicine_reminder_flag
-      - input_boolean.samsung_tv
-      - input_boolean.vacation_mode
 
-  # network:
-  #   name: Network
-  #   entities:
-  #     - device_tracker.dev_delapic
-  #     - device_tracker.test_delapic
-  #     - device_tracker.uat_delapic
-  #     - device_tracker.live_delapic
-  #     - device_tracker.gateway_delapic
+###########################################
+
+###########################################
+
+###########################################
+
+###########################################
+

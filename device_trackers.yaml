@@ -1,38 +1,39 @@
 
-  #- platform: owntracks
+  # - platform: owntracks
   # - platform: gpslogger
 
   - platform: nmap_tracker
     interval_seconds: 60
-    hosts: 192.168.1.0/24
-    home_interval: 5
+    hosts: 
+      - 192.168.1.254
+      - 192.168.1.11
+    home_interval: 10
     exclude:
       - 192.168.1.1
       - 192.168.1.9
       - 192.168.1.165
-
-  # - platform: googlehome
-  #   host: 192.168.1.132
-
-  # - platform: googlehome
-  #   host: 192.168.1.143
-
-  # - platform: googlehome
-  #   host: 192.168.1.2
-
   - platform: composite
     name: lalit
     time_as: local
+    require_movement: true
     entity_id: 
-      #- device_tracker.lalit_gpslogger
       - device_tracker.lalit_nmap
       - device_tracker.lalit_zanzito
-
   - platform: composite
     name: jyoti
     time_as: local
+    require_movement: true
     entity_id: 
-      - device_tracker.jyoti_gpslogger
       - device_tracker.jyoti_nmap
       - device_tracker.jyoti_zanzito
 
+  # - platform: mqtt
+  #   devices:
+  #     office: 'room-assistant/device_tracker/bluetooth-classic-00-fa-21-3f-0e-f3-tracker/state'
+  #   payload_home: 'true'
+  #   payload_not_home: 'false'
+  #   source_type: bluetooth
+  # # - platform: mqtt
+  #   devices:
+  #     room_presence_lalit: 'location/bluetooth-classic-00-fa-21-3f-0e-f3_room_presence'
+  #   source_type: bluetooth_le

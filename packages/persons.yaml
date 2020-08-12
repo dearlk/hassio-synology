@@ -1,0 +1,5 @@
+device_tracker:
+  platform: mqtt
+  devices:
+    room_presence_lalit: 'location/bluetooth-classic-00-fa-21-3f-0e-f3_room_presence'
+  source_type: bluetooth_le

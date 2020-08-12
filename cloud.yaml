@@ -9,9 +9,9 @@
         - switch.bedroom_aircon
         - vacuum.xiaomi_vacuum_cleaner
         - switch.livingroom_fan
-        - script.livingroom_fan_medium
-        - script.livingroom_fan_high
-        - switch.livingroom_tv
+        # - script.livingroom_fan_medium
+        # - script.livingroom_fan_high
+        # - switch.livingroom_tv
     entity_config:
       switch.livingroom_aircon:
         name: Aircon
@@ -50,54 +50,3 @@
         name: TV
         room: Living room
 
-
-  alexa:
-      filter:
-        include_domains:
-          - light
-        include_entities:
-          - switch.livingroom_aircon
-          - switch.office_aircon
-          - switch.bedroom_aircon
-          - vacuum.xiaomi_vacuum_cleaner
-          - switch.livingroom_fan
-          - script.livingroom_fan_medium
-          - script.livingroom_fan_high
-          - switch.livingroom_tv
-      entity_config:
-        switch.livingroom_aircon:
-          name: Aircon
-          # aliases:
-          #   - Aircon
-          #   - AC
-          # room: living room
-        switch.office_aircon:
-          name: Aircon
-          # aliases:
-          #   - Aircon
-          #   - AC
-          # room: Office
-        switch.bedroom_aircon:
-          name: Aircon
-          # aliases:
-          #   - Aircon
-          #   - AC
-          # room: Bedroom
-        vacuum.xiaomi_vacuum_cleaner:
-          name: vacuum
-          # aliases:
-          #   - Robot
-          #   - Shantabai
-          # room: Living room
-        switch.livingroom_fan:
-          name: Fan
-          # room: Living room
-        script.livingroom_fan_medium:
-          name: Fan medium
-          # room: Living room
-        script.livingroom_fan_high:
-          name: Fan high
-          # room: Living room
-        switch.livingroom_tv:
-          name: TV
-          # room: Living room

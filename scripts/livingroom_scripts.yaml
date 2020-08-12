@@ -1,0 +1,207 @@
+livingroom_tv_on:
+  alias: Tv On
+  sequence:
+  - service: input_boolean.turn_on
+    entity_id: input_boolean.livingroom_tv_state
+  - service: remote.send_command
+    data:
+      command: PowerOn
+      device: Samsung TV
+      entity_id: remote.harmony_hub
+livingroom_tv_off:
+  alias: Tv Off
+  sequence:
+  - service: input_boolean.turn_off
+    entity_id: input_boolean.livingroom_tv_state
+  # - service: remote.send_command
+  #   data:
+  #     command: PowerOff
+  #     device: Samsung TV
+  #     entity_id: remote.harmony_hub
+  - service: media_player.turn_off
+    data:
+      entity_id: media_player.shield_tv
+
+livingroom_tv_channel_up:
+  alias: Channel Up
+  sequence:
+  - data:
+      command: ChannelUp
+      device: Samsung TV
+      entity_id: remote.harmony_hub
+    service: remote.send_command
+livingroom_tv_channel_down:
+  alias: Channel Down
+  sequence:
+  - data:
+      command: ChannelDown
+      device: Samsung TV
+      entity_id: remote.harmony_hub
+    service: remote.send_command
+livingroom_tv_mute:
+  alias: Tv Mute
+  sequence:
+  - data:
+      command: Mute
+      device: Samsung TV
+      entity_id: remote.harmony_hub
+    service: remote.send_command
+livingroom_tv_volume_up:
+  alias: Tv Volume Up
+  sequence:
+  - data:
+      command: VolumeUp
+      device: Samsung TV
+      entity_id: remote.harmony_hub
+    service: remote.send_command
+livingroom_tv_volume_down:
+  alias: Tv Volume Down
+  sequence:
+  - data:
+      command: VolumeDown
+      device: Samsung TV
+      entity_id: remote.harmony_hub
+    service: remote.send_command
+
+livingroom_aircon_on:
+  alias: Aircon on
+  sequence:
+  - data:
+      command: PowerToggle
+      device: '49816813'
+      entity_id: remote.harmony_hub
+    service: remote.send_command
+  - service: input_boolean.turn_on
+    entity_id: input_boolean.livingroom_aircon
+
+
+livingroom_aircon_off:
+  alias: Aircon off
+  sequence:
+  - data:
+      command: 'Off'
+      device: '49816813'
+      entity_id: remote.harmony_hub
+    service: remote.send_command
+  - service: input_boolean.turn_off
+    entity_id: input_boolean.livingroom_aircon
+
+
+#############################################################################################
+studio_light_on:
+  alias: Studio light on
+  sequence:
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.studio_light_state
+    - service: switch.turn_on
+      entity_id: switch.livingroom_studio_light
+
+studio_light_off:
+  alias: Studio light off
+  sequence:
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.studio_light_state
+    - service: switch.turn_off
+      entity_id: switch.livingroom_studio_light
+
+# ##living room fan control scripts########################################################
+livingroom_fan_off:
+  alias: Living Room Fan Off
+  sequence:
+  # - service: switch.broadlink_send_packet_192_168_1_7
+  - service: broadlink.send
+    data:
+      host: !secret broadlink_rmproplus_host
+      packet:
+      - ZBIcAAkPCQ8JDwgPCQ8JCBAPCQ8JDwkPCA8JDwkAAQUAAAAAAAAAAAAAAAA=
+  - service: input_boolean.turn_off
+    entity_id: input_boolean.livingroom_fan_state
+# ##############
+livingroom_fan_on:
+  alias: Living Room Fan On
+  sequence:
+  - service: script.turn_on
+    entity_id: script.turn_on_livingroom_fan_power
+  # - service: switch.broadlink_send_packet_192_168_1_7
+  - service: broadlink.send
+    data:
+      host: !secret broadlink_rmproplus_host
+      packet:
+      - ZBYcAAkHEA8JDwkPCQ8JDwkPCQ8JDwkPCQ8JDwkAAQUAAAAAAAAAAAAAAAA=
+  - service: input_boolean.turn_on
+    entity_id: input_boolean.livingroom_fan_state
+# ##############
+livingroom_fan_speed:
+  alias: Living Room Fan Speed
+  sequence:
+  - service_template: '{%if speed is defined and speed=="medium"%}script.livingroom_fan_medium{%elif speed is defined and speed=="high"%}script.livingroom_fan_high{%elif speed is defined and speed=="low"%}script.livingroom_fan_on{%endif%}'
+
+# ##############
+turn_on_livingroom_fan_power: 
+  alias: "turn on Living Room Fan power"
+  sequence: 
+  - service: switch.turn_on
+    entity_id: switch.livingroom_fan_power
+  - delay: 00:00:15
+  - service: switch.turn_off
+    entity_id: switch.livingroom_studio_light
+# ##############
+livingroom_fan_medium:
+  alias: Livingroom Fan Medium
+  sequence:
+  # - service: switch.broadlink_send_packet_192_168_1_7
+  - service: broadlink.send
+    data:
+      host: !secret broadlink_rmproplus_host
+      packet:
+      - ZB0cAAkPCQ8JDwkPCQcQDwkPCQ8JDwkPCQ8JDwkAAQUAAAAAAAAAAAAAAAA=
+livingroom_fan_high:
+  alias: Livingroom Fan High
+  sequence:
+  # - service: switch.broadlink_send_packet_192_168_1_7
+  - service: broadlink.send
+    data:
+      host: !secret broadlink_rmproplus_host
+      packet:
+      - ZCEcAAkPCQ8JDwkIEA8JDwkPCA8JDwkPCQ8JDwkAAQUAAAAAAAAAAAAAAAA=
+      
+ask_for_studio_light:
+  sequence:
+    - service: notify.html5_s10e
+      data:
+        title: Studio Light Alert
+        message: is light on, turn it off?
+        data:
+          tag: studio_light_notification
+          actions:
+            - action: yes_turn_off
+              title: Yes, turn it off
+            - action: no_light_off
+              title: No, it's off
+
+shutdown_livingroom:
+  alias: "shutdown livingroom"
+  sequence:
+    - service: switch.turn_off
+      entity_id: switch.livingroom_aircon
+    - service: homeassistant.turn_off
+      entity_id: group.livingroom_lights
+    - service: homeassistant.turn_off
+      entity_id: group.livingroom_lamps
+    - service: fan.turn_off
+      entity_id: fan.livingroom_fan
+    - service: switch.turn_off
+      entity_id: switch.livingroom_fan_gang
+    - service: script.turn_on
+      entity_id: script.livingroom_tv_off
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.livingroom_presence_check
+    - service: switch.turn_off
+      entity_id: switch.sonoff_gas
+    - service: light.turn_off
+      entity_id: light.kitchen_light
+    - condition: time
+      after: '22:00:00'
+      before: '06:00:00'
+    - service: switch.turn_off
+      entity_id: switch.sonoff_tv_hub

@@ -6,3 +6,7 @@
   google_command:
     name: Google command
     initial: ''
+
+  sos_message:
+    name: SOS Message
+    initial: 'SOS call here, Jyoti is calling. Please attend her immediately!!!'    

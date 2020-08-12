@@ -1,0 +1,458 @@
+# No one in livingroom
+- alias: No one in livingroom
+  trigger:
+    entity_id: binary_sensor.livingroom
+    platform: state
+    to: 'off'
+    from: 'on'
+    for: 
+      minutes: 30
+  condition:
+    - condition: state
+      entity_id: input_boolean.livingroom_automation_check
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.livingroom_presence_check
+      state: 'on'
+  action:
+    - service: script.turn_on
+      data:
+        entity_id: script.shutdown_livingroom
+    - service: python_script.notify
+      data:
+        message: looks like no one in livingroom, shutting down everything
+        announce: 1
+        room: home
+    - service: homeassistant.turn_off
+      data:
+        entity_id: input_boolean.office_presence_check
+############################################################################
+- alias: someone in livingroom turn on presense check
+  trigger:
+    - entity_id: binary_sensor.livingroom_motion
+      platform: state
+      to: 'on'
+      from: 'off'
+  condition:
+    - condition: state
+      entity_id: input_boolean.livingroom_automation_check
+      state: 'on'
+  action:
+    - service: homeassistant.turn_on
+      data:
+        entity_id: input_boolean.livingroom_presence_check
+    - condition: state
+      state: 'off'
+      entity_id: switch.sonoff_tv_hub
+    - condition: state
+      state: 'on'
+      entity_id: binary_sensor.daytime
+    - service: switch.turn_on
+      entity_id: switch.sonoff_tv_hub
+
+
+#keep scanning for offline engines
+############################################################################
+- alias: scan livingroom camera
+  initial_state: true
+  trigger:
+    - platform: time_pattern
+      minutes: '/1' 
+  condition:
+    - condition: state
+      entity_id: input_boolean.livingroom_automation_check
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.livingroom_presence_check
+      state: 'on'
+    - condition: state
+      entity_id: binary_sensor.daytime
+      state: 'on'
+  action:
+    # - service: image_processing.scan
+    #   entity_id: image_processing.deepstackod_livingroom
+    # - service: image_processing.scan
+    #   entity_id: image_processing.rekognition_livingroom
+    - service: image_processing.scan
+      entity_id: image_processing.facebox_livingroom
+
+
+
+
+###############################################################################
+- alias: someone in livingroom switch on fan if ac is not on
+  trigger:
+    entity_id: binary_sensor.livingroom_motion
+    platform: state
+    to: 'on'
+    from: 'off'
+  condition:
+    - condition: state
+      entity_id: input_boolean.livingroom_automation_check
+      state: 'on'
+    - condition: state
+      entity_id: switch.livingroom_aircon
+      state: 'off'
+    - condition: state
+      entity_id: fan.livingroom_fan
+      state: 'off'  
+  action:
+    - service: fan.turn_on
+      data:
+        entity_id: fan.livingroom_fan
+        speed: 'medium'
+    - service: homeassistant.turn_on
+      data:
+        entity_id: input_boolean.livingroom_presence_check
+############################################################################
+- alias: tv is turned off
+  initial_state: true
+  trigger:
+    entity_id: binary_sensor.livingroom_tv
+    platform: state
+    to: 'off'
+    from: 'on'
+  condition:
+    - condition: state
+      entity_id: input_boolean.livingroom_automation_check
+      state: 'on'  
+  action:
+    - service: script.livingroom_aircon_off
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.livingroom_tv_state
+    - condition: time
+      after: '22:00:00'
+      before: '03:00:00'
+    - service: rest_command.assistant_preset
+      data:
+        preset: bedtime   
+    - service: climate.turn_on
+      data:
+        entity_id: climate.bedroom_aircon
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.bedroom_aircon
+        target_temp_high: 26
+        target_temp_low: 24
+        hvac_mode: heat_cool
+    - delay: '00:00:60'        
+    - service: script.shutdown_livingroom
+############################################################################
+- alias: tv is turned on
+  initial_state: true
+  trigger:
+    entity_id: binary_sensor.livingroom_tv
+    platform: state
+    to: 'on'
+    from: 'off'
+  condition:
+    - condition: state
+      entity_id: input_boolean.livingroom_automation_check
+      state: 'on'
+  # condition:
+  #   - condition: state
+  #     state: 'home'
+  #     entity_id: device_tracker.lalit
+  #   - condition: state
+  #     state: 'on'
+  #     entity_id: input_boolean.automate_ac_with_tv_flag
+  action:
+    # - service: script.turn_on
+    #   data:
+    #     entity_id: script.livingroom_aircon_on
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.livingroom_tv_state
+    # - service: input_boolean.turn_off
+    #   data:
+    #     entity_id: input_boolean.bedroom_fan_ac_toggel_state
+#######################################################################################
+# sleep time check 
+- alias: sleep time check
+  trigger:
+    platform: time_pattern
+    minutes: '/30'    
+  condition:
+    - condition: state
+      entity_id: input_boolean.livingroom_automation_check
+      state: 'on'
+    - condition: state  
+      entity_id: binary_sensor.sleep_mode
+      state: 'on'  
+    # - condition: state
+    #   entity_id: input_boolean.livingroom_presence_check
+    #   state: 'off'
+  action:
+    - service: script.turn_on
+      data:
+        entity_id: script.shutdown_livingroom
+###########################################################################################
+- alias: main door is closed
+  initial_state: false
+  trigger:
+    entity_id: binary_sensor.main_door
+    platform: state
+    to: 'off'
+    from: 'on'
+  condition:
+    - condition: state
+      entity_id: input_boolean.livingroom_automation_check
+      state: 'on'
+    - condition: time
+      before: '21:00:00'
+      after: '18:00:00'
+  action:
+    - service: python_script.notify
+      data_template:
+        message: 'krpya dhayan de! Joote-chappal almaari mein rakhen, shaam ko safai ke liye shaanta-bai aaegee'
+        announce: 1
+###########################################################################################
+- alias: main door is opened 
+  initial_state: true
+  trigger:
+    entity_id: binary_sensor.main_door
+    platform: state
+    to: 'on'
+    from: 'off'
+  condition:
+    - condition: state
+      entity_id: input_boolean.livingroom_automation_check
+      state: 'on'  
+  action:
+    - service: script.turn_on
+      entity_id: script.play_door_chimes
+
+
+- alias: turn on gallery light when motion detected
+  initial_state: true
+  trigger: 
+    entity_id: binary_sensor.gallery_motion
+    platform: state
+    to: 'on'
+  condition:
+    - condition: state
+      entity_id: input_boolean.livingroom_automation_check
+      state: 'on'
+    - condition: state
+      entity_id: light.gallery_light
+      state: 'off'
+    - condition: numeric_state
+      entity_id: sensor.sunlight_pct
+      below: 10
+  action:
+    - service: light.turn_on
+      entity_id: light.gallery_light
+
+
+- alias: turn off gallery light when no motion detected for 5 mins
+  initial_state: true
+  trigger: 
+    entity_id: binary_sensor.gallery_motion
+    platform: state
+    to: 'off'
+    #from: 'on'
+    for: 
+      minutes: 15
+  condition:  
+    - condition: state
+      entity_id: input_boolean.livingroom_automation_check
+      state: 'on'
+    - condition: state
+      state: 'on'
+      entity_id: binary_sensor.daytime
+  action:
+    - service: light.turn_off
+      entity_id: light.gallery_light
+
+# studio light check 
+# - alias: studio light check
+#   initial_state: false
+#   trigger:
+#     platform: time_pattern
+#     minutes: '/15'    
+#   condition:
+#     - condition: state
+#       entity_id: input_boolean.livingroom_automation_check
+#       state: 'on'
+#     - condition: state  
+#       entity_id: binary_sensor.sleep_mode
+#       state: 'off'  
+#     - condition: numeric_state
+#       entity_id: sensor.sunlight
+#       above: 500
+#   action:
+#     - service: light.turn_off
+#       data:
+#         entity_id: light.studio_light
+
+
+########################################################################################
+#turn on gallery light at night
+- alias: "turn on gallery light at night"
+  trigger:
+    platform: state
+    to: 'on'
+    entity_id: binary_sensor.bedroom_door, binary_sensor.familyroom_door, binary_sensor.office_door
+  condition:
+    condition: time
+    after: '22:00:00'
+    before: '07:00:00'
+  action:
+    - service: light.turn_on
+      data:
+        entity_id: light.gallery_light
+    - service: input_select.select_option
+      data_template:
+        entity_id: input_select.last_door_opened
+        option: '{{trigger.to_state.entity_id.split(".")[1]}}'
+
+
+#turn off gallery light at night
+- alias: "turn off gallery light at night"
+  trigger:
+    platform: state
+    to: 'off'
+    entity_id: binary_sensor.bedroom_door, binary_sensor.family_door, binary_sensor.office_door
+  condition:
+    - condition: time
+      after: '22:00:00'
+      before: '07:00:00'
+    - condition: template
+      value_template: '{{ trigger.to_state.entity_id.split(".")[1] == states.input_select.last_door_opened.state}}'  
+  action:
+    - service: light.turn_off
+      data:
+        entity_id: light.gallery_light
+
+
+#############################################################################################################
+#cleaning the kitchen
+# - alias: "cleaning the kitchen"
+#   trigger:
+#     platform: time
+#     at: '21:30:00'
+#   action:
+#     # - service: python_script.notify
+#     #   data_template:
+#     #     message: 'krpya dhayan de! Shanta-bai kitchen saaf karne jaa rahi hai.'
+#     #     announce: 1
+#     # - delay: '00:00:05'
+#     - service: script.turn_on
+#       data:
+#         entity_id: script.xiaomi_vacuum_clean_kitchen
+
+# #cleaning the hall
+# - alias: "cleaning the hall"
+#   trigger:
+#     platform: time
+#     at: '21:45:00'
+#   condition:
+#     condition: time
+#     weekday:
+#       - mon
+#       - wed
+#       - fri
+#   action:
+#     # - service: python_script.notify
+#     #   data_template:
+#     #     message: 'krpya dhayan de! Shanta-bai abhi hall saaf karegi.'
+#     # - delay: '00:00:05'        
+#     - service: script.turn_on
+#       data:
+#         entity_id: script.xiaomi_vacuum_clean_hall
+# ###################################################################################
+# - alias: send camera picture on motion in livingroom
+#   initial_state: false
+#   trigger: 
+#     - entity_id: binary_sensor.livingroom_motion
+#       platform: state
+#       to: "on"
+#       from: "off"
+#   condition:
+#     # - condition: or
+#     #   conditions:
+#     #     - condition: state
+#     #       state: "not_home"
+#     #       entity_id: device_tracker.jyoti
+#     #     - condition: state
+#     #       state: "not_home"
+#     #       entity_id: device_tracker.lalit
+#     - condition: state
+#       state: 'on'
+#       entity_id: input_boolean.send_camera_picture_notification
+#   action:
+#     - delay: '00:00:05'
+#     - service: notify.ha_notifier
+#       data_template:
+#         message: 'someone in livingroom'
+#         data:  
+#           photo:
+#             - url: !secret livingroom_camera_url
+###############################################################################
+#turn on ac if too hot
+- alias: "turn on ac if hot"
+  trigger:
+    platform: numeric_state
+    above: 28
+    entity_id: sensor.window_plant_temperature
+  condition:
+    - condition: state
+      state: 'on'
+      entity_id: binary_sensor.livingroom_tv
+    - condition: state
+      state: 'off'
+      entity_id: switch.livingroom_aircon
+    - condition: state
+      entity_id: input_boolean.livingroom_automation_check
+      state: 'on'
+  action:
+    - service: python_script.notify
+      data_template:
+        message: "'Looks like it's hot here, I'm turning on the aircon. Dont forget to close all windows!!!"
+        announce: 1
+    - service: switch.turn_on
+      data:
+        entity_id: switch.livingroom_aircon
+
+#turn off ac if too cold
+- alias: "turn off ac if cold"
+  trigger:
+    platform: numeric_state
+    below: 26
+    entity_id: sensor.window_plant_temperature
+  condition:
+    - condition: state
+      state: 'on'
+      entity_id: binary_sensor.livingroom_tv
+    - condition: state
+      state: 'on'
+      entity_id: switch.livingroom_aircon
+    - condition: state
+      entity_id: input_boolean.livingroom_automation_check
+      state: 'on'
+  action:
+    - service: python_script.notify
+      data_template:
+        message: "'Looks like it's hot here, I'm turning on the aircon. Dont forget to close all windows!!!"
+        announce: 1
+        room: livingroom
+    - service: switch.turn_off
+      data:
+        entity_id: switch.livingroom_aircon        
+
+#check if dining
+- alias: "check if dining in livingroom"
+  trigger:
+    platform: state
+    entity_id: image_processing.doods_livingroom
+  condition:
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.eating_food_check_flag
+    - condition: template
+      value_template: '{{ "spoon" in state_attr(trigger.to_state.entity_id),"summary" }}'  
+  action:
+    - service: python_script.notify
+      data:
+        message: Looks like someone is eating something, food time!

@@ -11,6 +11,34 @@
               {%- if is_state("binary_sensor.lalit_mobile_screen_locked", "on") %}No
               {%- elif is_state("binary_sensor.lalit_mobile_screen_locked", "off") %}Yes
               {%- else -%}Sorry, Don't know{%- endif -%}
+      lalit_seconds_since_last_steps_updated:
+        value_template: '{{(utcnow()-states.sensor.lalit_mobile_step_counter.last_updated).total_seconds()|int}}'
+        entity_id: sensor.time
+
+      jyoti_seconds_since_last_steps_updated:
+        value_template: '{{(utcnow()-states.sensor.jyoti_mobile_step_counter.last_updated).total_seconds()|int}}'
+        entity_id: sensor.time
+
+      sunlight_pct:
+        entity_id:
+          - sun.sun
+          - sensor.dark_sky_cloud_coverage
+        value_template: >-
+          {%- set elevation = state_attr('sun.sun','elevation') | float %}
+          {%- set cloud_coverage = states('sensor.dark_sky_cloud_coverage') | float %}
+          {%- set cloud_factor = (1 - (0.75 * ( cloud_coverage / 100) ** 3 )) %}
+          {%- set min_elevation = 0 %}
+          {%- set max_elevation = 100 %}
+          {%- set adjusted_elevation = elevation - min_elevation %}
+          {%- set adjusted_elevation = [adjusted_elevation,0] | max %}
+          {%- set adjusted_elevation = [adjusted_elevation,max_elevation - min_elevation] | min %}
+          {%- set adjusted_elevation = adjusted_elevation / (max_elevation - min_elevation) %}
+          {%- set adjusted_elevation = adjusted_elevation %}
+          {%- set adjusted_elevation = adjusted_elevation * 100 %}
+          {%- set brightness = adjusted_elevation * cloud_factor %}
+          {{ brightness | round }}
+        unit_of_measurement: '%'
+        device_class: 'illuminance'
 
 
   - platform: mqtt
@@ -142,17 +170,46 @@
       - cloud_cover
 
 
+  - platform: miflora
+    mac: !secret miflora_mac
+    name: window plant 
+    force_update: true
+    median: 3
+    go_unavailable_timeout: 43200
+    monitored_conditions:
+      - moisture
+      - light
+      - temperature
+      - conductivity
+      - battery
+  # - platform: mitemp_bt
+  #   mac: !secret livingroom_temp_mac
+  #   force_update: true
+  #   median: 1
+  #   monitored_conditions:
+  #     - temperature
+  #     - humidity
+  #     - battery
+      
 
+  # - platform: command_line
+  #   name: Bedroom Camera Motion
+  #   command: !secret bedroom_camera_motion_path 
+  #   value_template: '{{ value == "2" }}'
+  #   scan_interval: 2
 
-
-
+  # - platform: command_line
+  #   name: Livingroom Camera Motion
+  #   command: !secret livingroom_camera_motion_path 
+  #   value_template: '{{ value == "2" }}'
+  #   scan_interval: 2
 
 
 
   - platform: places
     name: lalit
     devicetracker_id: device_tracker.lalit
-    options: zone, place
+    options: zone, place, street, formatted_address
     map_provider: google
     map_zoom: 18
     home_zone: zone.home
@@ -161,7 +218,7 @@
   - platform: places
     name: jyoti
     devicetracker_id: device_tracker.jyoti
-    options: zone, place, formatted_address
+    options: zone, place, street, formatted_address
     map_provider: google
     map_zoom: 17
     home_zone: zone.home
@@ -169,7 +226,14 @@
 
 
     
-
+  - platform: mqtt
+    state_topic: 'zanzito/lalit/samsung_step_counter_sensor'
+    name: lalit mobile step counter
+    qos: 0
     
+  - platform: mqtt
+    state_topic: 'zanzito/jyoti/samsung_step_counter_sensor'
+    name: jyoti mobile step counter
+    qos: 0
 
-    
+

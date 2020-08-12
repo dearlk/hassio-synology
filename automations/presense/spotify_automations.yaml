@@ -1,0 +1,14 @@
+############################################################################
+- alias: change spotify speaker if playing on room change
+  initial_state: true  
+  trigger:
+    entity_id: sensor.lalit_room_location
+    platform: state
+  condition:
+    - condition: state
+      state: 'playing'
+      entity_id: media_player.spotify
+  action:
+    - service: spotcast.start
+      data_template: 
+        device_name: '{{states.sensor.lalit_room_location.state}}'

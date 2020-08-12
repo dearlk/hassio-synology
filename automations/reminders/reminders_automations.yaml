@@ -1,0 +1,98 @@
+- alias: "Medicine reminder" 
+  trigger:
+    - platform: time_pattern
+      hours: '/1'
+  condition:
+    - condition: state
+      entity_id: input_boolean.medicine_reminder_flag
+      state: 'on'
+    - condition: time
+      after: '11:00:00'
+      before: '21:00:00'
+  action:
+    - service: notify.html5_jyoti
+      data:
+        message: "Did you take your medicine?"
+        target: jyoti
+        data:
+          tag: medicine_reminder
+          priority: high
+          actions:
+            - action: "medicine_takenYes"
+              title: "Yes"
+            - action: "medicine_takenNo"
+              title: "No, not yet"
+    - service: script.zanzito_play_alarm
+      data:
+        device_id: jyoti
+        message: Medicine Alarm
+    - service: notify.sheild_tv
+      data:
+        message: "Did you take your medicine?"
+
+
+##Medicine taken Yes ########################################################
+- alias: Medicine taken
+  trigger:
+    platform: event
+    event_type: html5_notification.clicked
+    event_data:
+      action: medicine_takenYes
+      tag: medicine_reminder
+  action:
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.medicine_reminder_flag
+    - service: notify.html5_jyoti
+      data_template:
+        message: "Thank you for taking medicine on time, well done!"
+        target: jyoti
+    - service: script.zanzito_stop_alarm
+      data:
+        device_id: jyoti
+        message: Medicine Alarm
+
+#Medicine taken No ########################################################
+- alias: Medicine not taken
+  trigger:
+    platform: event
+    event_type: html5_notification.clicked
+    event_data:
+      action: medicine_takenNo
+      tag: medicine_reminder
+  action:
+    - service: notify.html5_jyoti
+      data_template:
+        message: "Ok will remind you in next 15 minutes"
+        title: "Medicine not taken yet"
+        target: jyoti
+    - service: script.zanzito_stop_alarm
+      data:
+        device_id: jyoti
+        message: Medicine Alarm
+
+#message is closed without any response
+- alias: medicine reminder - cancelled
+  initial_state: true
+  trigger:
+    platform: event
+    event_type: html5_notification.closed
+    event_data:
+      tag: medicine_reminder
+  action:
+    - service: script.zanzito_stop_alarm
+      data:
+        device_id: jyoti
+        message: Medicine Alarm
+
+
+        
+#Medicine taken No ########################################################
+- alias: Reset reminder flag every morning
+  trigger:
+    platform: time
+    at: '08:00:00'
+  action:
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.medicine_reminder_flag

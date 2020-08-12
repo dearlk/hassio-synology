@@ -4,123 +4,184 @@ Component that will perform object detection and identification via deepstack.
 For more details about this platform, please refer to the documentation at
 https://home-assistant.io/components/image_processing.deepstack_object
 """
-import base64
+from collections import namedtuple
 import datetime
+import io
 import logging
 import os
+import re
+from datetime import timedelta
+from typing import Tuple
+from pathlib import Path
 
-import requests
-import voluptuous as vol
+from PIL import Image, ImageDraw
 
-from homeassistant.const import (
-    ATTR_ENTITY_ID, ATTR_NAME)
-from homeassistant.core import split_entity_id
+import deepstack.core as ds
 import homeassistant.helpers.config_validation as cv
+import homeassistant.util.dt as dt_util
+import voluptuous as vol
+from homeassistant.util.pil import draw_box
 from homeassistant.components.image_processing import (
-    PLATFORM_SCHEMA, ImageProcessingEntity, ATTR_CONFIDENCE, CONF_SOURCE,
-    CONF_ENTITY_ID, CONF_NAME, DOMAIN)
+    ATTR_CONFIDENCE,
+    CONF_ENTITY_ID,
+    CONF_NAME,
+    CONF_SOURCE,
+    DOMAIN,
+    PLATFORM_SCHEMA,
+    ImageProcessingEntity,
+)
 from homeassistant.const import (
-    CONF_IP_ADDRESS, CONF_PORT,
-    HTTP_BAD_REQUEST, HTTP_OK, HTTP_UNAUTHORIZED)
+    ATTR_ENTITY_ID,
+    ATTR_NAME,
+    CONF_IP_ADDRESS,
+    CONF_PORT,
+    HTTP_BAD_REQUEST,
+    HTTP_OK,
+    HTTP_UNAUTHORIZED,
+)
+from homeassistant.core import split_entity_id
 
 _LOGGER = logging.getLogger(__name__)
 
-CLASSIFIER = 'deepstack_object'
-CONF_TARGET = 'target'
-CONF_SAVE_FILE_FOLDER = 'save_file_folder'
-DEFAULT_TARGET = 'person'
-EVENT_OBJECT_DETECTED = 'image_processing.object_detected'
-EVENT_FILE_SAVED = 'image_processing.file_saved'
-FILE = 'file'
-OBJECT = 'object'
+CONF_API_KEY = "api_key"
+CONF_TARGETS = "targets"
+CONF_TIMEOUT = "timeout"
+CONF_SAVE_FILE_FOLDER = "save_file_folder"
+CONF_SAVE_TIMESTAMPTED_FILE = "save_timestamped_file"
+CONF_SHOW_BOXES = "show_boxes"
+CONF_ROI_Y_MIN = "roi_y_min"
+CONF_ROI_X_MIN = "roi_x_min"
+CONF_ROI_Y_MAX = "roi_y_max"
+CONF_ROI_X_MAX = "roi_x_max"
+
+DATETIME_FORMAT = "%Y-%m-%d_%H-%M-%S"
+DEFAULT_API_KEY = ""
+DEFAULT_TARGETS = ["person"]
+DEFAULT_TIMEOUT = 90
+DEFAULT_ROI_Y_MIN = 0.0
+DEFAULT_ROI_Y_MAX = 1.0
+DEFAULT_ROI_X_MIN = 0.0
+DEFAULT_ROI_X_MAX = 1.0
+DEFAULT_ROI = (
+    DEFAULT_ROI_Y_MIN,
+    DEFAULT_ROI_X_MIN,
+    DEFAULT_ROI_Y_MAX,
+    DEFAULT_ROI_X_MAX,
+)
+
+EVENT_OBJECT_DETECTED = "deepstack.object_detected"
+BOX = "box"
+FILE = "file"
+OBJECT = "object"
+
+# rgb(red, green, blue)
+RED = (255, 0, 0)  # For objects within the ROI
+GREEN = (0, 255, 0)  # For ROI box
+YELLOW = (255, 255, 0)  # For objects outside the ROI
 
 
-PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
-    vol.Required(CONF_IP_ADDRESS): cv.string,
-    vol.Required(CONF_PORT): cv.port,
-    vol.Optional(CONF_TARGET, default=DEFAULT_TARGET): cv.string,
-    vol.Optional(CONF_SAVE_FILE_FOLDER): cv.isdir,
-})
+PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
+    {
+        vol.Required(CONF_IP_ADDRESS): cv.string,
+        vol.Required(CONF_PORT): cv.port,
+        vol.Optional(CONF_API_KEY, default=DEFAULT_API_KEY): cv.string,
+        vol.Optional(CONF_TIMEOUT, default=DEFAULT_TIMEOUT): cv.positive_int,
+        vol.Optional(CONF_TARGETS, default=DEFAULT_TARGETS): vol.All(
+            cv.ensure_list, [cv.string]
+        ),
+        vol.Optional(CONF_ROI_Y_MIN, default=DEFAULT_ROI_Y_MIN): cv.small_float,
+        vol.Optional(CONF_ROI_X_MIN, default=DEFAULT_ROI_X_MIN): cv.small_float,
+        vol.Optional(CONF_ROI_Y_MAX, default=DEFAULT_ROI_Y_MAX): cv.small_float,
+        vol.Optional(CONF_ROI_X_MAX, default=DEFAULT_ROI_X_MAX): cv.small_float,
+        vol.Optional(CONF_SAVE_FILE_FOLDER): cv.isdir,
+        vol.Optional(CONF_SAVE_TIMESTAMPTED_FILE, default=False): cv.boolean,
+        vol.Optional(CONF_SHOW_BOXES, default=True): cv.boolean,
+    }
+)
+
+Box = namedtuple("Box", "y_min x_min y_max x_max")
+Point = namedtuple("Point", "y x")
 
 
-def draw_box(draw, prediction, text='', color=(255, 0, 0)):
-    """Draw bounding box on image."""
-    (left, right, top, bottom) = (
-        prediction['x_min'], prediction['x_max'], prediction['y_min'], prediction['y_max'])
-    draw.line([(left, top), (left, bottom), (right, bottom),
-               (right, top), (left, top)], width=5, fill=color)
-    if text:
-        draw.text((left, abs(top-15)), text, fill=color)
+def point_in_box(box: Box, point: Point) -> bool:
+    """Return true if point lies in box"""
+    if (box.x_min <= point.x <= box.x_max) and (box.y_min <= point.y <= box.y_max):
+        return True
+    return False
 
 
-def format_confidence(confidence):
-    """Takes a confidence from the API like 
-       0.55623 and returne 55.6 (%).
-    """
-    return round(float(confidence)*100, 1)
+def object_in_roi(roi: dict, centroid: dict) -> bool:
+    """Convenience to convert dicts to the Point and Box."""
+    target_center_point = Point(centroid["y"], centroid["x"])
+    roi_box = Box(roi["y_min"], roi["x_min"], roi["y_max"], roi["x_max"])
+    return point_in_box(roi_box, target_center_point)
 
 
-def get_confidences_above_threshold(confidences, threshold):
-    """Takes a list of confidences and returns those above a threshold."""
-    return [val for val in confidences if val >= threshold]
+def get_valid_filename(name: str) -> str:
+    return re.sub(r"(?u)[^-\w.]", "", str(name).strip().replace(" ", "_"))
 
 
-def get_object_classes(predictions):
-    """
-    Get a list of the unique object classes predicted.
-    """
-    classes = [pred['label'] for pred in predictions]
-    return set(classes)
+def get_objects(predictions: list, img_width: int, img_height: int):
+    """Return objects with formatting and extra info."""
+    objects = []
+    decimal_places = 3
+    for pred in predictions:
+        box_width = pred["x_max"] - pred["x_min"]
+        box_height = pred["y_max"] - pred["y_min"]
+        box = {
+            "height": round(box_height / img_height, decimal_places),
+            "width": round(box_width / img_width, decimal_places),
+            "y_min": round(pred["y_min"] / img_height, decimal_places),
+            "x_min": round(pred["x_min"] / img_width, decimal_places),
+            "y_max": round(pred["y_max"] / img_height, decimal_places),
+            "x_max": round(pred["x_max"] / img_width, decimal_places),
+        }
+        box_area = round(box["height"] * box["width"], decimal_places)
+        centroid = {
+            "x": round(box["x_min"] + (box["width"] / 2), decimal_places),
+            "y": round(box["y_min"] + (box["height"] / 2), decimal_places),
+        }
+        name = pred["label"]
+        confidence = round(pred["confidence"] * 100, decimal_places)
 
-
-def get_object_instances(predictions, target):
-    """
-    Return the number of instances of a target class.
-    """
-    targets_identified = [format_confidence(
-        pred['confidence']) for pred in predictions if pred['label'] == target]
-    return targets_identified
-
-
-def get_objects_summary(predictions):
-    """
-    Get a summary of the objects detected.
-    """
-    classes = get_object_classes(predictions)
-    return {class_cat: len(get_object_instances(predictions, target=class_cat))
-            for class_cat in classes}
-
-
-def post_image(url, image):
-    """Post an image to the classifier."""
-    try:
-        response = requests.post(
-            url,
-            files={"image": image},
-            )
-        return response
-    except requests.exceptions.ConnectionError:
-        _LOGGER.error("ConnectionError: Is %s running?", CLASSIFIER)
-        return None
+        objects.append(
+            {
+                "bounding_box": box,
+                "box_area": box_area,
+                "centroid": centroid,
+                "name": name,
+                "confidence": confidence,
+            }
+        )
+    return objects
 
 
 def setup_platform(hass, config, add_devices, discovery_info=None):
     """Set up the classifier."""
-    ip_address = config.get(CONF_IP_ADDRESS)
-    port = config.get(CONF_PORT)
-    target = config.get(CONF_TARGET)
     save_file_folder = config.get(CONF_SAVE_FILE_FOLDER)
-    confidence = config.get(ATTR_CONFIDENCE)
-
     if save_file_folder:
-        save_file_folder = os.path.join(
-            save_file_folder, '')  # If no trailing / add it
+        save_file_folder = Path(save_file_folder)
 
+    targets = [t.lower() for t in config[CONF_TARGETS]]  # ensure lower case
     entities = []
     for camera in config[CONF_SOURCE]:
         object_entity = ObjectClassifyEntity(
-            ip_address, port, target, confidence, save_file_folder,
-            camera[CONF_ENTITY_ID], camera.get(CONF_NAME))
+            config.get(CONF_IP_ADDRESS),
+            config.get(CONF_PORT),
+            config.get(CONF_API_KEY),
+            config.get(CONF_TIMEOUT),
+            targets,
+            config.get(ATTR_CONFIDENCE),
+            config[CONF_ROI_Y_MIN],
+            config[CONF_ROI_X_MIN],
+            config[CONF_ROI_Y_MAX],
+            config[CONF_ROI_X_MAX],
+            config[CONF_SHOW_BOXES],
+            save_file_folder,
+            config.get(CONF_SAVE_TIMESTAMPTED_FILE),
+            camera.get(CONF_ENTITY_ID),
+            camera.get(CONF_NAME),
+        )
         entities.append(object_entity)
     add_devices(entities)
 
@@ -128,93 +189,96 @@ def setup_platform(hass, config, add_devices, discovery_info=None):
 class ObjectClassifyEntity(ImageProcessingEntity):
     """Perform a face classification."""
 
-    def __init__(self, ip_address, port, target, confidence, save_file_folder, camera_entity, name=None):
+    def __init__(
+        self,
+        ip_address,
+        port,
+        api_key,
+        timeout,
+        targets,
+        confidence,
+        roi_y_min,
+        roi_x_min,
+        roi_y_max,
+        roi_x_max,
+        show_boxes,
+        save_file_folder,
+        save_timestamped_file,
+        camera_entity,
+        name=None,
+    ):
         """Init with the API key and model id."""
         super().__init__()
-        self._url_check = "http://{}:{}/v1/vision/detection".format(
-            ip_address, port)
-        self._target = target
+        self._dsobject = ds.DeepstackObject(ip_address, port, api_key, timeout)
+        self._targets = targets
         self._confidence = confidence
         self._camera = camera_entity
         if name:
             self._name = name
         else:
             camera_name = split_entity_id(camera_entity)[1]
-            self._name = "{} {}".format(CLASSIFIER, camera_name)
+            self._name = "deepstack_object_{}".format(camera_name)
+
         self._state = None
-        self._targets_confidences = []
-        self._predictions = {}
-        if save_file_folder:
-            self._save_file_folder = save_file_folder
+        self._objects = []  # The parsed raw data
+        self._targets_found = []
+        self._summary = {}
+
+        self._roi_dict = {
+            "y_min": roi_y_min,
+            "x_min": roi_x_min,
+            "y_max": roi_y_max,
+            "x_max": roi_x_max,
+        }
+
+        self._show_boxes = show_boxes
+        self._last_detection = None
+        self._image_width = None
+        self._image_height = None
+        self._save_file_folder = save_file_folder
+        self._save_timestamped_file = save_timestamped_file
 
     def process_image(self, image):
         """Process an image."""
-        response = post_image(
-            self._url_check, image)
+        self._image_width, self._image_height = Image.open(
+            io.BytesIO(bytearray(image))
+        ).size
+        self._state = None
+        self._objects = []  # The parsed raw data
+        self._targets_found = []
+        self._summary = {}
 
-        if response:
-            if response.status_code == HTTP_OK:
-                predictions_json = response.json()["predictions"]
-                self._targets_confidences = get_object_instances(
-                    predictions_json, self._target)
-                self._state = len(
-                    get_confidences_above_threshold(
-                        self._targets_confidences, self._confidence))
-                self._predictions = get_objects_summary(predictions_json)
-                self.fire_prediction_events(predictions_json)
-                if hasattr(self, "_save_file_folder") and self._state > 0:
-                    self.save_image(
-                        image, predictions_json, self._target, self._save_file_folder)
-
-        else:
-            self._state = None
-            self._targets_confidences = []
-            self._predictions = {}
-
-    def save_image(self, image, predictions_json, target, directory):
-        """Save a timestamped image with bounding boxes around targets."""
-        from PIL import Image, ImageDraw
-        import io
-        img = Image.open(io.BytesIO(bytearray(image))).convert('RGB')
-        draw = ImageDraw.Draw(img)
-
-        for prediction in predictions_json:
-            prediction_confidence = format_confidence(prediction['confidence'])
-            if prediction['label'] == target and prediction_confidence >= self._confidence:
-                draw_box(draw, prediction, str(prediction_confidence))
-
-        now = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-        latest_save_path = directory + 'deepstack_latest_{}.jpg'.format(target)
-        timestamp_save_path = directory + 'deepstack_{}_{}.jpg'.format(target, now)
         try:
-            img.save(latest_save_path)
-            img.save(timestamp_save_path)
-            self.fire_saved_file_event(timestamp_save_path)
-            _LOGGER.info("Saved bounding box image to %s", timestamp_save_path)
-        except Exception as exc:
-            _LOGGER.error("Error saving bounding box image : %s", exc)
+            self._dsobject.detect(image)
+        except ds.DeepstackException as exc:
+            _LOGGER.error("Deepstack error : %s", exc)
+            return
 
-    def fire_prediction_events(self, predictions_json):
-        """Fire events based on predictions"""
+        predictions = self._dsobject.predictions.copy()
+        self._summary = ds.get_objects_summary(predictions)
+        self._objects = get_objects(predictions, self._image_width, self._image_height)
+        self._targets_found = [
+            obj
+            for obj in self._objects
+            if (obj["name"] in self._targets)
+            and (obj["confidence"] > self._confidence)
+            and (object_in_roi(self._roi_dict, obj["centroid"]))
+        ]
 
-        for prediction in predictions_json:
-            self.hass.bus.fire(
-                EVENT_OBJECT_DETECTED, {
-                    'classifier': CLASSIFIER,
-                    ATTR_ENTITY_ID: self.entity_id,
-                    OBJECT: prediction['label'],
-                    ATTR_CONFIDENCE: format_confidence(
-                        prediction['confidence'])
-                })
+        self._state = len(self._targets_found)
+        if self._state > 0:
+            self._last_detection = dt_util.now().strftime(DATETIME_FORMAT)
 
-    def fire_saved_file_event(self, save_path):
-        """Fire event when saving a file"""
-        self.hass.bus.fire(
-            EVENT_FILE_SAVED, {
-                'classifier': CLASSIFIER,
-                ATTR_ENTITY_ID: self.entity_id,
-                FILE: save_path
-                })
+        # Fire events
+        for target in self._targets_found:
+            target_event_data = target.copy()
+            target_event_data[ATTR_ENTITY_ID] = self.entity_id
+            self.hass.bus.fire(EVENT_OBJECT_DETECTED, target_event_data)
+
+        if self._save_file_folder and self._state > 0:
+            self.save_image(
+                image, self._targets, self._confidence, self._save_file_folder,
+            )
 
     @property
     def camera_entity(self):
@@ -232,13 +296,86 @@ class ObjectClassifyEntity(ImageProcessingEntity):
         return self._name
 
     @property
+    def unit_of_measurement(self):
+        """Return the unit of measurement."""
+        #return "targets"
+        return ""
+
+    @property
+    def should_poll(self):
+        """Return the polling state."""
+        return False
+
+    @property
     def device_state_attributes(self):
         """Return device specific state attributes."""
         attr = {}
-        attr['target'] = self._target
-        attr['target_confidences'] = self._targets_confidences
-        attr['all_predictions'] = self._predictions
-        if hasattr(self, "_save_file_folder"):
-            attr['save_file_folder'] = self._save_file_folder
+        for target in self._targets:
+            attr[f"ROI {target} count"] = len(
+                [t for t in self._targets_found if t["name"] == target]
+            )
+            attr[f"ALL {target} count"] = len(
+                [t for t in self._objects if t["name"] == target]
+            )
+        if self._last_detection:
+            attr["last_target_detection"] = self._last_detection
+        attr["summary"] = self._summary
+        attr["objects"] = self._objects
         return attr
 
+    def save_image(self, image, targets, confidence, directory):
+        """Draws the actual bounding box of the detected objects."""
+        try:
+            img = Image.open(io.BytesIO(bytearray(image))).convert("RGB")
+        except UnidentifiedImageError:
+            _LOGGER.warning("Deepstack unable to process image, bad data")
+            return
+        draw = ImageDraw.Draw(img)
+
+        roi_tuple = tuple(self._roi_dict.values())
+        if roi_tuple != DEFAULT_ROI and self._show_boxes:
+            draw_box(
+                draw, roi_tuple, img.width, img.height, text="ROI", color=GREEN,
+            )
+
+        for obj in self._objects:
+            if not self._show_boxes:
+                break
+            if not obj["name"] in self._targets:
+                continue
+            name = obj["name"]
+            confidence = obj["confidence"]
+            box = obj["bounding_box"]
+            centroid = obj["centroid"]
+            box_label = f"{name}: {confidence:.1f}%"
+
+            if object_in_roi(self._roi_dict, centroid):
+                box_colour = RED
+            else:
+                box_colour = YELLOW
+
+            draw_box(
+                draw,
+                (box["y_min"], box["x_min"], box["y_max"], box["x_max"]),
+                img.width,
+                img.height,
+                text=box_label,
+                color=box_colour,
+            )
+
+            # draw bullseye
+            draw.text(
+                (centroid["x"] * img.width, centroid["y"] * img.height),
+                text="X",
+                fill=box_colour,
+            )
+
+        latest_save_path = (
+            directory / f"{get_valid_filename(self._name).lower()}_latest.jpg"
+        )
+        img.save(latest_save_path)
+
+        if self._save_timestamped_file:
+            timestamp_save_path = directory / f"{self._name}_{self._last_detection}.jpg"
+            img.save(timestamp_save_path)
+            _LOGGER.info("Deepstack saved file %s", timestamp_save_path)

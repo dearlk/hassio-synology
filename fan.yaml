@@ -18,22 +18,22 @@
           - 'medium'
           - 'high'
 
-      bedroom_fan:
-        friendly_name: "Bedroom fan"
-        value_template: "{{ states('input_boolean.bedroom_fan_state') }}"
-        speed_template: "{{ states('input_select.bedroom_fan_speed') }}"
-        turn_on:
-          service: script.bedroom_fan_on
-        turn_off:
-          service: script.bedroom_fan_off
-        set_speed:
-          service: script.bedroom_fan_speed
-          data_template:
-            speed: "{{ speed }}"
-        speeds:
-          - 'low'
-          - 'medium'
-          - 'high'
+      # bedroom_fan:
+      #   friendly_name: "Bedroom fan"
+      #   value_template: "{{ states('input_boolean.bedroom_fan_state') }}"
+      #   speed_template: "{{ states('input_select.bedroom_fan_speed') }}"
+      #   turn_on:
+      #     service: script.bedroom_fan_on
+      #   turn_off:
+      #     service: script.bedroom_fan_off
+      #   set_speed:
+      #     service: script.bedroom_fan_speed
+      #     data_template:
+      #       speed: "{{ speed }}"
+      #   speeds:
+      #     - 'low'
+      #     - 'medium'
+      #     - 'high'
 
   - platform: xiaomi_miio
     host: !secret xiaomi_air_ip

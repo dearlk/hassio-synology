@@ -3,16 +3,21 @@
   - platform: tod
     name: Morning
     after: sunrise
-    before: '10:00'
+    before: '09:00'
+
+  - platform: tod
+    name: Daytime
+    after: '10:00:00'
+    before: sunset
 
   - platform: tod
     name: Evening
     after: sunset
-    before: '22:00:00'
+    before: '00:00:00'
 
   - platform: tod
     name: Night
-    after: '22:00:00'
+    after: '00:00:00'
     before: sunrise
 
   - platform: ping
@@ -61,13 +66,134 @@
         friendly_name: Livingroom Tv
         value_template: '{{ (states.binary_sensor.livingroom_tv.state == "on") }}'
         entity_id: binary_sensor.livingroom_tv
-      # jyoti_sleeping:
-      #   friendly_name: Jyoti Sleeping
-      #   value_template: '{{ states.sensor.time.state > states.input_datetime.bed_time.state }}'
-      # lalit_sleeping:
-      #   friendly_name: Lalit Sleeping
-      #   value_template: '{{ states.sensor.time.state > states.input_datetime.bed_time.state }}'
+
+#########################################################################################################
+#some one in livingroom
+      # livingroom:
+      #   friendly_name: Livingroom
+      #   value_template: >
+      #     {{ (states.sensor.lalit_room_location.state == "livingroom" or
+      #           states.sensor.jyoti_room_location.state == "livingroom")
+      #       or ( 
+      #             ( state_attr("binary_sensor.livingroom_motion","No motion since")|int < 5*60 ) and
+      #             ( state_attr("binary_sensor.gallery_motion","No motion since")|int < 5*60 ) and
+      #             ( state_attr("binary_sensor.kitchen_motion","No motion since")|int < 5*60 ) 
+      #           )
+      #       or (
+      #             ( states.image_processing.deepstackod_livingroom.attributes["ALL person count"]|int>=1) or
+      #             ( states.image_processing.rekognition_livingroom.state|int>=1) or
+      #             ( states.image_processing.facebox_livingroom.state|int>=1)
+      #       ) 
+      #     }}
+      #   entity_id: sensor.time
+
+      livingroom:
+        friendly_name: Livingroom
+        value_template: >
+          {{ (states.sensor.lalit_room_location.state == "livingroom" or
+                states.sensor.jyoti_room_location.state == "livingroom")
+            or ( 
+                  ( state_attr("binary_sensor.livingroom_motion","No motion since")|int < 5*60 ) and
+                  ( state_attr("binary_sensor.gallery_motion","No motion since")|int < 5*60 ) and
+                  ( state_attr("binary_sensor.kitchen_motion","No motion since")|int < 5*60 ) 
+                )
+            or (
+                  ( states.image_processing.doods_livingroom.state|int>=1) or
+                  ( states.image_processing.facebox_livingroom.state|int>=1)
+            ) 
+          }}
+        entity_id: sensor.time
+
+#some one in bedroom
+      # bedroom:
+      #   friendly_name: Bedroom
+      #   value_template: >
+      #     {{ (
+      #           states.sensor.lalit_room_location.state == "bedroom" or states.sensor.jyoti_room_location.state == "bedroom" 
+      #         )
+      #       or 
+      #         ( 
+      #             ((now()-states.binary_sensor.bedroom_motion.last_changed).total_seconds() < 30*60 and is_state("binary_sensor.bedroom_motion", "on")  ) or 
+      #             ((now()-states.binary_sensor.bedroom_motion_2.last_changed).total_seconds() < 30*60 and is_state("binary_sensor.bedroom_motion_2", "on") )  or
+      #             ((now()-states.binary_sensor.bathroom_motion.last_changed).total_seconds()  < 30*60 and is_state("binary_sensor.bathroom_motion", "on")  ) 
+      #         )
+      #       or (
+      #             ( states.image_processing.deepstackod_bedroom.attributes["ALL person count"]|int>=1) or
+      #             ( states.image_processing.rekognition_bedroom.state|int>=1) or
+      #             ( states.image_processing.facebox_bedroom.state|int>=1)
+      #         )  
+      #     }}
+      #   entity_id: sensor.time
+      bedroom:
+        friendly_name: Bedroom
+        value_template: >
+          {{ (
+                states.sensor.lalit_room_location.state == "bedroom" or states.sensor.jyoti_room_location.state == "bedroom" 
+              )
+            or 
+              ( 
+                  ((now()-states.binary_sensor.bedroom_motion.last_changed).total_seconds() < 5*60 and is_state("binary_sensor.bedroom_motion", "on")  ) or 
+                  ((now()-states.binary_sensor.bedroom_motion_2.last_changed).total_seconds() < 5*60 and is_state("binary_sensor.bedroom_motion_2", "on") )  or
+                  ((now()-states.binary_sensor.bathroom_motion.last_changed).total_seconds()  < 5*60 and is_state("binary_sensor.bathroom_motion", "on")  ) 
+              )
+            or (
+                  ( states.image_processing.doods_bedroom.state|int>=1) or
+                  ( states.image_processing.facebox_bedroom.state|int>=1)
+              )  
+          }}
+        entity_id: sensor.time
+
+#some one in office
+      office:
+        friendly_name: Office
+        value_template: >
+          {{ (
+                states.sensor.lalit_room_location.state == "office" or 
+                states.sensor.jyoti_room_location.state == "office"
+              )
+            or 
+              ( 
+                ( state_attr("binary_sensor.office_motion","No motion since")|int < 5*60 ) 
+              )
+            or (
+                ( states.image_processing.doods_office.state|int>=1) or
+                ( states.image_processing.facebox_office.state|int>=1)
+            ) 
+          }}
+        entity_id: sensor.time
         
+
+
+#some one in familyroom
+      familyroom:
+        friendly_name: Familyroom
+        value_template: >
+          {{ 
+              ( 
+                ( (now()-states.binary_sensor.familyroom_motion.last_changed).total_seconds() < 15*60 and is_state("binary_sensor.familyroom_motion","on") )
+              )
+          }}
+        entity_id: sensor.time
+#########################################################################################################
+#jyoti sleeping
+      jyoti_sleeping:
+        friendly_name: Jyoti Sleeping
+        value_template: >
+          {{ 
+              states.binary_sensor.night.state =="on" and 
+              ( (now()-states.sensor.jyoti_mobile_in_use.last_updated).total_seconds() > 30*60 ) 
+          }}
+        entity_id: sensor.time
+#lalit sleeping
+      lalit_sleeping:
+        friendly_name: Lalit Sleeping
+        value_template: >
+          {{ 
+              states.binary_sensor.night.state =="on" and  
+              ( (now()-states.sensor.lalit_mobile_in_use.last_updated).total_seconds() > 30*60 ) 
+          }}
+        entity_id: sensor.time
+
   # - platform: bayesian
   #   prior: 0.5
   #   name: lalit at home
@@ -110,7 +236,7 @@
   #       platform: state
   #       to_state: home
 
-
+# and (states.binary_sensor.gallery_motion.attributes["No motion since"]|int > 5*60)
 
   - platform: mqtt
     name: jyoti mobile zanzito status
@@ -118,13 +244,6 @@
     payload_on: "1"
     payload_off: "0"
     device_class: connectivity
-
-  # - platform: mqtt
-  #   name: jyoti mobile charging
-  #   state_topic: zanzito/jyoti/device_info
-  #   value_template: '{{ value_json.battery_charging }}'
-
-
   - platform: mqtt
     name: lalit mobile zanzito status
     state_topic: zanzito/lalit/status
@@ -136,3 +255,19 @@
   #   name: lalit mobile charging
   #   state_topic: zanzito/lalit/device_info
   #   value_template: '{{ value_json.battery_charging }}'
+  #   payload_on: "true"
+  #   payload_off: "false"
+
+  # - platform: mqtt
+  #   name: jyoti mobile charging
+  #   state_topic: zanzito/jyoti/device_info
+  #   value_template: '{{ value_json.battery_charging }}'
+  #   payload_on: "true"
+  #   payload_off: "false"
+
+  # - platform: rest
+  #   resource: 
+  #   method: GET
+  #   name: bedroom camera motion
+  #   device_class: motion
+  #   value_template: '{{ value_json. }}'

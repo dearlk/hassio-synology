@@ -1,0 +1,36 @@
+#################################################################################################
+# Xiaomi Roborock s6 Vacuum room Cleaning 
+#################################################################################################
+xiaomi_vacuum_clean_the_kitchen:
+  sequence:
+    - service: xiaomi_miio.vacuum_clean_segment
+      data:
+        entity_id: vacuum.dusty
+        segments: 18
+
+xiaomi_vacuum_clean_the_studio:
+  sequence:
+    - service: xiaomi_miio.vacuum_clean_segment
+      data:
+        entity_id: vacuum.dusty
+        segments: 17
+
+xiaomi_vacuum_clean_the_bedroom:
+  sequence:
+    - service: xiaomi_miio.vacuum_clean_segment
+      data:
+        entity_id: vacuum.dusty
+        segments: 20
+
+xiaomi_vacuum_clean_the_office:
+  sequence:
+    - service: xiaomi_miio.vacuum_clean_segment
+      data:
+        entity_id: vacuum.dusty
+        segments: 22
+
+xiaomi_vacuum_clean_the_home:
+  sequence:
+    - service: vacuum.start
+      data:
+        entity_id: vacuum.dusty

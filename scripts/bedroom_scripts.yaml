@@ -1,0 +1,111 @@
+
+###############################################################
+bedroom_fan_on:
+  alias: "bedroom fan on"
+  sequence: 
+    - service: switch.turn_on
+      entity_id: switch.bedroom_main_light
+    - delay: '00:00:02'  
+    # - service: switch.turn_on
+    #   entity_id: switch.bedroom_fan_on_off
+    # - delay: '00:00:02'        
+    - service: switch.turn_on
+      entity_id: switch.bedroom_fan_high
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.bedroom_fan_state
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.bedroom_fan
+bedroom_fan_off:
+  alias: "bedroom fan off"
+  sequence: 
+    - service: switch.turn_off
+      entity_id: switch.bedroom_fan_on_off
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.bedroom_fan_state
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.bedroom_fan      
+bedroom_fan_speed:
+  alias: "bedroom fan speed"
+  sequence: 
+    - service: switch.turn_on
+      data_template:
+        entity_id: >-
+          {%- if speed == 'low' -%}
+             switch.bedroom_fan
+          {%- elif speed == 'medium' -%}
+             switch.bedroom_fan_med
+          {%- elif speed == 'high' -%}
+             switch.bedroom_fan_high    
+          {%- endif -%}  
+
+bedroom_fan_high:
+  sequence:
+    - service: switch.turn_on
+      entity_id: switch.bedroom_main_light
+    - service: switch.turn_on
+      entity_id: switch.bedroom_fan_high
+
+play_door_chimes:
+  sequence:
+    - service: media_extractor.play_media
+      data_template:
+        entity_id: 'media_player.{{states.input_select.broadcast_speaker.state}}'
+        media_content_id: !secret base_url_door_chimes 
+        media_content_type: "music"
+
+
+#####################################################
+ask_for_bedroom_shutdown:
+  sequence:
+    - condition: state
+      state: 'off'
+      entity_id: input_boolean.pending_bedroom_shutdown_reply
+    - service: notify.html5
+      data:
+        title: No one in bedroom
+        message: Looks like no one is in bedroom, do you want me to switching off everyting in bedroom?
+        data:
+          tag: bedroom_shutdown_notification
+          room_name: bedroom
+          actions:
+            - action: yes_shutdown
+              title: Yes, please
+            - action: no_shutdown
+              title: No, leave it
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.pending_bedroom_shutdown_reply
+
+ask_for_reminder_shutdown:
+  sequence:
+    - service: notify.html5
+      data:
+        title: No one in bedroom
+        message: do you want me to remind you in half an hour?
+        data:
+          tag: bedroom_shutdown_notification
+          room_name: bedroom
+          actions:
+            - action: remind_me_in_30_min
+              title: Ok  
+            - action: no_remind
+              title: No, forget it! 
+
+######bedroom aircon and fan on off
+bedroom_ac_on_fan_off:
+  sequence:
+    - service: switch.turn_on
+      entity_id: switch.bedroom_aircon
+    - service: switch.turn_off
+      entity_id: switch.bedroom_fan
+bedroom_ac_off_fan_on:
+  sequence:
+    - service: switch.turn_off
+      entity_id: switch.bedroom_aircon
+    - service: switch.turn_on
+      entity_id: script.bedroom_fan_high
+      
+shutdown_bedroom:
+  alias: "shutdown bedroom"
+  sequence: 
+    - service: homeassistant.turn_off
+      entity_id: group.bedroom      

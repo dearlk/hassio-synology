@@ -1,0 +1,226 @@
+# No one in bedroom
+- alias: No one in bedroom
+  initial_state: true
+  trigger:
+    - entity_id: binary_sensor.bedroom
+      platform: state
+      to: 'off'
+      from: 'on'
+      for: 
+        minutes: 30
+  condition:
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.bedroom_presence_check
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.bedroom_automation_check
+    - condition: time
+      after: '11:00:00'
+      before: '22:00:00'
+  action:
+    - service: python_script.notify
+      data:
+        message: 'looks like no one in bedroom, switching off everything'
+        announce: 1
+    - service: script.turn_on
+      entity_id: script.shutdown_bedroom
+    - service: homeassistant.turn_off
+      data:
+        entity_id: input_boolean.bedroom_presence_check 
+
+############################################################################
+- alias: someone in bedroom
+  initial_state: true
+  trigger:
+    - entity_id: binary_sensor.bedroom 
+      platform: state
+      to: 'on'
+      #from: 'off'
+  condition:
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.bedroom_automation_check
+  action:
+    - service: homeassistant.turn_on
+      data:
+        entity_id: input_boolean.bedroom_presence_check
+
+############################################################################
+- alias: turn on bathroom light on motion
+  trigger:
+    entity_id: binary_sensor.bathroom_motion
+    platform: state
+    to: 'on'
+    from: 'off'
+  condition:
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.bedroom_automation_check  
+  action:
+    - service: homeassistant.turn_on
+      data:
+        entity_id: light.bathroom_light
+############################################################################
+- alias: turn off bathroom light if no motion
+  trigger:
+    entity_id: binary_sensor.bathroom_motion
+    platform: state
+    to: 'off'
+    for:
+      minutes: 10
+  condition:
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.bedroom_automation_check
+  action:
+    - service: homeassistant.turn_off
+      data:
+        entity_id: light.bathroom_light
+############################################################################
+- alias: bedroom door open
+  initial_state: false  
+  trigger:
+    entity_id: binary_sensor.bedroom_door
+    platform: state
+    to: 'on'
+    from: 'off'
+  condition:
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.bedroom_automation_check
+    - condition: state
+      state: 'not_home'
+      entity_id: device_tracker.jyoti
+    - condition: state
+      state: 'not_home'
+      entity_id: device_tracker.lalit
+  action:
+    - service: xiaomi_aqara.play_ringtone
+      data:
+        ringtone_id: 8
+        ringtone_vol: 100
+    - service: python_script.notify
+      data:
+        message: 'bedroom door opened'
+
+############################################################################
+- alias: turn off ac at morning
+  initial_state: true
+  trigger:
+    platform: template
+    value_template: "{{ states('sensor.time') == (states.input_datetime.morning_alarm_time.attributes.timestamp | int | timestamp_custom('%H:%M', False)) }}"
+  condition:  
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.bedroom_automation_check 
+  action:
+    - service: switch.turn_off
+      entity_id: switch.bedroom_aircon
+###############################################################################################
+# Turn off ac every hour and turn on fan if off
+- alias: Turn off ac every hour and turn on fan if off
+  initial_state: false
+  trigger:
+    platform: time_pattern
+    minutes: '/30'
+  condition:
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.bedroom_automation_check     
+    - condition: time
+      after: '00:00:00'
+      before: '08:00:00'
+  action:
+    - service: switch.turn_off
+      data:
+        entity_id: switch.bedroom_aircon
+    - service: homeassistant.turn_on
+      data:
+        entity_id: script.bedroom_fan_high
+
+- alias: bedroom fan ac toggel at night
+  initial_state: false
+  trigger:
+    platform: time_pattern
+    hours: '/1'
+  condition:
+    - condition: state
+      state: 'below_horizon'
+      entity_id: sun.sun
+    - condition: state
+      entity_id: input_boolean.bedroom_fan_ac_toggel_state
+      state: 'on'
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.bedroom_automation_check 
+  action:
+    - service_template: script.turn_on
+      data_template: 
+        entity_id: >-
+          {% set current = states.input_boolean.bedroom_fan_ac_toggel_switch.state %}
+          {%- if current == "off" -%}
+          script.bedroom_ac_on_fan_off
+          {%- elif current == "on" -%}
+          script.bedroom_ac_off_fan_on
+          {%- endif -%}
+    - service: homeassistant.toggle
+      data:
+        entity_id: input_boolean.bedroom_fan_ac_toggel_switch
+# ###################################################################################
+# - alias: send camera picture on motion in bedroom
+#   initial_state: false
+#   trigger: 
+#     - entity_id: binary_sensor.bedroom_motion
+#       platform: state
+#       to: "on"
+#       from: "off"    
+#     - entity_id: binary_sensor.bedroom_door
+#       platform: state
+#       to: "on"
+#       from: "off"    
+#   condition:
+#     # - condition: or
+#     #   conditions:
+#     #     - condition: state
+#     #       state: "not_home"
+#     #       entity_id: device_tracker.jyoti
+#     #     - condition: state
+#     #       state: "not_home"
+#     #       entity_id: device_tracker.lalit
+#     - condition: state
+#       state: 'on'
+#       entity_id: input_boolean.send_camera_picture_notification
+#   action:
+#     - delay: '00:00:05'
+#     - service: notify.ha_notifier
+#       data_template:
+#         message: 'someone in bedroom'
+#         data:  
+#           photo:
+#             - url: !secret bedroom_camera_url
+
+#keep scanning for offline engines
+############################################################################
+- alias: scan bedroom camera
+  initial_state: true
+  trigger:
+    - platform: time_pattern
+      minutes: '/1' 
+  condition:
+    - condition: state
+      entity_id: input_boolean.bedroom_automation_check
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.bedroom_presence_check
+      state: 'on'
+    - condition: state
+      entity_id: binary_sensor.sleep_mode
+      state: 'off'
+  action:
+    # - service: image_processing.scan
+    #   entity_id: image_processing.deepstackod_bedroom
+    # - service: image_processing.scan
+    #   entity_id: image_processing.rekognition_bedroom
+    - service: image_processing.scan
+      entity_id: image_processing.facebox_bedroom

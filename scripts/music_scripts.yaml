@@ -1,0 +1,197 @@
+#############################################################################################
+play_morning_music_by_room:
+  alias: play monring music by room
+  sequence:
+  - service: script.volume_down
+    data_template:
+      rname: '{{rname}}'
+  - service: media_extractor.play_media
+    data_template: 
+      entity_id: media_player.{{rname}}
+      media_content_id: '{{ [
+                             "https://www.youtube.com/watch?v=qpxINQEdUyE", 
+                             "https://www.youtube.com/watch?v=6E3MMKzBn1g", 
+                             "https://www.youtube.com/watch?v=PO7kT1h21CU", 
+                             "https://www.youtube.com/watch?v=grk1w2Xb_vo"
+                            ] | random }}'
+      media_content_type: "music"     
+#
+volume_down:
+  sequence:
+    - service: media_player.volume_set
+      data_template:
+        entity_id: media_player.{{rname}}
+        volume_level: 0.1
+    - service: script.volume_fade_in
+      data_template:
+        rname: '{{rname}}'
+#
+volume_fade_in:
+  sequence:
+    - service: media_player.volume_set
+      data_template:
+        entity_id: media_player.{{rname}}
+        volume_level: >
+          {% set current = state_attr("media_player." +rname,"volume_level") | float %}
+          {% set next = current + 0.05 %}
+          {% if next > 1 %}
+            {% set next = 1 %}
+          {% endif %}
+          {{ next }}
+    - wait_template: '{{ is_state("script.fade_in_stop","off") }}'
+      timeout: '00:05:00'
+      continue_on_timeout: true
+    - service_template: >
+        {% set max_vol = states.input_number.alarm_volume_level.state | float %}
+        {% if state_attr("media_player."+rname,"volume_level") | float < max_vol %}
+          script.turn_on
+        {% else %}
+          script.turn_off
+        {% endif %}
+      entity_id: script.fade_in_stop
+      data_template:
+        variables:
+          rname: '{{rname}}'
+#
+fade_in_stop:
+  sequence:
+  - delay:
+      #seconds: 60
+      minutes: '{{states.input_number.alarm_fade_delay.state|int}}'
+  - service: script.volume_fade_in
+    data_template:
+      rname: '{{rname}}'
+# #############################################################################################
+# #############################################################################################
+# play_morning_music:
+#   alias: play monring music
+#   sequence:
+#   - service: script.turn_on
+#     entity_id: script.volume_down
+#   - service: media_extractor.play_media
+#     data_template: 
+#       entity_id: media_player.office
+#       media_content_id: '{{ [
+#                              "https://www.youtube.com/watch?v=qpxINQEdUyE", 
+#                              "https://www.youtube.com/watch?v=6E3MMKzBn1g", 
+#                              "https://www.youtube.com/watch?v=PO7kT1h21CU", 
+#                              "https://www.youtube.com/watch?v=grk1w2Xb_vo"
+#                             ] | random }}'
+#       media_content_type: "music"     
+# volume_down:
+#   sequence:
+#     - service: media_player.volume_set
+#       data:
+#         entity_id: media_player.office
+#         volume_level: 0.1
+#     - service: script.turn_on
+#       data:
+#         entity_id: script.volume_fade_in
+# volume_fade_in:
+#   sequence:
+#     - service: media_player.volume_set
+#       data_template:
+#         entity_id: media_player.office
+#         volume_level: >
+#           {% set current = state_attr('media_player.office','volume_level') | float %}
+#           {% set next = current + 0.1 %}
+#           {% if next > 1 %}
+#             {% set next = 1 %}
+#           {% endif %}
+#           {{ next }}
+#     - service_template: >
+#         {% if state_attr('media_player.office','volume_level') | float < 0.5 %}
+#           script.turn_on
+#         {% else %}
+#           script.turn_off
+#         {% endif %}
+#       data:
+#         entity_id: script.fade_in_stop
+# fade_in_stop:
+#   sequence:
+#   - delay:
+#       seconds: 300
+#   - service: script.turn_on
+#     data:
+#       entity_id: script.volume_fade_in
+# #############################################################################################
+spotify_morning:
+  alias: Spotify Morning
+  sequence:
+  - service: media_player.volume_set
+    data_template:
+      entity_id: 'media_player.{{states.sensor.lalit_room_location.state}}_home'
+      volume_level: 0.2
+  - delay: '00:00:05'  
+  - service: spotcast.start
+    data_template:
+      device_name: '{{states.sensor.lalit_room_location.state}}'
+      uri: '{{ [
+                            "spotify:user:spotify:playlist:37i9dQZF1DXbKpCeB6bby3",
+                            "spotify:user:spotify:playlist:37i9dQZF1DX4PP3DA4J0N8",
+                            "spotify:user:spotify:playlist:37i9dQZF1DXebxttQCq0zA"
+               ] | random }}'
+  - delay: '00:00:05'
+  - service: script.turn_on
+    entity_id: script.spotify_volume_down
+
+# spotify_evening:
+#   alias: Spotify Evening
+#   sequence:
+#   - service: media_player.select_source
+#     data:
+#       entity_id: media_player.spotify
+#       source: 'Hass.io'
+#   - delay: '00:00:30'
+#   - service: script.turn_on
+#     entity_id: script.spotify_volume_down
+#   - service: media_player.play_media
+#     data_template:
+#       entity_id: media_player.spotify
+#       media_content_type: playlist
+#       media_content_id: '{{ [
+#                             "spotify:user:spotify:playlist:7sXrmazSWcD5jGDX64EpqG",
+#                             "spotify:user:spotify:playlist:5zPkrQhayMoOluFPTqP5t8",
+#                             "spotify:user:spotify:playlist:37i9dQZF1DXbcPC6Vvqudd"
+#                             ] | random }}'
+
+spotify_volume_down:
+  sequence:
+    - service: media_player.volume_set
+      data_template:
+        entity_id: 'media_player.{{states.sensor.lalit_room_location.state}}_home'
+        volume_level: 0.1
+    - service: script.turn_on
+      data:
+        entity_id: script.spotify_volume_fade_in
+
+spotify_volume_fade_in:
+  sequence:
+    - service: media_player.volume_set
+      data_template:
+        entity_id: 'media_player.{{states.sensor.lalit_room_location.state}}_home'
+        volume_level: >
+          {% set speaker = 'media_player.'+states.sensor.lalit_room_location.state +'_home' %}
+          {% set current = state_attr(speaker,'volume_level') %}
+          {% set next = current + 0.1 %}
+          {% if next > 1 %}
+            {% set next = 1 %}
+          {% endif %}
+          {{ next }}
+    - service_template: >
+        {% set speaker = 'media_player.'+states.sensor.lalit_room_location.state +'_home' %}
+        {% if state_attr(speaker,'volume_level') < 0.5 %}
+          script.turn_on
+        {% else %}
+          script.turn_off
+        {% endif %}
+      data:
+        entity_id: script.spotify_fade_in_stop
+
+spotify_fade_in_stop:
+  sequence:
+  - delay:
+      seconds: 300
+  - service: script.turn_on
+    data:
+      entity_id: script.spotify_volume_fade_in

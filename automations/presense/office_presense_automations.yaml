@@ -1,0 +1,108 @@
+# No one in office
+- alias: No one in office
+  initial_state: true
+  trigger:
+    - entity_id: binary_sensor.office
+    #- entity_id: binary_sensor.office_motion
+      platform: state
+      to: 'off'
+      from: 'on'
+      for: 
+        minutes: 15
+  condition:
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.office_presence_check
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.office_automation_check
+  action:
+    - service: python_script.notify
+      data:
+        message: 'looks like no one in office switching off everything'
+        announce: 1
+    - service: script.turn_on
+      entity_id: script.shutdown_office 
+    - service: homeassistant.turn_off
+      data:
+        entity_id: input_boolean.office_presence_check
+#########################################################################
+- alias: someone in office
+  initial_state: true  
+  trigger:
+    - entity_id: binary_sensor.office_motion
+      platform: state
+      to: 'on'
+      from: 'off'
+  condition:
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.office_automation_check
+  action:
+    - service: homeassistant.turn_on
+      entity_id: input_boolean.office_presence_check
+#########################################################################
+- alias: someone in office switch on ac and light
+  initial_state: true    
+  trigger:
+    - entity_id: binary_sensor.office_motion
+      platform: state
+      to: 'on'
+      from: 'off'
+  condition:
+    - condition: state
+      state: 'on'
+      entity_id: input_boolean.office_automation_check
+  action:
+    - service: homeassistant.turn_on
+      entity_id: input_boolean.office_presence_check
+    - condition: state
+      state: 'off'
+      entity_id: climate.office_aircon
+    - service: climate.turn_on
+      entity_id: climate.office_aircon
+
+
+#keep scanning for offline engines
+############################################################################
+- alias: scan office camera
+  initial_state: true
+  trigger:
+    - platform: time_pattern
+      minutes: '/1' 
+  condition:
+    - condition: state
+      entity_id: input_boolean.office_automation_check
+      state: 'on'
+    - condition: state
+      entity_id: input_boolean.office_presence_check
+      state: 'on'
+    - condition: state
+      entity_id: binary_sensor.sleep_mode
+      state: 'off'      
+  action:
+    # - service: image_processing.scan
+    #   entity_id: image_processing.deepstackod_office
+    # - service: image_processing.scan
+    #   entity_id: image_processing.rekognition_office
+    - service: image_processing.scan
+      entity_id: image_processing.facebox_office
+
+# - alias: scan office camera
+#   initial_state: true
+#   trigger:
+#     - platform: time_pattern
+#       minutes: '/5' 
+#   condition:
+#     - condition: state
+#       entity_id: input_boolean.office_automation_check
+#       state: 'on'
+#     - condition: state
+#       entity_id: input_boolean.office_presence_check
+#       state: 'on'
+#     - condition: state
+#       entity_id: binary_sensor.sleep_mode
+#       state: 'off'      
+#   action:
+#     - service: image_processing.scan
+#       entity_id: image_processing.rekognition_office

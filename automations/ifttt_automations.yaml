@@ -1,0 +1,28 @@
+# #################################################### 
+- alias: IFTTT event trigger
+  initial_state: true      
+  trigger:
+    platform: event
+    event_type: ifttt_webhook_received
+    event_data:
+      action: call_service
+  action:
+    service_template: '{{ trigger.event.data.service }}'
+    data_template:
+      entity_id: '{{ trigger.event.data.entity_id | replace(" ","_")}}'
+
+# #################################################### 
+- alias: IFTTT webhook trigger
+  initial_state: true      
+  trigger:
+    platform: webhook
+    webhook_id: ifttt_webhook
+    # event_data:
+    #   action: call_service
+  action:
+    - service: python_script.notify
+      data_template:
+        message: '{{trigger.data}}'
+    - service_template: '{{trigger.data.service}}'
+      data_template:
+        entity_id: '{{trigger.data.entity_id}}'

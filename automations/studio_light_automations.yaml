@@ -1,0 +1,39 @@
+
+- alias: check studio light
+  initial_state: true
+  trigger: 
+    platform: time_pattern
+    hours: "/1"      
+  condition:
+    - condition: state
+      state: 'on'
+      entity_id: binary_sensor.daytime
+  action:
+    - service: script.turn_on
+      entity_id: script.ask_for_studio_light
+
+
+#process response
+- alias: process studio light response 
+  initial_state: true
+  trigger: 
+    platform: event
+    event_type: html5_notification.clicked
+    event_data:
+      tag: studio_light_notification
+  action:
+    - service_template: >-
+        {% set response = trigger.event.data.action %}
+        {%- if response == "yes_turn_off" -%} 
+          light.turn_off
+        {%- elif response == "no_light_off" -%}
+          input_boolean.turn_off
+        {%- endif %}
+      data_template: 
+        entity_id: >-
+          {% set response = trigger.event.data.action %}
+          {%- if response == "yes_turn_off" -%} 
+            light.studio_light
+          {%- elif response == "no_light_off" -%}
+            input_boolean.studio_light_state        
+          {%- endif %}

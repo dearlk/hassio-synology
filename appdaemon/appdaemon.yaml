@@ -1,25 +1,44 @@
 secrets: /config/secrets.yaml
-log:
-  logfile: /config/appdaemon.log
-  errorfile: /config/appdaemon.log
+logs:
+  main_log: 
+    filename: /config/appdaemon.log
+  access_log: 
+    filename: /config/appdaemon.log
+  error_log: 
+    filename: /config/appdaemon.log
+  diag_log: 
+    filename: /config/appdaemon_diag.log
+  test_log: 
+    name: testlog
+    filename: /config/appdaemon_test.log
+
 appdaemon:
+  latitude: !secret home_latitude
+  longitude: !secret home_longitude
+  elevation: 0
+  time_zone: Asia/Singapore
   production_mode: false
-  threads: 50
+  threads: 40
   app_dir: /config/appdaemon/apps
+  log_thread_actions: 1
   plugins:
     HASS:
       type: hass
-      ha_url: http://hassio/homeassistant
-      token: c16fd49635fe48c135f1ed64b3d182b7158ab078547b1a5b957288df587890a2f2d0aa0f1b93fbcd1f39c80fbb002f9da546edd3225759f4
-      namespace: default
+      # ha_url: http://hassio/homeassistant
+      # token: c83213cd5a3f794e3e3a3d03399ce8ddd81539582ba29f2fb7a6717436886542e80af095235517aa5a763cc724e51e1bbe5cbfaec06eb1eb
+      # namespace: default
+      verbose: true
     MQTT:
       type: mqtt
       client_host: 192.168.1.165
       client_user: mqtttest
       client_password: admin
       namespace: mqtt
-      verbose: false
+      verbose: true
       token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJiYTA1MjQyMDYzZTg0NjZkYjRhMmRmZWI1ODU2ZGI5MiIsImlhdCI6MTU2NDIxMTIwOSwiZXhwIjoxODc5NTcxMjA5fQ.UWUgMziJSqzKT7BzrX6DoXpukQKwz3TFIbx2sh5uAFs
+
+admin:
+api:
 hadashboard:
-  dash_url: http://127.0.0.1:5050
-  dash_dir: /config/appdaemon/dashboards
+http:
+  url: http://192.168.1.165:8123

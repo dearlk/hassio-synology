@@ -1,0 +1,37 @@
+
+lalit_reached_home:
+  sequence:
+    # - wait_template: "{{states.binary_sensor.main_door.state=='on'}}"
+    #   timeout: '00:10:00'
+    #   continue_on_timeout: true
+    # - delay: '00:00:05'
+    # - service: python_script.notify
+    #   data:
+    #     message: Lalit has reached home now
+    #     text: 1
+    #     to: lalit  
+    - service: rest_command.assistant_preset
+      data:
+        preset: arrivedhome
+    - service: input_boolean.turn_on
+      entity_id: input_boolean.lalit_at_home    
+
+lalit_left_home:
+  sequence:
+    # - wait_template: "{{states.device_tracker.lalit_nmap.state=='not_home'}}"
+    #   timeout: '00:05:00'    
+    #   continue_on_timeout: false
+    # - service: python_script.notify
+    #   data:
+    #     message: Lalit has left home now
+    #     text: 1
+    #     to: lalit    
+    - service: rest_command.assistant_preset
+      data:
+        preset: ontheway
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.lalit_at_home
+    # - service: python_script.set_state
+    #   data:
+    #     entity_id: sensor.lalit_room_location
+    #     state: "Not at home"

@@ -25,25 +25,12 @@ views:
     path: home
     theme: happy
     icon: mdi:home
-    # badges:
-    #   #- sensor.time
-    #   #- sun.sun
-    #   # - sensor.moon
-    #   - device_tracker.lalit
-    #   - device_tracker.jyoti
-    #   - device_tracker.mom
-    #   # - binary_sensor.lalit_sleeping
-    #   # - binary_sensor.jyoti_sleeping
-    #   #- binary_sensor.announcement_mode
-    #   #- binary_sensor.sleep_mode
-    #   #- binary_sensor.tv_mode
-    #   #- binary_sensor.workday
-    #   #- binary_sensor.morning
-    #   #- binary_sensor.evening
-    #   #- binary_sensor.night
-    #   - sensor.sunlight
-    #   - sensor.systemmonitor_processor_use
-    #   - sensor.systemmonitor_memory_use_percent
+    badges:
+      #- sensor.office_temperature
+      #- sensor.humidity
+      - device_tracker.jyoti
+      - device_tracker.lalit
+      
 
     cards:
       - type: picture-glance
@@ -51,6 +38,9 @@ views:
           - group.livingroom_lights
           - group.livingroom_lamps
           - binary_sensor.main_door
+          - binary_sensor.sleep_mode
+          - input_boolean.livingroom_presence_check
+          - binary_sensor.announcement_mode
         camera_image: camera.combined
         camera_view: live
 
@@ -58,20 +48,29 @@ views:
         cards:
           - type: vertical-stack            
             cards:
+
+              - type: glance
+                title: Sensors
+                entities:
+                  - binary_sensor.sleep_mode
+                  - input_boolean.livingroom_presence_check
+                  - binary_sensor.announcement_mode              
+
               - type: entities
                 #title: People
                 show_header_toggle: false
                 entities:
                   - sensor.jyoti
+                  # - device_tracker.jyoti
                   - entity: binary_sensor.jyoti_mobile_zanzito_status
                     name: Zanzito
                     secondary_info: last-changed
-                  - entity: sensor.jyoti_mobile_battery                  
-                    name: Battery
-                    secondary_info: last-changed
-                  - entity: binary_sensor.jyoti_mobile_charging
-                    name: Charging
-                    secondary_info: last-changed                    
+                  # - entity: sensor.jyoti_mobile_battery                  
+                  #   name: Battery
+                  #   secondary_info: last-changed
+                  # - entity: binary_sensor.jyoti_mobile_charging
+                  #   name: Charging
+                  #   secondary_info: last-changed                    
                   - entity: sensor.jyoti_mobile_in_use
                     name: Active
                     icon: mdi:cellphone-android
@@ -79,20 +78,25 @@ views:
                   - entity: sensor.jyoti_room_location 
                     name: Room
                     secondary_info: last-changed
+                  # - entity: input_boolean.jyoti_at_home 
+                  #   name: At Home
+                  #   secondary_info: last-changed
+
 
               - type: entities
                 show_header_toggle: false
                 entities:
                   - sensor.lalit
+                  # - device_tracker.lalit
                   - entity: binary_sensor.lalit_mobile_zanzito_status
                     name: Zanzito
                     secondary_info: last-changed
-                  - entity: sensor.lalit_mobile_battery                  
-                    name: Battery
-                    secondary_info: last-changed
-                  - entity: binary_sensor.lalit_mobile_charging
-                    name: Charging
-                    secondary_info: last-changed
+                  # - entity: sensor.lalit_mobile_battery                  
+                  #   name: Battery
+                  #   secondary_info: last-changed
+                  # - entity: binary_sensor.lalit_mobile_charging
+                  #   name: Charging
+                  #   secondary_info: last-changed
                   - entity: sensor.lalit_mobile_in_use
                     name: Active
                     icon: mdi:cellphone-android
@@ -100,10 +104,13 @@ views:
                   - entity: sensor.lalit_room_location 
                     name: Room
                     secondary_info: last-changed
+                  # - entity: input_boolean.lalit_at_home 
+                  #   name: At Home
+                  #   secondary_info: last-changed
                   - type: divider
-                  - entity: device_tracker.mom                                    
-                  - type: cast
-                    view: "/lovelace/home"
+                  # - entity: device_tracker.mom                                    
+                  # - type: cast
+                  #   view: "/home"
               - type: custom:auto-entities
                 card:
                   type: entities
@@ -118,6 +125,7 @@ views:
           - type: custom:auto-entities
             card: 
               type: entities
+              title: What's On
             show_empty: false
             filter:
               include:
@@ -134,7 +142,10 @@ views:
                   state: 'cool'
                   options:
                     secondary_info: last-changed
-
+                - entity_id: "/^switch.*_aircon$/"
+                  state: 'on'
+                  options:
+                    secondary_info: last-changed
 
       - type: vertical-stack
         cards:
@@ -170,6 +181,22 @@ views:
             entity: media_player.livingroom_office          
           - type: custom:mini-media-player
             entity: media_player.home
+
+
+          # - type: custom:auto-entities
+          #   card:
+          #     type: entities
+          #     title: automations
+          #   filter:
+          #     template: | 
+
+          #     include:
+          #       - domain: automation
+          #         options:
+          #           secondary_info: last_triggered
+          #         attributes:
+          #           last_triggered: <= 15
+                    
 ##############################################################################################
 #
 # Livingroom config
@@ -193,11 +220,11 @@ views:
           - binary_sensor.livingroom_motion
           - entity: switch.livingroom_aircon
             icon: mdi:air-conditioner
-          # - entity: group.livingroom_samsung_tv
-          #   icon: mdi:television
-          - entity: input_boolean.livingroom_tv_state
-            name: TV
-            #icon: television
+          - entity: switch.livingroom_tv
+            icon: mdi:television
+          # - entity: input_boolean.livingroom_tv_state
+          #   name: TV
+          #   #icon: television
           - entity: vacuum.xiaomi_vacuum_cleaner
         camera_image: camera.livingroom
         camera_view: live
@@ -210,12 +237,6 @@ views:
             - entity_id: binary_sensor.main_door
               options:
                 secondary_info: last-changed
-            - entity_id: binary_sensor.kitchen_motion
-              options:
-                secondary_info: last-changed 
-            - entity_id: light.kitchen_light
-              options:
-                secondary_info: last-changed                             
             - entity_id: binary_sensor.livingroom_motion
               options:
                 secondary_info: last-changed                
@@ -226,6 +247,16 @@ views:
               options:
                 secondary_info: last-changed
 
+      - type: entities
+        title: Kitchen
+        show_header_toggle: true
+        entities:
+          - entity: binary_sensor.kitchen_motion
+            secondary_info: last-changed 
+          - entity: switch.sonoff_gas
+            secondary_info: last-changed 
+          - entity: light.kitchen_light
+            secondary_info: last-changed 
 
       - type: entities
         title: Fan
@@ -237,33 +268,25 @@ views:
             name: Livingroom Fan
             secondary_info: last-changed
 
-      - type: entities
-        title: Lights
-        show_header_toggle: true
-        entities:
-          - entity: light.center_light
-            name: Center
-            secondary_info: last-changed
-          - entity: light.door_light
-            name: Door
-            secondary_info: last-changed
-          - entity: light.gallery_light
-            name: Gallery
-            secondary_info: last-changed
 
-      - type: entities
-        title: Lamps
-        show_header_toggle: true
-        entities:
-          - entity: light.sofa_lamp
-            name: Sofa
-            secondary_info: last-changed
-          - entity: light.console_lamp
-            name: Console
-            secondary_info: last-changed
-          - entity: light.dining_lamp
-            name: Dining
-            secondary_info: last-changed
+
+ 
+
+
+      - type: custom:auto-entities
+        card:
+          type: entities
+          title: Lights
+        filter:
+          include:
+            - entity_id: "light.livingroom_*"
+              options:
+                secondary_info: last-changed
+
+
+
+
+
 
       - type: vertical-stack
         cards:
@@ -271,15 +294,40 @@ views:
             entity: media_player.livingroom
           - type: custom:mini-media-player
             entity: media_player.livingroom_tv
+          - type: media-control
+            entity: media_player.nvidia_shield
+
+
 
       - type: entities
         show_header_toggle: false
         entities:
           - group.livingroom_samsung_tv
           - vacuum.xiaomi_vacuum_cleaner
+          - remote.harmony_hub
 
-
-
+      - type: custom:auto-entities
+        card: 
+          type: entities
+          title: Automations
+        show_empty: false
+        filter:
+          include:
+            - entity_id: "automation.*livingroom*"
+              #state: 'on'
+              options:
+                secondary_info: last-changed
+      - type: custom:auto-entities
+        card: 
+          type: entities
+          title: Scripts
+        show_empty: false
+        filter:
+          include:
+            - entity_id: "script.*livingroom*"
+              #state: 'on'
+              options:
+                secondary_info: last-changed
 ##############################################################################################
 #
 # Office config
@@ -299,10 +347,11 @@ views:
         entities:
           - binary_sensor.office_door
           - binary_sensor.office_motion
-          - entity: climate.office_aircon
+          - entity: switch.office_aircon
             icon: mdi:air-conditioner
           - light.office_light
           - light.gateway_light
+          - switch.sonoff_office_lamp
         camera_image: camera.office
         camera_view: live
 
@@ -323,20 +372,39 @@ views:
             - entity_id: light.gateway_light
               options:
                 secondary_info: last-changed
-            - entity_id: climate.office_aircon
+            - entity_id: switch.office_aircon
+              options:
+                secondary_info: last-changed
+
+            - entity_id: switch.sonoff_office_lamp
               options:
                 secondary_info: last-changed
 
       - type: custom:mini-media-player
         entity: media_player.office
-      - type: sensor
-        entity: sensor.office_temperature
-        name: Temperature
-        graph: line
-      - type: sensor
-        entity: sensor.office_humidity
-        name: Humidity
-        graph: line        
+
+      - type: custom:auto-entities
+        card: 
+          type: entities
+          title: Automations
+        show_empty: false
+        filter:
+          include:
+            - entity_id: "automation.*office*"
+              #state: 'on'
+              options:
+                secondary_info: last-changed
+      - type: custom:auto-entities
+        card: 
+          type: entities
+          title: Scripts
+        show_empty: false
+        filter:
+          include:
+            - entity_id: "script.*office*"
+              #state: 'on'
+              options:
+                secondary_info: last-changed   
 ##############################################################################################
 #
 # Familyroom config
@@ -372,6 +440,11 @@ views:
           - entity: light.temple_lamp
             name: Lamp
             secondary_info: last-changed
+          - entity: switch.sonoff_iron
+            name: Iron
+            #icon: mdi:iron
+            secondary_info: last-changed
+
       - type: entities
         title: Bathroom
         show_header_toggle: false
@@ -385,7 +458,30 @@ views:
             secondary_info: last-changed
           - entity: light.family_bathroom_light
             name: Light
-            secondary_info: last-changed                
+            secondary_info: last-changed    
+
+      - type: custom:auto-entities
+        card: 
+          type: entities
+          title: Automations
+        show_empty: false
+        filter:
+          include:
+            - entity_id: "automation.*family*"
+              #state: 'on'
+              options:
+                secondary_info: last-changed
+      - type: custom:auto-entities
+        card: 
+          type: entities
+          title: Scripts
+        show_empty: false
+        filter:
+          include:
+            - entity_id: "script.*family*"
+              #state: 'on'
+              options:
+                secondary_info: last-changed 
 ##############################################################################################
 #
 # Bedroom config
@@ -400,7 +496,7 @@ views:
       - type: picture-glance
         entities:
           - light.bedroom_mini_lamp
-          - entity: climate.bedroom_aircon
+          - entity: switch.bedroom_aircon
             icon: mdi:air-conditioner
           - entity: binary_sensor.bedroom_tv
             name: TV
@@ -415,12 +511,13 @@ views:
           - entity: binary_sensor.bedroom_motion
             name: Motion
             secondary_info: last-changed
+          - entity: binary_sensor.bedroom_motion_2
+            name: Motion 2
+            secondary_info: last-changed          
           - entity: binary_sensor.bedroom_door
             name: Door
             secondary_info: last-changed
-          - entity: light.bedroom_mini_lamp
-            name: Mini Lamp
-            secondary_info: last-changed
+
           - entity: light.bedroom_lamp
             name: Lamp
             secondary_info: last-changed
@@ -430,9 +527,13 @@ views:
           - entity: light.bedroom_fan_light
             name: Fan Light
             secondary_info: last-changed
+          - entity: switch.sonoff_bedroom_charger
+            name: Charger
+            secondary_info: last-changed
           - entity: fan.bedroom_fan
             name: Fan
             secondary_info: last-changed
+
 
       - type: entities
         title: Bathroom
@@ -450,13 +551,37 @@ views:
       
       - type: entities
         entities:
-          - entity: climate.bedroom_aircon
+          - entity: switch.bedroom_aircon
 
       - type: custom:mini-media-player
         entity: media_player.bedroom
       - type: custom:mini-media-player
         entity: media_player.bedroom_tv 
+      - type: media-control
+        entity: media_player.fire_tv
 
+      - type: custom:auto-entities
+        card: 
+          type: entities
+          title: Automations
+        show_empty: false
+        filter:
+          include:
+            - entity_id: "automation.*bedroom*"
+              #state: 'on'
+              options:
+                secondary_info: last-changed
+      - type: custom:auto-entities
+        card: 
+          type: entities
+          title: Scripts
+        show_empty: false
+        filter:
+          include:
+            - entity_id: "script.*bedroom*"
+              #state: 'on'
+              options:
+                secondary_info: last-changed 
 ###############################################################################################################################################
   - title: Setup
     icon: mdi:cellphone-settings-variant
@@ -482,33 +607,40 @@ views:
             - domain: input_number
             - domain: input_datetime
 ###############################################################################################################################################
-  - title: Scripts
-    icon: mdi:script
-    cards:
-      - type: custom:group-card
-        card: 
-          type: entities
-          title: Scripts
-        group: group.all_scripts
-      - type: custom:group-card
-        card: 
-          type: entities
-          title: Automations
-        group: group.all_automations
+
+
 ###############################################################################################################################################
   - title: Switches
     icon: mdi:lightbulb
     cards:
-      - type: custom:group-card
+      - type: custom:auto-entities
         card: 
           type: entities
-          title: Switches
-        group: group.all_switches
-      - type: custom:group-card
+          title: Livingroom
+        filter:
+          include:
+            - entity_id: "switch.*livingroom*"
+      - type: custom:auto-entities
         card: 
           type: entities
-          title: Lights
-        group: group.all_lights
+          title: Office
+        filter:
+          include:
+            - entity_id: "switch.*office*"
+      - type: custom:auto-entities
+        card: 
+          type: entities
+          title: Family
+        filter:
+          include:
+            - entity_id: "switch.*family*"
+      - type: custom:auto-entities
+        card: 
+          type: entities
+          title: Bedroom
+        filter:
+          include:
+            - entity_id: "switch.*bedroom*"
 ##########################################################################################################################################################
   - title: Updates
     panel: true

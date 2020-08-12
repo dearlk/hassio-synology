@@ -1,0 +1,146 @@
+  
+ #deepstack object
+  - platform: deepstack_object
+    ip_address: localhost
+    port: 32769
+    targets: 
+      - person
+    source:
+      - entity_id: camera.livingroom
+        name: deepstackod_livingroom
+  - platform: deepstack_object
+    ip_address: localhost
+    port: 32769
+    targets: 
+      - person
+    source:
+      - entity_id: camera.bedroom
+        name: deepstackod_bedroom
+  - platform: deepstack_object
+    ip_address: localhost
+    port: 32769
+    targets: 
+      - person
+    source:
+      - entity_id: camera.office
+        name: deepstackod_office
+
+#deepstack face                
+  - platform: deepstack_face
+    ip_address: localhost
+    port: 32769
+    source:
+      - entity_id: camera.livingroom
+        name: deepstackfd_livingroom
+  - platform: deepstack_face
+    ip_address: localhost
+    port: 32769
+    source:
+      - entity_id: camera.bedroom
+        name: deepstackfd_bedroom
+  - platform: deepstack_face
+    ip_address: localhost
+    port: 32769
+    source:
+      - entity_id: camera.office
+        name: deepstackfd_office              
+
+  #facebox
+  - platform: facebox
+    ip_address: localhost
+    port: 8090
+    scan_interval: 20000
+    source:
+      - entity_id: camera.livingroom
+        name: facebox_livingroom
+  - platform: facebox
+    ip_address: localhost
+    port: 8090
+    scan_interval: 20000
+    source:
+      - entity_id: camera.bedroom
+        name: facebox_bedroom
+  - platform: facebox
+    ip_address: localhost
+    port: 8090
+    scan_interval: 20000
+    source:
+      - entity_id: camera.office
+        name: facebox_office
+
+#amazon rekognition                
+  - platform: amazon_rekognition
+    aws_access_key_id: !secret aws_access_key_id
+    aws_secret_access_key: !secret aws_secret_access_key
+    target: Person
+    source:
+      - entity_id: camera.livingroom
+        name: rekognition_livingroom
+  - platform: amazon_rekognition
+    aws_access_key_id: !secret aws_access_key_id
+    aws_secret_access_key: !secret aws_secret_access_key
+    target: Person
+    source:
+      - entity_id: camera.bedroom
+        name: rekognition_bedroom
+  - platform: amazon_rekognition
+    aws_access_key_id: !secret aws_access_key_id
+    aws_secret_access_key: !secret aws_secret_access_key
+    target: Person
+    source:
+      - entity_id: camera.office
+        name: rekognition_office
+
+  - platform: doods
+    scan_interval: 60
+    url: "http://localhost:8080"
+    detector: default
+    #detector: tensorflow
+    source:
+      - entity_id: camera.livingroom
+    file_out:
+      - "/config/www/doods/livingroom_latest.jpg"  
+    #   - "/config/www/doods/livingroom_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"  
+    labels:
+      - name: person
+        confidence: 60
+      # - spoon
+      # - bowl
+      # - cup
+      # - fork
+      
+  - platform: doods
+    scan_interval: 60
+    url: "http://localhost:8080"
+    detector: default
+    #detector: tensorflow
+    source:
+      - entity_id: camera.office
+    file_out:
+      - "/config/www/doods/office_latest.jpg"  
+    #   - "/config/www/doods/office_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"  
+    labels:
+      - name: person
+        confidence: 60
+      # - spoon
+      # - bowl
+      # - cup
+      # - fork
+
+  - platform: doods
+    scan_interval: 60
+    url: "http://localhost:8080"
+    detector: default
+    #detector: tensorflow
+    source:
+      - entity_id: camera.bedroom
+    file_out:
+      - "/config/www/doods/bedroom_latest.jpg"  
+    #   - "/config/www/doods/bedroom_{{ now().strftime('%Y%m%d_%H%M%S') }}.jpg"  
+    labels:
+      - name: person
+        confidence: 60
+      # - spoon
+      # - bowl
+      # - cup
+      # - fork    

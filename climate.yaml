@@ -4,7 +4,7 @@
   - platform: smartir
     name: Office Aircon
     unique_id: office_aircon
-    device_code: 123456
+    device_code: 1281
     controller_data: !secret broadlink_rmproplus_host
     temperature_sensor: sensor.office_temperature
     humidity_sensor: sensor.office_humidity
@@ -12,7 +12,7 @@
   - platform: smartir
     name: Bedroom Aircon
     unique_id: bedroom_aircon
-    device_code: 123456
+    device_code: 1281
     controller_data: !secret broadlink_mini_bedroom_host
     temperature_sensor: sensor.bedroom_temperature
     humidity_sensor: sensor.bedroom_humidity
@@ -20,8 +20,8 @@
   - platform: smartir
     name: Familyroom Aircon
     unique_id: familyroom_aircon
-    device_code: 123456
+    device_code: 1281
     controller_data: !secret broadlink_mini_family_host
-    temperature_sensor: sensor.bedroom_temperature
-    humidity_sensor: sensor.bedroom_humidity
+    # temperature_sensor: sensor.bedroom_temperature
+    # humidity_sensor: sensor.bedroom_humidity
     
