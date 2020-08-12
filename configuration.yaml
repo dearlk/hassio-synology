@@ -29,7 +29,6 @@ logger:
   logs:
     custom_components.places.sensor: error
     homeassistant.components.proximity: error
-
 updater:
 discovery:
 conversation:
@@ -73,12 +72,10 @@ media_extractor:
     media_player.office:
       video: bestvideo
       music: bestaudio[ext=m4a]/bestaudio[ext=ogg]/bestaudio
-
 input_text: !include input_text.yaml
 # google:
 #   client_id: !secret google_calendar_client_id
 #   client_secret: !secret google_calendar_client_secret
-
 climate: !include climate.yaml
 camera: !include camera.yaml
 vacuum: !include vacuum.yaml
@@ -88,54 +85,26 @@ lovelace:
 weather:
   - platform: darksky
     api_key: !secret darksky_api_key
-  
 system_health:
 smartir:
   update_branch: rc
 hacs:
   token: !secret my_github_access_token
-
 image_processing: !include image_processing.yaml
-
 variable:
   base_url_full: 
     value: !secret base_url_full
-
 timer:
   bedroom_shutdown_reminder:
     duration: '00:30:00'
-
 sonoff:
   username: !secret sonoff_username
   password: !secret sonoff_password
   reload: always
-
-rest_command:
-  assistant_broadcast:
-    url: !secret assistant_relay_url
-    method: POST
-    content_type: 'application/json'
-    payload: '{"command":"{{ command }}", "broadcast":true}'
-  assistant_converse:
-    url: !secret assistant_relay_url
-    method: POST
-    content_type: 'application/json'
-    payload: '{"command":"{{ command }}", "converse":true}'
-  assistant_relay:
-    url: !secret assistant_relay_url
-    method: POST
-    content_type: 'application/json'
-    payload: '{"command":"{{ command }}", "user":"username"}'
-  assistant_preset:
-    url: !secret assistant_relay_url
-    method: POST
-    content_type: 'application/json'
-    payload: '{"preset":"{{ preset }}"}'
-
+rest_command: !include rest_command.yaml
 spotify:
   client_id: !secret spotify_client_id
   client_secret: !secret spotify_client_secret
-
 spotcast:
   sp_dc: !secret sp_dc 
   sp_key: !secret sp_key
